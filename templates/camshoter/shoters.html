@@ -1,22 +1,42 @@
-<b>Снапшоты с "[#TITLE#]"</b>
-   <a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
-
-[#ARCDATES#]
-
+<table border=0><tr><td>
+<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#]</b>
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+</td></tr>
+<tr><td>
 <select name="arcdate" class="form-control" style="width: 350px;" align="left">
 <!--  <option value=""><#LANG_SELECT#> -->
-
-
 
 [#begin ARCDATES#]
 <option value="[#DATE#]"[#if SELECTED#] selected[#endif#]>[#DATE#]
 [#end ARCDATES#]
  </select>
-
+</td><td>
+<button type="submit" name="subm" value="Submit" class="btn btn-primary">Применить</button>
+<input type="hidden" name="view_mode" value="indata_edit">	
+<input type="hidden" name="mode" value="confirm">
+<input type="hidden" name="tab" value="devcount">
+<input type="hidden" name="id" value="[#ID#]">
+</form>
+</td></tr>
+</table>
+<table>
+<tr><td>
 
 
 
 [#begin FILES#]
-<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" title='../cms/cached/nvr/[#FILE#]' >
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='../cms/cached/nvr/[#FILE#]' >
 <img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
 [#end FILES#]
+</td></tr>
+
+<tr><td>
+
+<br><br>
+<a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+</td>
+
+
+</tr>
+</table>
