@@ -13,7 +13,7 @@ padding: .3em 1em
 
 
 
-<img src="../img/modules/camshoter.png" width="20%"  ></a> &nbsp;&nbsp; &nbsp;&nbsp;
+<img src="../img/modules/camshoter.png"   ></a> &nbsp;&nbsp; &nbsp;&nbsp;
 
 
  &nbsp; 
@@ -26,8 +26,6 @@ padding: .3em 1em
 
 <br>
 <li [#if TAB=="" || TAB=="config" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=config"><span class="glyphicon glyphicon-list-alt"></span> Счетчики</a></li>
-<li [#if TAB=="param" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=param"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
-<li [#if TAB=="debug" #] class="active" [#endif#]><a href="?view_mode=&tab=debug"><span class="glyphicon glyphicon-inbox"></span> Отладка</a> </li>	
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
 [#endif#]
