@@ -1,0 +1,15 @@
+<b>Снапшоты с "[#TITLE#]"</b>
+
+[#ARCDATES#]
+
+<select name="arcdate" class="form-control" style="width: 350px;" align="left">
+<!--  <option value=""><#LANG_SELECT#> -->
+
+
+
+[#begin ARCDATES#]
+<option value="[#DATE#]"[#if SELECTED#] selected[#endif#]>[#DATE#]
+[#end ARCDATES#]
+ </select>
+
+   <a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
