@@ -92,3 +92,4 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    }
   }
   outHash($rec, $out);
+
