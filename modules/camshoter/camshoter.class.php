@@ -414,7 +414,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: SENDEMAIL int(1) 
  camshoter_devices: SENDSLAKS int(1) 
  camshoter_devices: COUNT int(10) 
- camshoter_devices: SIZE int(10) 
+ camshoter_devices: SIZE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: LASTPING datetime
  camshoter_devices: UPDATED datetime
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
