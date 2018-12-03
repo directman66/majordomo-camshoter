@@ -121,6 +121,25 @@ function run() {
 function admin(&$out) {
 
 
+
+//$out['arcdate']=date('Ymd');
+
+/*
+$start = strtotime('09/01/2010');
+$finish = strtotime('05/31/2011');
+
+$arrayOfDates = array();
+  for($i=$start; $i<$finish; $i+=86400){
+  list($year,$month,$day) = explode("|",date("Y|m|d",$i));
+  $arrayOfDates[$year][$month][] = $day;
+}
+*/
+//print_r(getDatesFromRange( '2010-10-01', '2010-10-05' ));
+
+//print_r($this->createDateRangeArray('2010-10-01', '2010-10-05'));
+
+
+
 	
 
 
@@ -138,6 +157,10 @@ $this->searchdevices($out, $this->id);
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
+
+
+
+
  }
 
 
@@ -146,6 +169,13 @@ $this->searchdevices($out, $this->id);
 
  if ($this->view_mode=='indata_del') {
    $this->delete($this->id);
+//   $this->redirect("?data_source=$this->data_source&view_mode=node_edit&id=$pid&tab=indata");
+   $this->redirect("?");
+ }	
+
+
+ if ($this->view_mode=='clearfolder') {
+   $this->clearpath($this->id);
 //   $this->redirect("?data_source=$this->data_source&view_mode=node_edit&id=$pid&tab=indata");
    $this->redirect("?");
  }	
@@ -162,6 +192,16 @@ $this->searchdevices($out, $this->id);
 
  
 
+
+
+ function clearpath($id) {
+
+$savepath=ROOT."cms/cached/nvr/cam".$id;
+$this->rmRec($savepath);
+
+//$devices=SQLSelect("SELECT * FROM camshoter_devices");
+
+ }
 
 
  function indata_edit(&$out, $id) {
@@ -249,13 +289,26 @@ $savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/';
  if (!file_exists($savepath)) {
 mkdir($savepath, 0777, true);}
 
-$savename=$savepath.date('YmdHis').".jpg"; // куда сохранять
-SaveFile($savename, $result);
 
-$text='Зафиксировано движение '.$properties['TITLE'];
+$savelast=ROOT."cms/cached/nvr/last/";
+ if (!file_exists($savelast)) {
+mkdir($savepath, 0777, true);}
+
+
+$savename=$savepath."cam".$properties[$i]['ID']."_".date('Ymd_His').".jpg"; // куда сохранять
+
+$savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
+
+
+
+$result=getURL($image_url,0);
+SaveFile($savename, $result);
+SaveFile($savenamelast, $result);
+
+$text='Зафиксировано движение '.$properties[$i]['TITLE'];
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
-$telegram_module->sendImageToAll($save_to,$text);
+$telegram_module->sendImageToAll($savename,$text);
 }
 
 
@@ -400,6 +453,64 @@ SQLInsert('camshoter_config', $par);
 
 
 
+
+function rmRec($dir) {
+  $d=opendir($dir);  
+    while(($entry=readdir($d))!==false) 
+    { 
+        if ($entry != "." && $entry != "..") 
+        { 
+            if (is_dir($dir."/".$entry)) 
+            {  
+                dirDel($dir."/".$entry);  
+            } 
+            else 
+            {  
+                unlink ($dir."/".$entry);  
+            } 
+        } 
+    } 
+    closedir($d);  
+    rmdir ($dir);  
+
+  }
+
+
+function createDateRangeArray($strDateFrom,$strDateTo)
+{
+    // takes two dates formatted as YYYY-MM-DD and creates an
+    // inclusive array of the dates between the from and to dates.
+
+    // could test validity of dates here but I'm already doing
+    // that in the main script
+
+    $aryRange=array();
+
+//$aryRange[] = array("DATA"=>"");
+
+    $iDateFrom=mktime(1,0,0,substr($strDateFrom,5,2),     substr($strDateFrom,8,2),substr($strDateFrom,0,4));
+    $iDateTo=mktime(1,0,0,substr($strDateTo,5,2),     substr($strDateTo,8,2),substr($strDateTo,0,4));
+
+    if ($iDateTo>=$iDateFrom)
+    {
+//        array_push($aryRange,date('Y-m-d',$iDateFrom)); // first entry
+//        array_push($aryRange["DATA"],date('Y-m-d',$iDateFrom)); // first entry
+$aryRange[] = array("DATE"=>date('Y-m-d',$iDateFrom));
+
+
+//$array[] = $var;
+
+        while ($iDateFrom<$iDateTo)
+        {
+            $iDateFrom+=86400; // add 24 hours
+//            array_push($aryRange,date('Y-m-d',$iDateFrom));
+//            array_push($aryRange["DATA"],date('Y-m-d',$iDateFrom));
+$aryRange[] = array("DATE"=>date('Y-m-d',$iDateFrom));
+
+        }
+    }
+    return $aryRange;
+}
 
 
 }
