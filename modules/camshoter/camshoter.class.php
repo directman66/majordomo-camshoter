@@ -164,6 +164,10 @@ $this->searchdevices($out, $this->id);
  }
 
 
+ if ($this->view_mode=='updatesize') {
+$this->getfoldersize($this->id);
+   $this->redirect("?");
+}
 
 
 
@@ -402,6 +406,8 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SENDTELEGRAM int(1) 
  camshoter_devices: SENDEMAIL int(1) 
+ camshoter_devices: COUNT int(10) 
+ camshoter_devices: SIZE int(10) 
  camshoter_devices: LASTPING datetime
  camshoter_devices: UPDATED datetime
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
@@ -542,6 +548,91 @@ $files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v);
 return $files;
 
 }
+
+
+function getfoldersize($id) {
+  $rec=SQLSelectOne("SELECT * FROM camshoter_devices WHERE ID='$id'");
+ $folder=ROOT."cms/cached/nvr/cam".$id.'/';
+
+// $cnt=count(scandir('/'.$folder.'/'));
+
+$cnt = $this->DirFilesR($folder);
+
+
+$dirsize=$this->show_size($folder);
+
+$rec['COUNT']=$cnt;
+$rec['SIZE']=$dirsize;
+
+SQLUpdate('camshoter_devices', $rec);
+
+
+}
+
+
+function show_size($f,$format=true) 
+{ 
+        if($format) 
+        { 
+                $size=$this->show_size($f,false); 
+                if($size<=1024) return $size.' bytes'; 
+                else if($size<=1024*1024) return round($size/(1024),2).' Kb'; 
+                else if($size<=1024*1024*1024) return round($size/(1024*1024),2).' Mb'; 
+                else if($size<=1024*1024*1024*1024) return round($size/(1024*1024*1024),2).' Gb'; 
+                else if($size<=1024*1024*1024*1024*1024) return round($size/(1024*1024*1024*1024),2).' Tb'; //:))) 
+                else return round($size/(1024*1024*1024*1024*1024),2).' Pb'; // ;-) 
+        }else 
+        { 
+                if(is_file($f)) return filesize($f); 
+                $size=0; 
+                $dh=opendir($f); 
+                while(($file=readdir($dh))!==false) 
+                { 
+                        if($file=='.' || $file=='..') continue; 
+                        if(is_file($f.'/'.$file)) $size+=filesize($f.'/'.$file); 
+                        else $size+=$this->show_size($f.'/'.$file,false); 
+                } 
+                closedir($dh); 
+                return $size+filesize($f); // +filesize($f) for *nix directories 
+        } 
+} 
+
+
+
+
+
+//получение названий файлов
+function DirFilesR($dir)  
+{  
+  $handle = opendir($dir) or die("Can't open directory $dir");  
+  $files = Array();  
+  $subfiles = Array();  
+  while (false !== ($file = readdir($handle)))  
+  {  
+    if ($file != "." && $file != "..")  
+    {  
+      if(is_dir($dir."/".$file))  
+      {  
+          // Получим список файлов  
+
+          // вложенной папки...  
+
+        $subfiles = $this->DirFilesR($dir."/".$file);  
+
+          // ...и добавим их к общему списку  
+
+        $files = array_merge($files,$subfiles);  
+      }  
+      else 
+      {  
+        $files[] = $dir."/".$file;  
+      }  
+    }  
+  }  
+  closedir($handle);  
+//  print_r($files);
+  return count($files);  
+  }
 
 
 
