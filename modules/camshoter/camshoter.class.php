@@ -292,7 +292,7 @@ mkdir($savepath, 0777, true);}
 
 $savelast=ROOT."cms/cached/nvr/last/";
  if (!file_exists($savelast)) {
-mkdir($savepath, 0777, true);}
+mkdir($savelast, 0777, true);}
 
 
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Ymd_His').".jpg"; // куда сохранять
@@ -511,6 +511,32 @@ $aryRange[] = array("DATE"=>date('Y-m-d',$iDateFrom));
     }
     return $aryRange;
 }
+
+
+
+
+function getfiles($dir,$fdate) {
+
+ $files = array();
+
+ foreach (scandir($dir) as $v) 
+
+{
+$upfoler=explode('/',$dir)[6];
+//$files[] =array("FILE"=>$dir."/".filemtime("$dir/$v"));
+//$files[] =array("FILE"=>$dir."/".$v);
+if (($v<>"")&&($v<>".")&&($v<>"..")
+&&(strpos($v,$fdate)>0)
+)
+
+{
+$files[] =array("FILE"=>$upfoler."/".$v);
+}
+}
+return $files;
+
+}
+
 
 
 }
