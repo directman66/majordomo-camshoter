@@ -1,4 +1,5 @@
 <b>Снапшоты с "[#TITLE#]"</b>
+   <a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
 
 [#ARCDATES#]
 
@@ -12,4 +13,10 @@
 [#end ARCDATES#]
  </select>
 
-   <a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
+
+
+
+[#begin FILES#]
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" title='../cms/cached/nvr/[#FILE#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
+[#end FILES#]
