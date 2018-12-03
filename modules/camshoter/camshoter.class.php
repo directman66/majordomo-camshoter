@@ -282,7 +282,7 @@ $image_url=$properties[$i]['URL'];
 //   sg('test.camshoter',  $properties['TYPE']);
 
 
-$savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/';
+$savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/';
 //   sg('test.camshoter', $savepath);
 
 
@@ -519,22 +519,24 @@ $aryRange=array_reverse($aryRange);
 
 
 
-function getfiles($dir,$fdate) {
+function getfiles($dir) {
 
  $files = array();
 
  foreach (scandir($dir) as $v) 
 
 {
-$upfoler=explode('/',$dir)[6];
+$upfoler=explode('/',$dir)[7];
+$upfoler1=explode('/',$dir)[6];
 //$files[] =array("FILE"=>$dir."/".filemtime("$dir/$v"));
 //$files[] =array("FILE"=>$dir."/".$v);
 if (($v<>"")&&($v<>".")&&($v<>"..")
-&&(strpos($v,$fdate)>0)
+//&&(strpos($v,$fdate)>0
 )
 
+
 {
-$files[] =array("FILE"=>$upfoler."/".$v);
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v);
 }
 }
 return $files;
