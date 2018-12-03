@@ -7,6 +7,23 @@
    $out['CONTROLPANEL']=1;
   }
 
+
+
+//  if ($this->mode=='confirm') 
+/*
+{
+//  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+   $ok=1;
+ 
+   global $arcdate;
+if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else 
+{   $rec['ARCDATE']=str_replace("-","",$arcdate);}
+
+
+}
+*/
+///////////////////////
+
   $table_name='camshoter_devices';
 //  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id' and IPADDR='$ipaddr'");
 
@@ -75,4 +92,3 @@
    }
   }
   outHash($rec, $out);
-
