@@ -31,17 +31,9 @@
 <thead>
 <tr>
 <th>Название</th>  
-<th>IP</th>  
-<th>MAC</th>  
-
-
-
 <th>Online</th>    
-<th>-</th>    
-<th>№ счетчика 1</th>    
-<th>Пок.счетчика 1</th>    
-<th>№ счетчика 2</th>    
-<th>Пок.счетчика 2</th>    
+<th>Количество снимков</th>    
+<th>Хранилище</th>    
  <th>Обновлено</th>
 </tr>
 </thead>
@@ -49,28 +41,13 @@
 [#begin RESULT#]
 
  <td style="vertical-align:middle">
-   <a href="?view_mode=get_counters&id=[#ID#]&tab=config" class="btn btn-default" title="Получить показания счетчика">   [#TITLE#]</a>
+  [#TITLE#]
  <br>
 
 
  </td>
 
-
- <td style="vertical-align:middle">
-
-   <a href="?view_mode=get_counters&id=[#ID#]&tab=config" class="btn btn-default" title="Получить показания счетчика">      [#IPADDR#] </a>
-
-
-
-
- <td style="vertical-align:middle">
-   [#MAC#] 
- </td>
-
-
-
-
-
+ 
  <td style="vertical-align:middle">
 	[#if ONLINE!=""#]
 		[#if ONLINE==1#]
@@ -82,30 +59,25 @@
 		&nbsp;
 	[#endif#]
 
+
  <td style="vertical-align:middle">
 
  </td>
 
+
  <td style="vertical-align:middle">
-   [#N1#] 
+
  </td>
 
 
- <td style="vertical-align:middle">
-   [#Total1#] 
- </td>
 
 
  <td style="vertical-align:middle">
-   [#N2#] 
+ [#UPDATED#]
  </td>
 
  <td style="vertical-align:middle">
-   [#Total2#]  
- </td>
 
- <td style="vertical-align:middle">
-	[#TS3#]
  </td>
 
 
@@ -149,4 +121,3 @@
 </td></tr></table>
 
 [#endif#]
-
