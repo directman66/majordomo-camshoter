@@ -309,10 +309,16 @@ $result=getURL($image_url,0);
 SaveFile($savename, $result);
 SaveFile($savenamelast, $result);
 
+if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
+($properties[$i]['SENDTELEGRAM']=1))
+
+ {	 
+
 $text='Зафиксировано движение '.$properties[$i]['TITLE'];
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 $telegram_module->sendImageToAll($savename,$text);
+}
 }
 
 
@@ -406,6 +412,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SENDTELEGRAM int(1) 
  camshoter_devices: SENDEMAIL int(1) 
+ camshoter_devices: SENDSLAKS int(1) 
  camshoter_devices: COUNT int(10) 
  camshoter_devices: SIZE int(10) 
  camshoter_devices: LASTPING datetime
