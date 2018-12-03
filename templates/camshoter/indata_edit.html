@@ -13,9 +13,9 @@
 <!-- DID (varchar) -->
 
 	 <ul class="nav nav-tabs">
+<li [#if  TAB=="" || TAB=="devparam" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devparam"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
+<li [#ifTAB=="devcount" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devcount"><span class="glyphicon glyphicon-list-alt"></span> Снапшоты</a></li>
 
-<li [#if TAB=="" || TAB=="devcount" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devcount"><span class="glyphicon glyphicon-list-alt"></span>Показания</a></li>
-<li [#if TAB=="devparam" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devparam"><span class="glyphicon glyphicon-cog"></span> Настройки счетчика</a></li>
 </ul>
 
 <br>
@@ -26,94 +26,8 @@
 
 [#if TAB="devcount"|| TAB=""#] 
 
-<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 
-<table>
-<tr>
-<td>
-<div class="form-group">
- <label class="col-lg-3 control-label">
-   Номер счетчика 1:
- </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="n1" value="[#N1#]" id="n1"> 
-</div> 
-</div>
-</td>
-
-<td>
-<div class="form-group">
- <label class="col-lg-3 control-label">
-   Показания счетчика 2:<br>
- </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="t2" value="[#Total2#]" id="t2"> 
-</div> 
-</div>
-</td>
-</tr>
-
-<tr>
-<td>
-<div class="form-group">
- <label class="col-lg-3 control-label">
-   Номер   счетчика 2:
- </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="n1" value="[#N2#]" id="n1"> 
-</div> 
-</div>
-</td>
-
-<td>
-<div class="form-group">
- <label class="col-lg-3 control-label">
-   Показания  счетчика 2:<br>
- </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="t2" value="[#Total2#]" id="t2"> 
-</div> 
-</div>
-
-</td>
-</tr>
-<tr> 
-<td align="right">
-
- [#if ID!=""#]
- <button type="submit" name="subm" value="Submit" class="btn btn-primary">Сохранить номера счетчиков</button>
- [#else ID#]
-<!-- <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button> -->
- [#endif ID#]
-
-
-<input type="hidden" name="id" value="<#ID#>">
-<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
-<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
-<input type="hidden" name="mode" value="updatecounters">
-<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
-
-
-
-</td><td>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=savedevcnt" class="btn btn-primary">Сохранить показания в контроллер</a>
-&nbsp;&nbsp;
-
-
-
-</td>
-</tr>
-<tr><td></td><td>
-<br>
-<left> <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a></left>
-</td></tr>
-</table>
-
-
-
-
-
-
-
-</fieldset>
-</form>
+[#inc shoters.html#] 
 
 
 
@@ -137,48 +51,86 @@
    TITLE:(*)
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" id="title"> 
-<small><small>Наприер "Счетчик на кухне" </small></small>
+<small>Название камеры, например "Камера в коридоре" </small>
 </div> 
 </div>
 
 
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Тип потока:
+			</label>
+			<div class="col-lg-4">
+<select name="type" class="form-control" style="width: 260px;" align="right">
+<option[#if TYPE=""#] selected[#endif#]>snapshot
+<option[#if TYPE="rtsp"#] selected[#endif#]>rtsp
+</select>
+
+</div></div>
+
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Метод сохранения:
+			</label>
+			<div class="col-lg-4">
+<select name="method" class="form-control" style="width: 260px;" align="right">
+<option[#if METHOD=""#] selected[#endif#]>jpeg
+
+[#if TYPE="rtsp"#]<option[#if METHOD="mov"#] selected[#endif#]>mov[#endif#]
+</select>
+
+</div></div>
+
 <div class="form-group">
  <label class="col-lg-3 control-label">
-IP-адрес ESPCounter: </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr">
-<small>IP адрес контроллера ESPCount в формате 192.168.1.X</small></small>
-</div>
-
-</div>
-
-
-<div class="form-group">
- <label class="col-lg-3 control-label">
-   Делитель 1:
+   URL:(*)
  </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="d1" value="[#D1#]" id="d1"> 
-<small>Цена деления (например, для счетчика воды – это вес импульса, как правило 10 литров/имп., для
-электросчетчика – это передаточное число имп./кВт*ч).</small></small>
+ <div class="col-lg-4"><input type="text" class="form-control" name="url" value="[#URL#]" id="url"> 
+<small><small>URL камеры (snapshot, rtsp) </small></small>
 </div> 
-
-
 </div>
 
 <div class="form-group">
  <label class="col-lg-3 control-label">
-   Делитель 2:
+   IPADDR:(*)
  </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="d2" value="[#D2#]" id="d2"> 
-<small>Цена деления (например, для счетчика воды – это вес импульса, как правило 10 литров/имп., для
-электросчетчика – это передаточное число имп./кВт*ч).</small></small>
+ <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr"> 
+<small><small>IP адрес  камеры </small></small>
 </div> 
 </div>
 
 
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_OBJECT#> (датчик движения):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_object" id="linked_object"  value="[#LINKED_OBJECT#]" ></div>
+</div>
+
+
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_PROPERTY#> (status):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_property" id="linked_property" value="[#LINKED_PROPERTY#]" ></div>
+</div>
+
+[#module name="linkedobject" object_field="linked_object" property_field="linked_property"#]
 
 
 
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Срок хранения(дней):
+			</label>
+			<div class="col-lg-4">
+<select name="srok" class="form-control" style="width: 260px;" align="right">
+<option[#if SROK=""#] selected[#endif#]>7
+<option[#if SROK="14"#] selected[#endif#]>14
+<option[#if SROK="30"#] selected[#endif#]>30
+<option[#if SROK="60"#] selected[#endif#]>60
+<option[#if SROK="120"#] selected[#endif#]>120
+<option[#if SROK="365"#] selected[#endif#]>365
+</select>
 
+</div></div>
 
 
 <!-- LINKED_OBJECT (varchar) -->
@@ -194,7 +146,7 @@ IP-адрес ESPCounter: </label>
 <input type="hidden" name="id" value="<#ID#>">
 <input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
 <input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
-<input type="hidden" name="mode" value="updatedevices">
+<input type="hidden" name="mode" value="update">
 <input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
 </div>
 
