@@ -132,7 +132,27 @@
 
 </div></div>
 
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
 
+
+	<label class="col-lg-3 control-label">Отправлять в telegram?&nbsp;&nbsp;
+ <input type="checkbox" name="sendtelegram" value="1"[#if SENDTELEGRAM="1"#] checked[#endif#]> 
+</label>
+</div>
+<br>
+<div class="form-group">
+	<label class="col-lg-3 control-label">Отправлять в SLAKS?&nbsp;&nbsp;
+ <input type="checkbox" name="sendslaks" value="1"[#if SENDSLAKS="1"#] checked[#endif#]> 
+</label>
+</div>
+<br>
+
+		<div class="form-group">
+	<label class="col-lg-3 control-label">Отправлять на email?&nbsp;&nbsp;
+ <input type="checkbox" name="sendemail" value="1"[#if SENDEMAIL="1"#] checked[#endif#]> 
+</label>
+</div>
 <!-- LINKED_OBJECT (varchar) -->
 
 <div class="form-actions">
@@ -153,7 +173,7 @@
 
 </fieldset>
 </form>
-
+<br>
 <img src="../cms/cached/nvr/last/cam[#ID#].jpg" width="60%"  ></a> &nbsp;&nbsp; &nbsp;&nbsp;
 
 [#endif#]
