@@ -114,8 +114,11 @@ $folderdata=$arcdate;
 
 //echo "fd:".$folderdata;
 $out['ARCDATE']=$folderdata;	
-$files=$this->getfiles($savepath,$folderdata);
-//print_r($files);
+$gfolder=$savepath.'/'.$folderdata."/";
+echo $gfolder."<br>";
+
+$files=$this->getfiles($gfolder);
+print_r($files);
 $out['FILES']=$files;
 
 }
