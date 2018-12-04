@@ -45,6 +45,10 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    global $srok;
    $rec['SROK']=$srok;
 
+   global $sec;
+   $rec['SEC']=$sec;
+
+
   global $ipaddr;
    $rec['IPADDR']=$ipaddr;
 
