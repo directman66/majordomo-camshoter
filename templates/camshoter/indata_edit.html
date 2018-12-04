@@ -64,23 +64,23 @@
       [#if TYPE=""||TYPE="snapshot" #]
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
-			Метод сохранения:
+			Формат фото:
 			</label>
 			<div class="col-lg-4">
                         <select name="method" class="form-control" style="width: 260px;" align="right">
                         <option[#if METHOD=""#] selected[#endif#]>jpeg
                         </select>
                         </div></div>
-                        [#endif#]
 
-       [#if TYPE="rtsp" #]
+
+	       [#endif TYPE#]
+
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
-			Продолжительность видео:
+			Формат видео:
 			</label>
 			<div class="col-lg-4">
                         <select name="method" class="form-control" style="width: 260px;" align="right">
-<!--                        <option[#if METHOD="mov"#] selected[#endif#]>mov[#endif#]-->
                         <option[#if METHOD="mp4"#] selected[#endif#]>mp4[#endif#]
                         </select>
                         </div></div>
@@ -90,20 +90,18 @@
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
-			Срок хранения(дней):
+			Длительность:
 			</label>
 			<div class="col-lg-4">
-<select name="sec" class="form-control" style="width: 260px;" align="right">
-<option[#if SEC=""#] selected[#endif#]>5
-<option[#if SEC="10"#] selected[#endif#]>10
-<option[#if SEC="15"#] selected[#endif#]>15
-<option[#if SEC="30"#] selected[#endif#]>30
-<option[#if SEC="60"#] selected[#endif#]>60
+			<select name="sec" class="form-control" style="width: 260px;" align="right">
+			<option[#if SEC=""#] selected[#endif#]>5
+			<option[#if SEC="10"#] selected[#endif#]>10
+			<option[#if SEC="15"#] selected[#endif#]>15
+			<option[#if SEC="30"#] selected[#endif#]>30
+			<option[#if SEC="60"#] selected[#endif#]>60
+			</select></div></div>
 
-</select>
 
-</div></div>
-[#endif#]
 
 
 
