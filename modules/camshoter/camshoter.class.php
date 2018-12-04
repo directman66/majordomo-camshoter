@@ -275,40 +275,62 @@ $sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LI
 //для теста вызовем нужный метод датчика движения
 //cm('Motion11.motionDetected');
 
-
-
-
-if ($properties[$i]['TYPE']=='snapshot')
-{
-
-$image_url=$properties[$i]['URL'];
-
-//   sg('test.camshoter',  $properties['TYPE']);
-
-
 $savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/';
-//   sg('test.camshoter', $savepath);
-
-
  if (!file_exists($savepath)) {
 mkdir($savepath, 0777, true);}
-
-
 $savelast=ROOT."cms/cached/nvr/last/";
  if (!file_exists($savelast)) {
 mkdir($savelast, 0777, true);}
 
 
+
+
+if ($properties[$i]['TYPE']=='snapshot')
+{
+$iam='img';
+$image_url=$properties[$i]['URL'];
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
-
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
-
-
 
 $result=getURL($image_url,0);
 SaveFile($savename, $result);
 SaveFile($savenamelast, $result);
+}
 
+if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mov'))
+{
+$iam='video';
+$url=$properties[$i]['URL'];
+$sec=$properties[$i]['SEC'];
+$savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mov"; // куда сохранять
+$savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
+
+//windows
+//exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i rtsp://192.168.2.89:554/12 -t 5 -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -vf scale=w=640:h=480:force_original_aspect_ratio=decrease -r 15 C:/_majordomo/htdocs/cached/img/out.mp4'); 
+//linux
+exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -mov  -an -r 15 '.$savename); 
+exec('ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamelast); 
+}
+
+
+if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mp4'))
+{
+$iam='video';
+$url=$properties[$i]['URL'];
+$sec=$properties[$i]['SEC'];
+$savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mp4"; // куда сохранять
+$savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
+
+//windows
+//exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i rtsp://192.168.2.89:554/12 -t 5 -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -vf scale=w=640:h=480:force_original_aspect_ratio=decrease -r 15 C:/_majordomo/htdocs/cached/img/out.mp4'); 
+//linux
+exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+exec('ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamelast); 
+
+
+}
+
+///отправка в телеграм
 if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
 ($properties[$i]['SENDTELEGRAM']=1))
 
@@ -317,9 +339,11 @@ if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
 $text='Зафиксировано движение '.$properties[$i]['TITLE'];
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
-$telegram_module->sendImageToAll($savename,$text);
+if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
+if ($iam=='video') {$telegram_module->sendVideoToAll($savename,$text);}
+
 }
-}
+
 
 
 	 }
@@ -413,6 +437,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: SENDTELEGRAM int(1) 
  camshoter_devices: SENDEMAIL int(1) 
  camshoter_devices: SENDSLAKS int(1) 
+ camshoter_devices: SEC int(1) 
  camshoter_devices: COUNT int(10) 
  camshoter_devices: SIZE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: LASTPING datetime
