@@ -324,8 +324,8 @@ $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохр
 //windows
 //exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i rtsp://192.168.2.89:554/12 -t 5 -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -vf scale=w=640:h=480:force_original_aspect_ratio=decrease -r 15 C:/_majordomo/htdocs/cached/img/out.mp4'); 
 //linux
-exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
-exec('ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamelast); 
+exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamelast); 
 
 
 }
