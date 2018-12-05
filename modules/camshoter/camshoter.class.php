@@ -443,7 +443,6 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: TS varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SROK varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: TYPE varchar(100) NOT NULL DEFAULT ''
- camshoter_devices: TS varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: URL varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SENDTELEGRAM int(1) 
