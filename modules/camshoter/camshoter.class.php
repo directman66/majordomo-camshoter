@@ -567,7 +567,7 @@ $aryRange=array_reverse($aryRange);
 
 
 
-
+///////список файлов папки
 function getfiles($dir) {
 
  $files = array();
@@ -579,13 +579,13 @@ $upfoler=explode('/',$dir)[7];
 $upfoler1=explode('/',$dir)[6];
 //$files[] =array("FILE"=>$dir."/".filemtime("$dir/$v"));
 //$files[] =array("FILE"=>$dir."/".$v);
-if (($v<>"")&&($v<>".")&&($v<>"..")
+if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 //&&(strpos($v,$fdate)>0
 )
 
 
 {
-$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v);
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4' );
 }
 }
 return $files;
