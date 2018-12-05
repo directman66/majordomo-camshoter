@@ -1,0 +1,167 @@
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<table>
+<tr><td></tr></tr>
+</table>
+
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   TITLE:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" id="title"> 
+<small>Название камеры, например "Камера в коридоре" </small>
+</div> 
+</div>
+
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Тип потока:
+			</label>
+			<div class="col-lg-4">
+<select name="type" class="form-control" style="width: 260px;" align="right">
+<option[#if TYPE=""#] selected[#endif#]>snapshot
+<option[#if TYPE="rtsp"#] selected[#endif#]>rtsp
+</select>
+
+</div></div>
+
+      [#if TYPE=""||TYPE="snapshot" #]
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Формат фото:
+			</label>
+			<div class="col-lg-4">
+                        <select name="method" class="form-control" style="width: 260px;" align="right">
+                        <option[#if METHOD=""#] selected[#endif#]>jpeg
+                        </select>
+                        </div></div>
+
+
+	       [#endif TYPE#]
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Формат видео:
+			</label>
+			<div class="col-lg-4">
+                        <select name="method" class="form-control" style="width: 260px;" align="right">
+                        <option[#if METHOD="mp4"#] selected[#endif#]>mp4[#endif#]
+                        </select>
+                        </div></div>
+                        
+
+
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Длительность:
+			</label>
+			<div class="col-lg-4">
+			<select name="sec" class="form-control" style="width: 260px;" align="right">
+			<option[#if SEC=""#] selected[#endif#]>5
+			<option[#if SEC="10"#] selected[#endif#]>10
+			<option[#if SEC="15"#] selected[#endif#]>15
+			<option[#if SEC="30"#] selected[#endif#]>30
+			<option[#if SEC="60"#] selected[#endif#]>60
+			</select></div></div>
+
+
+
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   URL:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="url" value="[#URL#]" id="url"> 
+<small><small>URL камеры (snapshot, rtsp) </small></small>
+</div> 
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   IPADDR:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr"> 
+<small><small>IP адрес  камеры </small></small>
+</div> 
+</div>
+
+
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_OBJECT#> (датчик движения):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_object" id="linked_object"  value="[#LINKED_OBJECT#]" ></div>
+</div>
+
+
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_PROPERTY#> (status):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_property" id="linked_property" value="[#LINKED_PROPERTY#]" ></div>
+</div>
+
+[#module name="linkedobject" object_field="linked_object" property_field="linked_property"#]
+
+
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+			Срок хранения(дней):
+			</label>
+			<div class="col-lg-4">
+<select name="srok" class="form-control" style="width: 260px;" align="right">
+<option[#if SROK=""#] selected[#endif#]>7
+<option[#if SROK="14"#] selected[#endif#]>14
+<option[#if SROK="30"#] selected[#endif#]>30
+<option[#if SROK="60"#] selected[#endif#]>60
+<option[#if SROK="120"#] selected[#endif#]>120
+<option[#if SROK="365"#] selected[#endif#]>365
+</select>
+
+</div></div>
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+
+
+	<label class="col-lg-3 control-label">Отправлять в telegram?&nbsp;&nbsp;
+ <input type="checkbox" name="sendtelegram" value="1"[#if SENDTELEGRAM="1"#] checked[#endif#]> 
+</label>
+</div>
+<br>
+<div class="form-group">
+	<label class="col-lg-3 control-label">Отправлять в SLACK?&nbsp;&nbsp;
+ <input type="checkbox" name="sendslaks" value="1"[#if SENDSLAKS="1"#] checked[#endif#]> 
+</label>
+</div>
+<br>
+
+		<div class="form-group">
+	<label class="col-lg-3 control-label">Отправлять на email?&nbsp;&nbsp;
+ <input type="checkbox" name="sendemail" value="1"[#if SENDEMAIL="1"#] checked[#endif#]> 
+</label>
+</div>
+<!-- LINKED_OBJECT (varchar) -->
+
+<div class="form-actions">
+ [#if ID!=""#]
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+ [#else ID#]
+ <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
+ [#endif ID#]
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="update">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="devparam">
+</div>
+
+
+</fieldset>
+</form>
+<br>
+<img src="../cms/cached/nvr/last/cam[#ID#].jpg" width="60%"  ></a> &nbsp;&nbsp; &nbsp;&nbsp;
