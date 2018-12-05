@@ -39,7 +39,9 @@
                         </div></div>
 
 
-	       [#endif TYPE#]
+	       [#endif#]
+
+      [#if TYPE="rtsp"#]
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
@@ -47,7 +49,7 @@
 			</label>
 			<div class="col-lg-4">
                         <select name="method" class="form-control" style="width: 260px;" align="right">
-                        <option[#if METHOD="mp4"#] selected[#endif#]>mp4[#endif#]
+                        <option[#if METHOD="mp4"#] selected[#endif#]>mp4
                         </select>
                         </div></div>
                         
@@ -67,7 +69,7 @@
 			<option[#if SEC="60"#] selected[#endif#]>60
 			</select></div></div>
 
-
+		[#endif#]
 
 
 
