@@ -1,5 +1,5 @@
 <table border=0><tr><td>
-<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#]</b>
+<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#])</b>
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 </td></tr>
 <tr><td>
@@ -23,11 +23,20 @@
 <tr><td>
 
 
+[#if METHOD="mp4"#]
+[#begin FILES#]
+<a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='../cms/cached/nvr/[#FILEMP4#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
+[#end FILES#]
+[#endif#]
 
+[#if METHOD="jpeg"#]
 [#begin FILES#]
 <a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='../cms/cached/nvr/[#FILE#]' >
 <img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
 [#end FILES#]
+[#endif#]
+
 </td></tr>
 
 <tr><td>
