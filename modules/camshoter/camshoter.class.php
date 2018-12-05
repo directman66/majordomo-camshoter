@@ -170,6 +170,12 @@ $this->getfoldersize($this->id);
 }
 
 
+ if ($this->view_mode=='home') {
+   $this->redirect("?");
+}
+
+
+
 
  if ($this->view_mode=='indata_del') {
    $this->delete($this->id);
@@ -347,12 +353,12 @@ if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
 ($properties[$i]['SENDTELEGRAM']=1))
 
  {	 
-
+$fsize=filesize($savename);
 $text='Зафиксировано движение '.$properties[$i]['TITLE'];
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
-if ($iam=='video') {$telegram_module->sendVideoToAll($savename,$text);}
+if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
 
 }
 
