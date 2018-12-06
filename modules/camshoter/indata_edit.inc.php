@@ -58,7 +58,7 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    $rec['METHOD']=$method;
 
    global $enable;
-   $rec['ENABLE']=$enable
+   $rec['ENABLE']=$enable;
 
 
 
