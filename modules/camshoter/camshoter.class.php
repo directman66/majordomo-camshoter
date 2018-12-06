@@ -19,7 +19,7 @@ class camshoter extends module {
 */
 function camshoter() {
   $this->name="camshoter";
-  $this->title="camshoter";
+  $this->title="CAMshoter";
   $this->module_category="<#LANG_SECTION_APPLICATIONS#>";
   $this->checkInstalled();
 }
@@ -272,7 +272,7 @@ $sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LI
    $total=count($properties);
    if ($total) {
     for($i=0;$i<$total;$i++) {
-	 if($properties[$i]['ID']) {
+	 if(($properties[$i]['ID'])&&($properties[$i]['ENABLE'])==1) {
 //		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], (int)!$value);
 //	 } else { 
 //		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], $value);
