@@ -57,6 +57,11 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    global $method;
    $rec['METHOD']=$method;
 
+   global $enable;
+   $rec['ENABLE']=$enable
+
+
+
 
   global $linked_object;
   global $linked_property;
