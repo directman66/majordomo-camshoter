@@ -57,6 +57,10 @@
 
   if ($this->tab=='devcount') {
 
+
+
+
+
 $iddev=$this->id;
 $date1=date('Y-m-d');
 $date2=strtotime("-$days day");
@@ -66,6 +70,7 @@ $date2=strtotime("-$days day");
 $arcar=$this->createDateRangeArray(date('Y-m-d',$date2), $date1);
 //print_r($arcar);
 $out['ARCDATES']=$arcar;
+
 
 
 
@@ -109,24 +114,27 @@ if (!$arcdate)  {$folderdata=date('Y-m-d');
 $folderdata=$arcdate;
 //echo "no";
 }
-
-//$folderdata=date('Ymd');
-
-//echo "fd:".$folderdata;
 $out['ARCDATE']=$folderdata;	
 $gfolder=$savepath.'/'.$folderdata."/";
 //echo $gfolder."<br>";
 
 $files=$this->getfiles($gfolder);
 //print_r($files);
+//jpeg
 $out['FILES']=$files;
+
+
+
+
+// $this->redirect("?view_mode=indata_edit&tab=devcount&id=".$this->id);
+
 
 }
 
 
 
-  } 
 
+  } 
 
 
 
