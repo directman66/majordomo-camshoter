@@ -490,6 +490,13 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
 
 
+ camshoter_recognize: ID int(10) unsigned NOT NULL auto_increment
+ camshoter_recognize: CAMID int(1) 
+ camshoter_recognize: UPDATED datetime
+ camshoter_recognize: FILENAME varchar(100) NOT NULL DEFAULT ''
+ camshoter_recognize: ANSWER varchar(1000) NOT NULL DEFAULT ''
+
+
 
 EOD;
   parent::dbInstall($data);
@@ -680,6 +687,18 @@ function show_size($f,$format=true)
 
 
 
+
+function mailvision_detect($file)  
+{  
+
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+$token=$cmd_rec['value'];
+$url = "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token=$token";
+$cmd=' curl -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
+$a=shell_exec($cmd); 
+return a;
+
+}
 
 
 //получение названий файлов
