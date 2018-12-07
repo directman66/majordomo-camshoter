@@ -153,15 +153,45 @@ $arrayOfDates = array();
 $this->searchdevices($out, $this->id);
 
 
+ if ($this->tab=='settings') {
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+$out['VISION_TOKEN']=$cmd_rec['value'];
+}
+
 
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
-
-
-
-
  }
+
+
+
+
+//echo "mode ".$this->mode."::".$this->tab;
+  if (($this->mode=='update')&&($this->tab=='settings')) {
+//  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+ 
+   global $vision_token;
+ //  $rec['TITLE']=$vision_token;
+
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+
+if ($cmd_rec['value']) 
+{
+//echo "1";
+//SQLUpdate('camshoter_config', cmd_rec);						
+SQLExec("update camshoter_config set value='".$vision_token."' where parametr='VISION_TOKEN'");
+}
+else
+{
+//echo "2";
+$cmd_rec['parametr'] = 'VISION_TOKEN';
+$cmd_rec['value'] = $vision_token;		 
+SQLInsert('camshoter_config', $cmd_rec);	
+}
+ $this->redirect("?tab=settings");
+
+}
 
 
  if ($this->view_mode=='updatesize') {
@@ -287,10 +317,6 @@ mkdir($savepath, 0777, true);}
 $savelast=ROOT."cms/cached/nvr/last/";
  if (!file_exists($savelast)) {
 mkdir($savelast, 0777, true);}
-
-
-
-
 if ($properties[$i]['TYPE']=='snapshot')
 {
 $iam='img';
@@ -302,23 +328,6 @@ $result=getURL($image_url,0);
 SaveFile($savename, $result);
 SaveFile($savenamelast, $result);
 }
-/*
-if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mov'))
-{
-$iam='video';
-$url=$properties[$i]['URL'];
-$sec=$properties[$i]['SEC'];
-$savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mov"; // куда сохранять
-$savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
-
-//windows
-//exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i rtsp://192.168.2.89:554/12 -t 5 -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -vf scale=w=640:h=480:force_original_aspect_ratio=decrease -r 15 C:/_majordomo/htdocs/cached/img/out.mp4'); 
-//linux
-exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -mov  -an -r 15 '.$savename); 
-exec('ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamelast); 
-}
-*/
-
 if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mp4'))
 {
 $iam='video';
@@ -327,32 +336,21 @@ $sec=$properties[$i]['SEC'];
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mp4"; // куда сохранять
 $savenamethumb=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
-
 //linux
-
 if (substr(php_uname(),0,5)=='Linux')  {
 exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //http://digilinux.ru/2010/10/21/how-to-split-frames-with-ffmpeg/
 exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
-
-
 }
 else 
 {
 //windows
-//exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i rtsp://192.168.2.89:554/12 -t 5 -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -vf scale=w=640:h=480:force_original_aspect_ratio=decrease -r 15 C:/_majordomo/htdocs/cached/img/out.mp4'); 
-
 exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
-//exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
 }
-
 copy($savenamethumb, $savenamelast);
-
-
-
 }
 
 ///отправка в телеграм
@@ -366,15 +364,11 @@ include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
 if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
-
 }
-
-
-
-	 }
 	 $properties[$i]['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties[$i]);
-    }
+	}
+  }
    }
  }
 
@@ -482,7 +476,7 @@ EOD;
    parent::dbInstall($data);
 
 
-
+/*
 $cmd_rec = SQLSelect("SELECT * FROM camshoter_config");
 if ($cmd_rec[0]['EVERY']) {
 null;
@@ -507,6 +501,7 @@ $par['parametr'] = 'DEBUG';
 $par['value'] = "";		 
 SQLInsert('camshoter_config', $par);	
 }
+*/
 }
 
 
