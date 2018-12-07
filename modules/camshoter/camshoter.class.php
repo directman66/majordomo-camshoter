@@ -299,10 +299,21 @@ $sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LI
 //   sg('test.camshoter',  $sql);
 //   sg('test.camshoter',  $properties['TYPE']);
 
+
+//никого дома нет статус
+$nobodyactive=gg('NobodyHomeMode.active');
+
    $total=count($properties);
    if ($total) {
     for($i=0;$i<$total;$i++) {
-	 if(($properties[$i]['ID'])&&($properties[$i]['ENABLE'])==1) {
+
+$body=1;
+
+if (($properties[$i]['SOMEBODYIGNORE']=='1')&& ($nobodyactive==0))
+{$body=0;} 
+else 
+{$body=1;} 
+	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)) {
 //		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], (int)!$value);
 //	 } else { 
 //		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], $value);
@@ -452,6 +463,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: TYPE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: URL varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
+ camshoter_devices: SOMEBODYIGNORE int(1) 
  camshoter_devices: SENDTELEGRAM int(1) 
  camshoter_devices: SENDEMAIL int(1) 
  camshoter_devices: SENDSLAKS int(1) 
