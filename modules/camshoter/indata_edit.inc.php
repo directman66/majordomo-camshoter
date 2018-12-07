@@ -62,6 +62,10 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    $rec['ENABLE']=$enable;
 
 
+   global $somebodyignore;
+   $rec['SOMEBODYIGNORE']=$somebodyignore;
+
+
 
 
   global $linked_object;
