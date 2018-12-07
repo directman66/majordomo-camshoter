@@ -121,6 +121,12 @@ function run() {
 function admin(&$out) {
 
 
+global $sizethmb;
+if (!$sizethmb) $sizethmb=200;
+$out['SIZETHMB1']=$sizethmb;
+
+
+
 
 //$out['arcdate']=date('Ymd');
 
@@ -162,6 +168,11 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
+ }
+
+
+ if ($this->mode=='confirm') {
+// $this->redirect("?view_mode=indata_edit&tab=devcount&id=".$this->id);
  }
 
 
@@ -219,6 +230,8 @@ $this->getfoldersize($this->id);
 //   $this->redirect("?data_source=$this->data_source&view_mode=node_edit&id=$pid&tab=indata");
    $this->redirect("?");
  }	
+
+
 
 
 
@@ -598,6 +611,10 @@ function getfiles($dir) {
 {
 $upfoler=explode('/',$dir)[7];
 $upfoler1=explode('/',$dir)[6];
+
+global $sizethmb;
+if (!$sizethmb) $sizethmb=200;
+
 //$files[] =array("FILE"=>$dir."/".filemtime("$dir/$v"));
 //$files[] =array("FILE"=>$dir."/".$v);
 if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
@@ -606,7 +623,7 @@ if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 
 
 {
-$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4' );
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb );
 }
 }
 return $files;
