@@ -24,6 +24,7 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
 */
 ///////////////////////
 
+
   $table_name='camshoter_devices';
 //  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id' and IPADDR='$ipaddr'");
 
