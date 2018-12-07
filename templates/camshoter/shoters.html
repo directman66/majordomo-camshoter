@@ -1,5 +1,5 @@
 <table border=0><tr><td>
-<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#])</b>
+<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#] )</b>
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 </td></tr>
 <tr><td>
@@ -11,6 +11,18 @@
 [#end ARCDATES#]
  </select>
 </td><td>
+
+<select name="sizethmb" class="form-control" style="width: 150px;" align="left">
+<option[#if SIZETHMB1=500#] selected[#endif#]>500
+<option[#if SIZETHMB1=400#] selected[#endif#]>400
+<option[#if SIZETHMB1=300#] selected[#endif#]>300
+<option[#if SIZETHMB1=200#] selected[#endif#]>200
+<option[#if SIZETHMB1=150#] selected[#endif#]>150
+<option[#if SIZETHMB1=100#] selected[#endif#]>100
+<option[#if SIZETHMB1=50#] selected[#endif#]>50
+</select>
+
+</td><td>       &nbsp;  &nbsp;  &nbsp; 
 <button type="submit" name="subm" value="Submit" class="btn btn-primary">Применить</button>
 <input type="hidden" name="view_mode" value="indata_edit">	
 <input type="hidden" name="mode" value="confirm">
@@ -26,14 +38,14 @@
 [#if METHOD="mp4"#]
 [#begin FILES#]
 <a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='../cms/cached/nvr/[#FILEMP4#]' >
-<img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
 [#end FILES#]
 [#endif#]
 
 [#if METHOD="jpeg"#]
 [#begin FILES#]
 <a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='../cms/cached/nvr/[#FILE#]' >
-<img src="../cms/cached/nvr/[#FILE#]" width="30%"  ></a> 
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
 [#end FILES#]
 [#endif#]
 
