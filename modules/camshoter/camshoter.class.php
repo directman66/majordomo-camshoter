@@ -55,6 +55,8 @@ function saveParams($data=0) {
 */
 function getParams() {
   global $id;
+  global $file;
+  global $teg;
   global $mode;
   global $view_mode;
   global $edit_mode;
@@ -211,6 +213,26 @@ $this->getfoldersize($this->id);
 }
 
 
+ if ($this->view_mode=='detect') {
+
+
+$file=ROOT.$this->id;
+$idd=substr(explode("/",$this->id)[4],3);
+echo $file;
+
+if  (strpos($file,'..')>0)
+
+ {$file=ROOT.substr($file,3);}
+sg('test.mjmk',$file);
+sg('test.mkjidd',$idd);
+sg('test.mkjteg',$this->teg);
+
+$this->mailvision_detect($file, $idd);
+$this->redirect("?tab=devcount");
+}
+
+
+
  if ($this->view_mode=='home') {
    $this->redirect("?");
 }
@@ -347,6 +369,7 @@ $iam='img';
 $image_url=$properties[$i]['URL'];
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
+$savenamethumb=$savename;
 
 $result=getURL($image_url,0);
 SaveFile($savename, $result);
@@ -391,6 +414,20 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 }
 	 $properties[$i]['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties[$i]);
+
+
+
+//..if ($iam=='img') {$detect$this->mailvision_detect($savename);}
+//if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
+
+$this->mailvision_detect($savenamethumb, $id);
+
+
+
+//$this->mailvision_detect($savenamelast);
+
+
+
 	}
   }
    }
@@ -454,6 +491,9 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 
 SQLExec('DROP TABLE IF EXISTS camshoter_devices');
 SQLExec('DROP TABLE IF EXISTS camshoter_config');
+SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
+
+
   parent::uninstall();
 
  }
@@ -489,21 +529,24 @@ SQLExec('DROP TABLE IF EXISTS camshoter_config');
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
 
-
- camshoter_recognize: ID int(10) unsigned NOT NULL auto_increment
- camshoter_recognize: CAMID int(1) 
- camshoter_recognize: UPDATED datetime
- camshoter_recognize: FILENAME varchar(100) NOT NULL DEFAULT ''
- camshoter_recognize: ANSWER varchar(1000) NOT NULL DEFAULT ''
-
-
-
 EOD;
   parent::dbInstall($data);
 
   $data = <<<EOD
  camshoter_config: parametr varchar(300)
  camshoter_config: value varchar(10000)  
+EOD;
+   parent::dbInstall($data);
+
+
+
+  $data = <<<EOD
+ camshoter_recognize: ID int(10) unsigned NOT NULL auto_increment
+ camshoter_recognize: CAMID int(1) 
+ camshoter_recognize: UPDATED datetime
+ camshoter_recognize: FILENAME varchar(100) NOT NULL DEFAULT ''
+ camshoter_recognize: ANSWER varchar(1000) NOT NULL DEFAULT ''
+
 EOD;
    parent::dbInstall($data);
 
@@ -613,6 +656,7 @@ function getfiles($dir) {
 
  $files = array();
 
+if (($dir)&&($dir<>"")){
  foreach (scandir($dir) as $v) 
 
 {
@@ -630,10 +674,14 @@ if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 
 
 {
-$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb );
+$sql="select * from camshoter_recognize where filename like '%".substr($v,0,-3)."%'";
+$meta=SqlSelectOne($sql)['ANSWER'];
+sg('test.meta',$sql);
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta  );
 }
 }
 return $files;
+}
 
 }
 
@@ -688,15 +736,45 @@ function show_size($f,$format=true)
 
 
 
-function mailvision_detect($file)  
+function mailvision_detect($file, $id)  
 {  
+
+//if  (strpos($file,'..')>0) {$file=ROOT.substr($file,3);}
+
+sg('test.cmsh',$file);
+
 
 $cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
 $token=$cmd_rec['value'];
-$url = "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token=$token";
+
+
+
+
+//$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_devices where ID='$id'");
+//$id=$cmd_rec['value'];
+
+
+
+$cmd_rec2 = SQLSelectOne("SELECT * FROM camshoter_recognize where FILENAME='$file'");
+
+
+
+//$url = "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token=$token";
 $cmd=' curl -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
 $a=shell_exec($cmd); 
-return a;
+
+$cmd_rec2['ANSWER']=$a;
+$cmd_rec2['FILENAME']=$file;
+$cmd_rec2['CAMID']=$id;
+$cmd_rec2['UPDATED']=date('Y-m-d H:i:s');
+
+echo $a;
+
+if (!$cmd_rec2['ID']) {
+SQLInsert('camshoter_recognize',$cmd_rec2); }
+else 
+{SQLUpdate(camshoter_recognize,$cmd_rec2); }
+//return a;
 
 }
 
