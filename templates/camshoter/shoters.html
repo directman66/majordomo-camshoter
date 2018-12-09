@@ -1,17 +1,20 @@
-<table border=0><tr><td>
-<b>Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#] )</b>
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
-</td></tr>
-<tr><td>
-<select name="arcdate" class="form-control" style="width: 350px;" align="left">
+<table border=0><tr><td>
+Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#] )
+</td><td>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align="left">
+<select name="arcdate" class="form-control" style="width: 200px;" align="left">
 <!--  <option value=""><#LANG_SELECT#> -->
 
 [#begin ARCDATES#]
-<option value="[#DATE#]"[#if SELECTED#] selected[#endif#]>[#DATE#]
+<!--<option value="[#DATE#]"[#if SELECTED#] selected[#endif#]>[#DATE#]-->
+
+<option value="[#DATE#]"[#if SELECTED=DATE#] selected[#endif#]>[#DATE#]
 [#end ARCDATES#]
  </select>
 </td><td>
-
+ &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; размер миниатюры:</td><td>
 <select name="sizethmb" class="form-control" style="width: 150px;" align="left">
 <option[#if SIZETHMB1=500#] selected[#endif#]>500
 <option[#if SIZETHMB1=400#] selected[#endif#]>400
@@ -37,16 +40,18 @@
 
 [#if METHOD="mp4"#]
 [#begin FILES#]
-<a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='../cms/cached/nvr/[#FILEMP4#]' >
+<a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='[#META#]' >
 <img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="Распознать" >..</a>
+
 [#end FILES#]
 [#endif#]
 
 [#if METHOD="jpeg"#]
 [#begin FILES#]
-<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='../cms/cached/nvr/[#FILE#]' >
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#META#]' >
 <img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
-[#end FILES#]
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="Распознать" >..</a>
 [#endif#]
 
 </td></tr>
