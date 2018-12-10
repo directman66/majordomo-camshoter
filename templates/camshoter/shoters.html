@@ -33,28 +33,44 @@
 <input type="hidden" name="id" value="[#ID#]">
 </form>
 </td></tr>
-</table>
-<table>
-<tr><td>
 
+
+<table border=0>
+<tr><td>
 
 [#if METHOD="mp4"#]
 [#begin FILES#]
+<table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
 <a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='[#META#]' >
-<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
-<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="Распознать" >..</a>
-
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
+</td></tr>
+<td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
+</a>
+</td></tr>
+</table>
 [#end FILES#]
+
 [#endif#]
 
 [#if METHOD="jpeg"#]
 [#begin FILES#]
+<table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
 <a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#META#]' >
-<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]"  ></a> 
-<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="Распознать" >..</a>
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
+</td></tr>
+<td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
+</a>
+</td></tr>
+</table>
+[#end FILES#]
 [#endif#]
 
-</td></tr>
 
 <tr><td>
 
