@@ -666,14 +666,29 @@ $aryRange=array_reverse($aryRange);
 ///////список файлов папки
 function getfiles($dir) {
 
+ if (substr(php_uname(),0,5)=='Linux')  {
+$dir=str_replace(chr(92),"/",$dir);
+$upfoler=explode('/',$dir)[7];
+$upfoler1=explode('/',$dir)[6];
+}
+else 
+{
+$dir=str_replace('/',chr(92),$dir);    
+$upfoler=explode(chr(92),$dir)[7];
+$upfoler1=explode(chr(92),$dir)[6];
+
+}
+
+
+
  $files = array();
 
 if (($dir)&&($dir<>"")){
  foreach (scandir($dir) as $v) 
 
 {
-$upfoler=explode('/',$dir)[7];
-$upfoler1=explode('/',$dir)[6];
+//$upfoler=explode('/',$dir)[7];
+//$upfoler1=explode('/',$dir)[6];
 
 global $sizethmb;
 if (!$sizethmb) $sizethmb=200;
