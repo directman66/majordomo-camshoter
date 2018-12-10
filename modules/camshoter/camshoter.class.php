@@ -372,8 +372,20 @@ $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохр
 $savenamethumb=$savename;
 
 $result=getURL($image_url,0);
+
+if ($result) {
 SaveFile($savename, $result);
 SaveFile($savenamelast, $result);
+
+}else {
+$result=file_get_contents($url); //скачиваем картинку с камеры 
+file_put_contents($savename, $result);
+file_put_contents($savenamelast, $result);
+}
+
+
+
+
 }
 if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mp4'))
 {
