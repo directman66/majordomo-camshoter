@@ -43,11 +43,16 @@
 <tbody>
 [#begin RESULT#]
 
+
+
+
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
   [#ID#]
  <br>
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
   [#TITLE#]
  <br>
 
@@ -55,12 +60,14 @@
  </td>
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
 <!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
 [#TYPE#]
 
  </td>
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
 <!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
 [#IPADDR#]
 
@@ -83,6 +90,7 @@
 
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
 <!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
    <a href="?view_mode=sendaction&id=[#LINKED_OBJECT#].[#LINKED_PROPERTY#]&tab=devcont" class="btn btn-default" title="Сымитировать сработку :=)">
 [#LINKED_OBJECT#].[#LINKED_PROPERTY#]
@@ -91,6 +99,7 @@
 
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
    <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#SIZE#]</a>
 
  </td>
@@ -99,6 +108,7 @@
 
 
  <td style="vertical-align:middle">
+[#if ENABLE=="1"#]<font color="black">[#else#]<font color="C0C3CC">[#endif#]
  [#UPDATED#]
  </td>
 
@@ -109,6 +119,7 @@
 
  
  <td style="vertical-align:middle" width="1%" nowrap>
+
   <div style="width:120px">
   [#if "<#ACTION#>"=="admin"#]
    <a href="?view_mode=indata_edit&id=[#ID#]&tab=devparam" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
