@@ -223,9 +223,9 @@ echo $file;
 if  (strpos($file,'..')>0)
 
  {$file=ROOT.substr($file,3);}
-sg('test.mjmk',$file);
-sg('test.mkjidd',$idd);
-sg('test.mkjteg',$this->teg);
+//sg('test.mjmk',$file);
+//sg('test.mkjidd',$idd);
+//sg('test.mkjteg',$this->teg);
 
 $this->mailvision_detect($file, $idd);
 $this->redirect("?tab=devcount");
@@ -675,9 +675,81 @@ if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 
 {
 $sql="select * from camshoter_recognize where filename like '%".substr($v,0,-3)."%'";
-$meta=SqlSelectOne($sql)['ANSWER'];
-sg('test.meta',$sql);
-$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta  );
+$meta1=SqlSelectOne($sql)['ANSWER'];
+
+$meta=$meta1;
+
+$json=$meta1;
+
+$meta2=json_decode($meta1, true);
+
+
+//$meta3=$meta2['body']['object_labels']['labels'][0]['rus'];
+//$meta3=$meta2['status'];
+//$meta3=$meta2->body->object_labels->status;
+$meta3=$meta2['body']['object_labels'][0]['labels'];
+$meta="";
+   foreach ($meta3 as $value)
+
+{
+$meta.=','.$value['rus'];
+//print_r($value);
+}
+
+$meta=substr($meta,1);
+
+
+
+//echo $meta3;
+///print_r($meta3);
+
+
+
+/*
+
+$meta2=json_decode($meta1);
+
+//$meta=$meta2['body']['labels']['rus'];
+//$meta=$meta2->{'body'};
+//echo $meta;
+
+$error=0;
+
+//      $src=$meta2['body']['object_labels'];
+    $src=$meta2->{'body'}->{'object_labels'};
+print_r($src);
+//    $src=$meta2;
+    if ($error==0) {
+        foreach ($src as $key=> $value
+) {
+
+            if (is_array($value)) {
+                foreach ($value as $key2=> $value2) {
+
+//                        $sql[$key.'_'.$key2]=$value2;
+//echo $key.'_'.$key2.':'.$value2.'<br>';
+//       if (!is_array($value2)) 
+//echo $value2.'<br>';
+
+
+                }
+            } else {
+
+//                    $sql[$key]=$value;
+//if (!is_array($value)) 
+//echo $key.':'.$value.'<br>';
+//echo $value.'<br>';
+
+            }
+        }
+    }
+
+
+//print_r($meta2);
+
+*/
+//sg('test.meta',$meta);
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta, 'JSON'=>$json );
 }
 }
 return $files;
@@ -741,7 +813,7 @@ function mailvision_detect($file, $id)
 
 //if  (strpos($file,'..')>0) {$file=ROOT.substr($file,3);}
 
-sg('test.cmsh',$file);
+//sg('test.cmsh',$file);
 
 
 $cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
