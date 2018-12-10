@@ -30,9 +30,12 @@
 <table  align=center class="table table-striped">
 <thead>
 <tr>
+<th>ID</th>  
 <th>Название</th>  
+<th>Тип</th>  
+<th>IP</th>  
 <th>Online</th>    
-<th>Количество снимков</th>    
+<th>Привязка</th>    
 <th>Хранилище</th>    
  <th>Обновлено</th>
 </tr>
@@ -41,11 +44,30 @@
 [#begin RESULT#]
 
  <td style="vertical-align:middle">
+  [#ID#]
+ <br>
+
+ <td style="vertical-align:middle">
   [#TITLE#]
  <br>
 
 
  </td>
+
+ <td style="vertical-align:middle">
+<!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
+[#TYPE#]
+
+ </td>
+
+ <td style="vertical-align:middle">
+<!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
+[#IPADDR#]
+
+ </td>
+
+
+
 
  
  <td style="vertical-align:middle">
@@ -61,7 +83,8 @@
 
 
  <td style="vertical-align:middle">
-   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a>
+<!--   <a href="?view_mode=updatesize&id=[#ID#]&tab=config" class="btn btn-default" title="update">[#COUNT#]</a> -->
+[#LINKED_OBJECT#].[#LINKED_PROPERTY#]
 
  </td>
 
