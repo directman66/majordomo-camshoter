@@ -238,6 +238,12 @@ $this->redirect("?tab=devcount");
 }
 
 
+ if ($this->view_mode=='sendaction') {
+sg($this->id, 1);
+$this->redirect("?");
+}
+
+
 
 
  if ($this->view_mode=='indata_del') {
@@ -397,7 +403,17 @@ $savenamethumb=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
 //linux
 if (substr(php_uname(),0,5)=='Linux')  {
-exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+//exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+//  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec ac3 -an -r 15 '.$savename); 
+//  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec pcm_s16le -an -r 15 '.$savename); 
+  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename); 
+
+
+
+
+
+//-vcodec copy -b 64k -acodec ac3
+
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //http://digilinux.ru/2010/10/21/how-to-split-frames-with-ffmpeg/
