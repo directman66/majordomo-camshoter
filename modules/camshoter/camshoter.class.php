@@ -406,9 +406,14 @@ if (substr(php_uname(),0,5)=='Linux')  {
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
 //  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec ac3 -an -r 15 '.$savename); 
 //  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec pcm_s16le -an -r 15 '.$savename); 
+if  ($properties[$i]['FFMPEGCMD'])
+{
   exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename); 
-
-
+ } else
+{
+$cmd='timeout -s INT 60s '.str_replace('#savename',$savename, str_replace('#sec',$sec, $properties[$i]['FFMPEGCMD']));
+exec($cmd); 
+}
 
 
 
@@ -543,6 +548,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
  camshoter_devices: SROK varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: TYPE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: URL varchar(100) NOT NULL DEFAULT ''
+ camshoter_devices: FFMPEGCMD varchar(200) NOT NULL DEFAULT ''
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SOMEBODYIGNORE int(1) 
  camshoter_devices: SENDTELEGRAM int(1) 
