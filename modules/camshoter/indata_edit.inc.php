@@ -65,6 +65,10 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    global $somebodyignore;
    $rec['SOMEBODYIGNORE']=$somebodyignore;
 
+   global $ffmpegcmd;
+   $rec['FFMPEGCMD']=$ffmpegcmd;
+
+
 
 
 
