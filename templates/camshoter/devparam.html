@@ -42,6 +42,9 @@
 </div></div>
 
       [#if TYPE=""||TYPE="snapshot" #]
+
+
+
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
 			Формат фото:
@@ -56,6 +59,8 @@
 	       [#endif#]
 
       [#if TYPE="rtsp"#]
+
+
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
@@ -83,7 +88,20 @@
 			<option[#if SEC="60"#] selected[#endif#]>60
 			</select></div></div>
 
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   FFMEGCMD:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="ffmpegcmd" value="[#FFMPEGCMD#]" id="ffmpegcmd"> 
+<small><small>Индивидуальные настройки для ffmpeg, заполняется, только  если в обычном режиме не получается записать фото или видео.</small></small><br>
+<small><small>пример записи: ffmpeg -y -i #url -t #sec -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 #savename</small></small>
+</div> 
+</div>
+
+
 		[#endif#]
+
+
 
 
 
@@ -92,7 +110,16 @@
    URL:(*)
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="url" value="[#URL#]" id="url"> 
-<small><small>URL камеры (snapshot, rtsp) </small></small>
+<small><small>URL камеры (snapshot, rtsp) </small></small><br>
+      [#if TYPE="snapshot"#]
+<small><small>пример для snapshot: http://login:password@192.168.1.32/webcapture.jpg?command=snap&channel=0</small></small><br>
+		[#endif#]
+      [#if TYPE="rtsp"#]
+<small><small>пример для rtsp:rtsp://192.168.1.32:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream </small></small><br>
+<small><small>пример для rtsp:rtsp://login:password@192.168.1.32:554/channel1 </small></small>
+		[#endif#]
+
+
 </div> 
 </div>
 
@@ -101,7 +128,7 @@
    IPADDR:(*)
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr"> 
-<small><small>IP адрес  камеры </small></small>
+<small><small>IP адрес  камеры, для определения доступности камеры </small></small>
 </div> 
 </div>
 
