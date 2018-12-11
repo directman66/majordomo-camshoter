@@ -719,6 +719,7 @@ if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 {
 $sql="select * from camshoter_recognize where filename like '%".substr($v,0,-3)."%'";
 $meta1=SqlSelectOne($sql)['ANSWER'];
+if ($meta1){
 
 $meta=$meta1;
 
@@ -741,7 +742,7 @@ $meta.=','.$value['rus'];
 
 $meta=substr($meta,1);
 
-
+}
 
 //echo $meta3;
 ///print_r($meta3);
