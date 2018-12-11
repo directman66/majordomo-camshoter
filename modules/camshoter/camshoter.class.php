@@ -882,7 +882,12 @@ $cmd_rec2 = SQLSelectOne("SELECT * FROM camshoter_recognize where FILENAME='$fil
 
 
 //$url = "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token=$token";
+if (substr(php_uname(),0,5)=='Linux')  {
 $cmd=' curl -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
+} else 
+{
+$cmd='C:\_majordomo\apps\curl.exe -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
+}
 $a=shell_exec($cmd); 
 
 $cmd_rec2['ANSWER']=$a;
