@@ -537,6 +537,7 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 //if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
 
 $this->mailvision_detect($savenamethumb, $id);
+$this->mailvision_detect_face($savenamethumb, $id);
 
 
 
