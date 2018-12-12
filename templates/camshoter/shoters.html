@@ -50,6 +50,16 @@
 [#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
 </a>
 </td></tr>
+
+<tr><td>
+<a  href="?view_mode=detecfaces&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#FACES#]" >
+[#if FACES=""#]..[#else#]<small><small>[#FACES#]</small></small>[#endif#]
+<!-- USER_ID (select) -->
+</a>
+</td></tr>
+
+
+
 </table>
 [#end FILES#]
 
@@ -59,7 +69,7 @@
 [#begin FILES#]
 <table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
 <tr><td>
-<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#JSON#]' >
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#META#]' >
 <img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
 </td></tr>
 <td>
