@@ -167,17 +167,64 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 }
 
 
+ if ($this->tab=='users') {
+
+
+
+$gfolder=ROOT."cms/cached/nvr/users/";
+$files=$this->getusers($gfolder);
+//print_r($files);
+//jpeg
+$out['FILES']=$files;
+
+}
+
+
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
  }
 
+echo "mode ".$this->mode."::".$this->tab;
+echo "<br>";
+echo "wiewmode ".$this->viewmode."::".$this->tab;
 
  if ($this->view_mode=='adduser') {
    $this->adduser($out, $this->id);
  }
 
 
+ if ($this->view_mode=='deluserfile') {
+$fn=ROOT.'cms/cached/nvr/'.$this->id;
+echo $fn;
+unlink($fn);
+
+$this->redirect("?tab=users");
+ }
+
+
+
+
+ if ($this->view_mode=='saveuser') {
+
+ global $filename;
+
+$filename=explode("/",$filename)[1];
+//echo $filename;
+  $rec=SQLSelectOne("SELECT * FROM camshoter_people WHERE FILENAME='$filename'");
+
+//  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+ global $selecteduser;
+echo $selecteduser;
+   $rec['PEOPLENAME']=sqlselectone('select * from users where ID='.$selecteduser)['NAME'];
+//   $rec['PEOPLENAME']='123';
+   $rec['USERID']=$selecteduser;
+   sqlupdate('camshoter_people', $rec);
+   $this->redirect("?tab=users");
+ }
+
+
+////////////////
  if ($this->mode=='confirm') {
 // $this->redirect("?view_mode=indata_edit&tab=devcount&id=".$this->id);
  }
@@ -185,7 +232,11 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 
 
 
-//echo "mode ".$this->mode."::".$this->tab;
+
+
+
+
+
   if (($this->mode=='update')&&($this->tab=='settings')) {
 //  $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
  
@@ -576,7 +627,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
  camshoter_devices: SROK varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: TYPE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: URL varchar(100) NOT NULL DEFAULT ''
- camshoter_devices: FFMPEGCMD varchar(200) NOT NULL DEFAULT ''
+ camshoter_devices: FFMPEGCMD varchar(300) NOT NULL DEFAULT ''
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SOMEBODYIGNORE int(1) 
  camshoter_devices: SENDTELEGRAM int(1) 
@@ -741,25 +792,15 @@ $upfoler=explode(chr(92),$dir)[7];
 $upfoler1=explode(chr(92),$dir)[6];
 
 }
-
-
-
  $files = array();
 
 if (($dir)&&($dir<>"")){
  foreach (scandir($dir) as $v) 
 
 {
-//$upfoler=explode('/',$dir)[7];
-//$upfoler1=explode('/',$dir)[6];
-
 global $sizethmb;
 if (!$sizethmb) $sizethmb=200;
-
-//$files[] =array("FILE"=>$dir."/".filemtime("$dir/$v"));
-//$files[] =array("FILE"=>$dir."/".$v);
 if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
-//&&(strpos($v,$fdate)>0
 )
 
 
@@ -791,55 +832,7 @@ $meta=substr($meta,1);
 
 }
 
-//echo $meta3;
-///print_r($meta3);
 
-
-
-/*
-
-$meta2=json_decode($meta1);
-
-//$meta=$meta2['body']['labels']['rus'];
-//$meta=$meta2->{'body'};
-//echo $meta;
-
-$error=0;
-
-//      $src=$meta2['body']['object_labels'];
-    $src=$meta2->{'body'}->{'object_labels'};
-print_r($src);
-//    $src=$meta2;
-    if ($error==0) {
-        foreach ($src as $key=> $value
-) {
-
-            if (is_array($value)) {
-                foreach ($value as $key2=> $value2) {
-
-//                        $sql[$key.'_'.$key2]=$value2;
-//echo $key.'_'.$key2.':'.$value2.'<br>';
-//       if (!is_array($value2)) 
-//echo $value2.'<br>';
-
-
-                }
-            } else {
-
-//                    $sql[$key]=$value;
-//if (!is_array($value)) 
-//echo $key.':'.$value.'<br>';
-//echo $value.'<br>';
-
-            }
-        }
-    }
-
-
-//print_r($meta2);
-
-*/
-//sg('test.meta',$meta);
 $files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta, 'JSON'=>$json );
 }
 }
@@ -847,6 +840,71 @@ return $files;
 }
 
 }
+
+
+function getusers($dir) {
+
+
+  $tempusers=SQLSelect("SELECT ID, NAME FROM users ORDER BY NAME");
+  $users_total=count($tempusers);
+  for($users_i=0;$users_i<$users_total;$users_i++) {
+//   $user_id_opt[$tmp[$users_i]['ID']]=$tmp[$users_i]['NAME'];
+//$users[]=$tempusers['NAME'];
+  }
+
+$users=$tempusers;
+
+//print_r($users);
+
+ if (substr(php_uname(),0,5)=='Linux')  {
+$dir=str_replace(chr(92),"/",$dir);
+$upfoler=explode('/',$dir)[7];
+$upfoler1=explode('/',$dir)[6];
+}
+else 
+{
+$dir=str_replace('/',chr(92),$dir);    
+$upfoler=explode(chr(92),$dir)[7];
+$upfoler1=explode(chr(92),$dir)[6];
+
+}
+ $files = array();
+
+if (($dir)&&($dir<>"")){
+ foreach (scandir($dir) as $v) 
+
+
+{
+$sizethmb=200;
+
+if (($v<>"")&&($v<>".")&&($v<>"..")
+//&&(strpos($v,'jpg')>0)
+)
+{
+$sql="select * from camshoter_people where FILENAME='$v'";
+$sqlzapr=SQLSelectOne($sql);
+$username=$sqlzapr['PEOPLENAME'];
+
+///$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3));
+$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'USERS'=>$users, 'USERNAME'=>$username);
+
+
+if (!$sqlzapr['ID'])
+
+{
+$sqlzapr['FILENAME']=$v;
+$sqlzapr['UPDATED']=date('Y-m-d H:i:s');
+sqlinsert('camshoter_people', $sqlzapr);
+}
+
+
+}}
+}
+return $files;
+
+
+}
+
 
 
 function getfoldersize($id) {
