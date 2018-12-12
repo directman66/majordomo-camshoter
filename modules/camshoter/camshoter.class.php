@@ -203,7 +203,7 @@ echo "<br>";
 echo "file2 ".$file2;
 
 copy($file1,$file2);
-//$this->redirect("?tab=users");
+$this->redirect("?tab=users");
  }
 
 
@@ -821,7 +821,7 @@ $upfoler1=explode(chr(92),$dir)[6];
 }
  $files = array();
 
-if (($dir)&&($dir<>"")){
+if (($dir)&&($dir<>"")&& (is_dir($dir))){
  foreach (scandir($dir) as $v) 
 
 {
@@ -892,7 +892,7 @@ if (($dir)&&($dir<>"")){
 
 
 {
-$sizethmb=200;
+$sizethmb=300;
 
 if (($v<>"")&&($v<>".")&&($v<>"..")
 //&&(strpos($v,'jpg')>0)
