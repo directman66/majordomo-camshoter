@@ -185,13 +185,21 @@ $out['FILES']=$files;
    $this->editdevices($out, $this->id);
  }
 
-echo "mode ".$this->mode."::".$this->tab;
-echo "<br>";
-echo "wiewmode ".$this->viewmode."::".$this->tab;
+//echo "mode ".$this->mode."::".$this->tab;
+//echo "<br>";
+//echo "wiewmode ".$this->viewmode."::".$this->tab;
 
  if ($this->view_mode=='adduser') {
    $this->adduser($out, $this->id);
+   $this->redirect("?tab=users");
  }
+
+
+ if ($this->view_mode=='obuchit') {
+   $this->vision_setface($this->id);
+   $this->redirect("?tab=users");
+ }
+
 
 
  if ($this->view_mode=='deluserfile') {
@@ -669,6 +677,7 @@ EOD;
  camshoter_people: UPDATED datetime
  camshoter_people: FILENAME varchar(100) NOT NULL DEFAULT ''
  camshoter_people: PEOPLENAME varchar(100) NOT NULL DEFAULT ''
+ camshoter_people: ANSWER varchar(1000) NOT NULL DEFAULT ''
  camshoter_people: USERID int(3) 
 
 
@@ -884,9 +893,10 @@ if (($v<>"")&&($v<>".")&&($v<>"..")
 $sql="select * from camshoter_people where FILENAME='$v'";
 $sqlzapr=SQLSelectOne($sql);
 $username=$sqlzapr['PEOPLENAME'];
+$userid=$sqlzapr['USERID'];
 
 ///$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3));
-$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'USERS'=>$users, 'USERNAME'=>$username);
+$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username);
 
 
 if (!$sqlzapr['ID'])
@@ -999,7 +1009,7 @@ echo $a;
 if (!$cmd_rec2['ID']) {
 SQLInsert('camshoter_recognize',$cmd_rec2); }
 else 
-{SQLUpdate(camshoter_recognize,$cmd_rec2); }
+{SQLUpdate('camshoter_recognize',$cmd_rec2); }
 //return a;
 
 }
@@ -1037,6 +1047,40 @@ function DirFilesR($dir)
 //  print_r($files);
   return count($files);  
   }
+
+
+
+function vision_setface($id)  
+{
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+$token=$cmd_rec['value'];
+
+
+
+$cmd=sqlselectOne("select * from camshoter_people where USERID='$id'");
+
+$file=ROOT."cms/cached/nvr/users/".$cmd['FILENAME'];;
+$peoplename=$cmd['PEOPLENAME'];
+
+if (substr(php_uname(),0,5)=='Linux')  {
+
+//curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=ххх" -F file_0=@examples/friends1.jpg  -F file_1=@examples/rachel-green.jpg -F meta='{"images":[{"name":"file_1"}, {"name":"file_0"}], "space":"1"}'
+
+$cmd=' curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"name":["'.$peoplename.'"],"images":[{"name":"file_0"}]}'."'";
+} else 
+{
+//$cmd='C:\_majordomo\apps\curl.exe -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
+}
+$a=shell_exec($cmd); 
+
+echo  $a;
+
+	$cmd['ANSWER']=$a;
+
+sqlupdate('camshoter_people',$cmd);
+
+return $a;
+}
 
 
 
