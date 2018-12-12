@@ -1,0 +1,74 @@
+
+
+
+
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<table border=0><tr><td>
+
+<input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+Путь к фотографии пользователя
+
+<input name="userfile" type="file" />
+
+</td><td>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align="left">
+
+</td><td>       &nbsp;  &nbsp;  &nbsp; 
+<button type="submit" name="subm" value="Submit" class="btn btn-primary">Добавить</button>
+<input type="hidden" name="view_mode" value="adduser">	
+<input type="hidden" name="mode" value="confirm">
+<input type="hidden" name="tab" value="users">
+<input type="hidden" name="id" value="[#ID#]">
+</form>
+</td></tr>
+
+
+<table border=0>
+<tr><td>
+
+[#if METHOD="mp4"#]
+[#begin FILES#]
+<table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
+<a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='[#JSON#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
+</td></tr>
+<td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
+</a>
+</td></tr>
+</table>
+[#end FILES#]
+
+[#endif#]
+
+[#if METHOD="jpeg"#]
+[#begin FILES#]
+<table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#JSON#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
+</td></tr>
+<td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
+</a>
+</td></tr>
+</table>
+[#end FILES#]
+[#endif#]
+
+
+<tr><td>
+
+<br><br>
+<a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a>
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+</td>
+
+
+</tr>
+</table>
