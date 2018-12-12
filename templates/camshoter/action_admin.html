@@ -26,6 +26,7 @@ padding: .3em 1em
 
 <br>
 <li [#if TAB=="" || TAB=="config" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=config"><span class="glyphicon glyphicon-list-alt"></span> Камеры</a></li>
+<li [#if TAB=="users" #] class="active" [#endif#]><a href="?view_mode=&tab=users"><span class="glyphicon glyphicon-cog"></span> Пользователи</a> </li>	
 <li [#if TAB=="settings" #] class="active" [#endif#]><a href="?view_mode=&tab=settings"><span class="glyphicon glyphicon-cog"></span> Настройки</a> </li>	
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
@@ -44,21 +45,8 @@ Degug:
 
  [#endif#]
 
-[#if TAB="param"#]
-<br>
-
-<table class="raz">
-<tr><td>
- [#module name="settings"  action="admin"  filter_name="appmercury"#]
-</td><td>
-<img src="../img/modules/[#MODEL#].png"  align="right" > 
-</td></tr></table>
-
-
-
-
- [#endif#]
 
 
 [#if TAB="help"#] [#inc help.html#] [#endif#]
 [#if TAB="settings"#] [#inc settings.html#] [#endif#]
+[#if TAB="users"#] [#inc users.html#] [#endif#]
