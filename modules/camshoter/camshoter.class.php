@@ -173,6 +173,11 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
  }
 
 
+ if ($this->view_mode=='adduser') {
+   $this->adduser($out, $this->id);
+ }
+
+
  if ($this->mode=='confirm') {
 // $this->redirect("?view_mode=indata_edit&tab=devcount&id=".$this->id);
  }
@@ -285,7 +290,15 @@ $this->rmRec($savepath);
  }
 
 
+
+ function adduser(&$out, $id) {
+echo "1";
+  require(DIR_MODULES.$this->name.'/adduser.inc.php');
+ }
+
+
  function indata_edit(&$out, $id) {
+
   require(DIR_MODULES.$this->name.'/indata_edit.inc.php');
  }
  
@@ -367,8 +380,18 @@ $savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/';
  if (!file_exists($savepath)) {
 mkdir($savepath, 0777, true);}
 $savelast=ROOT."cms/cached/nvr/last/";
+
+
+$users=ROOT."cms/cached/nvr/users/";
+if (!file_exists($users)) {
+mkdir($users, 0777, true);}
+
+
  if (!file_exists($savelast)) {
 mkdir($savelast, 0777, true);}
+
+
+
 if ($properties[$i]['TYPE']=='snapshot')
 {
 $iam='img';
@@ -511,6 +534,11 @@ $this->mailvision_detect($savenamethumb, $id);
 */
  function install($data='') {
 
+$users=ROOT."cms/cached/nvr/users/";
+if (!file_exists($users)) {
+mkdir($users, 0777, true);}
+
+
   parent::install();
  }
 /**
@@ -583,6 +611,19 @@ EOD;
 
 EOD;
    parent::dbInstall($data);
+
+
+  $data = <<<EOD
+ camshoter_people: ID int(10) unsigned NOT NULL auto_increment
+ camshoter_people: UPDATED datetime
+ camshoter_people: FILENAME varchar(100) NOT NULL DEFAULT ''
+ camshoter_people: PEOPLENAME varchar(100) NOT NULL DEFAULT ''
+ camshoter_people: USERID int(3) 
+
+
+EOD;
+   parent::dbInstall($data);
+
 
 
 /*
