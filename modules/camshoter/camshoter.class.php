@@ -292,6 +292,7 @@ if  (strpos($file,'..')>0)
 //sg('test.mkjteg',$this->teg);
 
 $this->mailvision_detect($file, $idd);
+$this->mailvision_detect_face($file, $idd);
 $this->redirect("?tab=devcount");
 }
 
@@ -612,6 +613,7 @@ mkdir($users, 0777, true);}
 SQLExec('DROP TABLE IF EXISTS camshoter_devices');
 SQLExec('DROP TABLE IF EXISTS camshoter_config');
 SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
+SQLExec('DROP TABLE IF EXISTS camshoter_people');
 
 
   parent::uninstall();
@@ -667,6 +669,7 @@ EOD;
  camshoter_recognize: UPDATED datetime
  camshoter_recognize: FILENAME varchar(100) NOT NULL DEFAULT ''
  camshoter_recognize: ANSWER varchar(1000) NOT NULL DEFAULT ''
+ camshoter_recognize: FACES varchar(1000) NOT NULL DEFAULT ''
 
 EOD;
    parent::dbInstall($data);
@@ -815,34 +818,24 @@ if (($v<>"")&&($v<>".")&&($v<>"..")&&(strpos($v,'jpg')>0)
 
 {
 $sql="select * from camshoter_recognize where filename like '%".substr($v,0,-3)."%'";
-$meta1=SqlSelectOne($sql)['ANSWER'];
+$zapr=SqlSelectOne($sql);
+$meta1=$zapr['ANSWER'];
 if ($meta1){
-
 $meta=$meta1;
-
 $json=$meta1;
-
 $meta2=json_decode($meta1, true);
-
-
-//$meta3=$meta2['body']['object_labels']['labels'][0]['rus'];
-//$meta3=$meta2['status'];
-//$meta3=$meta2->body->object_labels->status;
 $meta3=$meta2['body']['object_labels'][0]['labels'];
 $meta="";
    foreach ($meta3 as $value)
-
-{
-$meta.=','.$value['rus'];
-//print_r($value);
-}
+{$meta.=','.$value['rus'];}
 
 $meta=substr($meta,1);
-
 }
 
+$faces=$zapr['FACES'];
 
-$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta, 'JSON'=>$json );
+
+$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,"FILEMP4"=>$upfoler1."/".$upfoler."/".substr($v,0,-3).'mp4','SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3), 'META'=>$meta, 'JSON'=>$json, 'FACES'=>$faces );
 }
 }
 return $files;
@@ -894,9 +887,10 @@ $sql="select * from camshoter_people where FILENAME='$v'";
 $sqlzapr=SQLSelectOne($sql);
 $username=$sqlzapr['PEOPLENAME'];
 $userid=$sqlzapr['USERID'];
+$meta=$sqlzapr['ANSWER'];
 
 ///$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3));
-$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username);
+$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
 
 
 if (!$sqlzapr['ID'])
@@ -966,7 +960,7 @@ function show_size($f,$format=true)
 
 
 
-
+////определение объектов
 function mailvision_detect($file, $id)  
 {  
 
@@ -1015,6 +1009,43 @@ else
 }
 
 
+////определение лиц
+function mailvision_detect_face($file, $id)  
+{  
+
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+$token=$cmd_rec['value'];
+
+
+$cmd_rec2 = SQLSelectOne("SELECT * FROM camshoter_recognize where FILENAME='$file'");
+
+
+
+if (substr(php_uname(),0,5)=='Linux')  {
+$cmd='curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"space":"0","images":[{"name":"file_0"}]}'."'";
+} else 
+{
+//$cmd='C:\_majordomo\apps\curl.exe -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
+}
+$a=shell_exec($cmd); 
+
+$cmd_rec2['FACES']=$a;
+$cmd_rec2['FILENAME']=$file;
+$cmd_rec2['CAMID']=$id;
+$cmd_rec2['UPDATED']=date('Y-m-d H:i:s');
+
+echo $a;
+
+if (!$cmd_rec2['ID']) {
+SQLInsert('camshoter_recognize',$cmd_rec2); }
+else 
+{SQLUpdate('camshoter_recognize',$cmd_rec2); }
+//return a;
+
+}
+
+
+
 //получение названий файлов
 function DirFilesR($dir)  
 {  
@@ -1061,17 +1092,20 @@ $cmd=sqlselectOne("select * from camshoter_people where USERID='$id'");
 
 $file=ROOT."cms/cached/nvr/users/".$cmd['FILENAME'];;
 $peoplename=$cmd['PEOPLENAME'];
+$userid=$cmd['USERID'];
 
 if (substr(php_uname(),0,5)=='Linux')  {
 
 //curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=ххх" -F file_0=@examples/friends1.jpg  -F file_1=@examples/rachel-green.jpg -F meta='{"images":[{"name":"file_1"}, {"name":"file_0"}], "space":"1"}'
 
-$cmd=' curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"name":["'.$peoplename.'"],"images":[{"name":"file_0"}]}'."'";
+//$cmdcurl=' curl -k -v "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"name":["'.$peoplename.'"],"images":[{"name":"file_0"}]}'."'";
+$cmdcurl=' curl -k -v "https://smarty.mail.ru/api/v1/persons/set?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"space":"0","images":[{"name":"file_0","person_id":'.$userid.'}]}'."'";
+//echo $cmd."<br>";
 } else 
 {
 //$cmd='C:\_majordomo\apps\curl.exe -k -v "https://smarty.mail.ru/api/v1/objects/detect?oauth_provider=mcs&oauth_token='.$token.'" -F file_0=@'.$file.'   -F meta=\'{"mode":["object", "scene"],"images":[{"name":"file_0"}]}'."'";
 }
-$a=shell_exec($cmd); 
+$a=shell_exec($cmdcurl); 
 
 echo  $a;
 
