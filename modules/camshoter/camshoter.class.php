@@ -195,6 +195,20 @@ $out['FILES']=$files;
  }
 
 
+ if ($this->view_mode=='copyfav') {
+$file1=ROOT.$this->id;
+$file2=ROOT."cms/cached/nvr/users/".explode("/",$this->id)[5];
+echo "file1 ".$file1;
+echo "<br>";
+echo "file2 ".$file2;
+
+copy($file1,$file2);
+//$this->redirect("?tab=users");
+ }
+
+
+
+
  if ($this->view_mode=='obuchit') {
    $this->vision_setface($this->id);
    $this->redirect("?tab=users");
