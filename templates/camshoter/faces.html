@@ -1,0 +1,89 @@
+
+<br/>
+
+
+
+
+
+<table border=0>
+<tr><td>
+
+
+[#begin FILES#]
+
+
+
+
+  		
+
+
+
+
+
+<table border=0 width="[#SIZETHMB#]" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
+
+<table><tr><td>
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+  <select name="selecteduser" class="form-control" >
+  <option value="">[#USERNAME#]
+  [#begin USERS#]
+  <option value="[#ID#]"[#if SELECTED#] selected[#endif#]>[#NAME#]
+  [#end USERS#]
+  </select>
+</td><td>
+<button type="submit" name="subm" value="Submit" class="btn btn-default"  ><i class="glyphicon glyphicon-ok"></i></button>
+<input type="hidden" name="view_mode" value="saveuser">	
+<input type="hidden" name="mode" value="confirm">
+<input type="hidden" name="tab" value="users">
+<input type="hidden" name="filename" value="[#FILE#]">
+<input type="hidden" name="id" value="[#ID#]">
+</form>
+</td>
+<td>
+   <a href="?view_mode=obuchit&id=[#ID#]&tab=users" class="btn btn-default" title="Обучить нейросеть пользователем"><i class="glyphicon glyphicon-user"></i></a>
+</td>
+
+</td>
+<td>
+   <a href="?view_mode=deluserfile&id=[#FILE#]&tab=users" onClick="return confirm('Are you sure? Please confirm.')"  class="btn btn-default" title="Удалить файл"><i class="glyphicon glyphicon-trash"></i></a>
+</td>
+
+
+</tr>
+</table>
+
+
+</td></tr><tr>
+<td>
+
+<a rel="simplebox" href="../cms/cached/nvr/[#FILEMP4#]" target="_blank" title='[#JSON#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
+</td></tr>
+<td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
+<!-- USER_ID (select) -->
+</a>
+</td>
+
+</tr>
+
+
+</table>
+[#end FILES#]
+
+[#endif#]
+
+
+
+<tr><td>
+
+<br><br>
+<!--<a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a> -->
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+</td>
+
+
+</tr>
+</table>
