@@ -88,6 +88,15 @@ class Face_Detector {
         header('Content-type: image/jpeg');
         imagejpeg($canvas);
     }
+
+    public function cropsave($fn) {
+        $canvas = imagecreatetruecolor($this->face['w'], $this->face['w']);
+        imagecopy($canvas, $this->canvas, 0, 0, $this->face['x'], $this->face['x'], $this->face['w'], $this->face['w']);
+ //       header('Content-type: image/jpeg');
+//        imagejpeg($canvas, '/var/www/test/face/face.jpg');
+        imagejpeg($canvas, $fn);
+    }
+
     
     public function toJson() {
         return "{'x':" . $this->face['x'] . ", 'y':" . $this->face['y'] . ", 'w':" . $this->face['w'] . "}";
