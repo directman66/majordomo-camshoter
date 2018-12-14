@@ -180,6 +180,16 @@ $out['FILES']=$files;
 }
 
 
+ if ($this->tab=='faces') {
+$gfolder=ROOT."cms/cached/nvr/faces/";
+$files=$this->getusers($gfolder);
+//print_r($files);
+//jpeg
+$out['FILES']=$files;
+
+}
+
+
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
