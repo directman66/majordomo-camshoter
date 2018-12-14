@@ -467,6 +467,11 @@ if (!file_exists($savefacesdir)) {
 mkdir($savefacesdir, 0777, true);}
 
 
+
+
+
+
+
  if (!file_exists($savelast)) {
 mkdir($savelast, 0777, true);}
 
@@ -503,8 +508,17 @@ $url=$properties[$i]['URL'];
 $sec=$properties[$i]['SEC'];
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mp4"; // куда сохранять
 $savenamethumb=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+$savenamethumbdir=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His'); // куда сохранять
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
 $savenameface=$savefacesdir."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+
+
+$savenamethumbdir=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/'."cam".$properties[$i]['ID']."_".date('Y-m-d_His')."/";
+ if (!file_exists($savenamethumbdir)) {
+mkdir($savenamethumbdir, 0777, true);}
+
+
+
 //linux
 if (substr(php_uname(),0,5)=='Linux')  {
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
@@ -526,7 +540,14 @@ exec($cmd);
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
 //http://digilinux.ru/2010/10/21/how-to-split-frames-with-ffmpeg/
+
+// первый кадр на обложку
 exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
+
+//раскадровка каждый 4 кадр в отдельную папку для определения наличия лиц
+//exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25 -ss 00:00:00 -t 00:00:10 -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
+exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
+
 }
 else 
 {
@@ -566,25 +587,38 @@ $face_detect = new Face_Detector('detection.dat');
 
 
 
-
+//проверяем  первый кадр, вдруг мы работает только со снапшотами
 if ($face_detect->face_detect($savenamethumb)) 
 {$face=1;
 $face_detect->cropsave($savenameface);
 //$face_detect->cropFace2('new.jpg');
 } else $face=0; 
-echo $face;
+//echo $face;
+if ($face==1) $this->mailvision_detect_face($savenameface, $id);
+
+
+///идем по кадрам, сохраненным из видео
+if (($savenamethumbdir)&&($savenamethumbdir<>"")&& (is_dir($savenamethumbdir))){
+ foreach (scandir($savenamethumbdir) as $v) 
+{
+
+if ($face_detect->face_detect($savenamethumbdir.$v)) 
+{$face=1;
+$face_detect->cropsave($savenameface);
+//$face_detect->cropFace2('new.jpg');
+} else $face=0; 
+//echo $face;
+if ($face==1) $this->mailvision_detect_face($savenameface, $id);
+}}
 
 
 
 $this->mailvision_detect($savenamethumb, $id);
-if ($face==1) $this->mailvision_detect_face($savenameface, $id);
+
 
 
 
 //$this->mailvision_detect($savenamelast);
-
-
-
 	}
   }
    }
