@@ -550,8 +550,28 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 //..if ($iam=='img') {$detect$this->mailvision_detect($savename);}
 //if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
 
+$savenameface=$savelast.'lastface.jpg';
+
+//определяем, есть ли на фото лицо
+
+error_reporting(0);
+include "FaceDetector.php";
+$face_detect = new Face_Detector('detection.dat');
+
+
+
+
+if ($face_detect->face_detect($savenamethumb)) 
+{$face=1;
+$face_detect->cropsave($savenameface);
+//$face_detect->cropFace2('new.jpg');
+} else $face=0; 
+echo $face;
+
+
+
 $this->mailvision_detect($savenamethumb, $id);
-$this->mailvision_detect_face($savenamethumb, $id);
+if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 
 
 
