@@ -461,6 +461,12 @@ if (!file_exists($users)) {
 mkdir($users, 0777, true);}
 
 
+
+$savefacesdir=ROOT."cms/cached/nvr/faces/";
+if (!file_exists($savefacesdir)) {
+mkdir($savefacesdir, 0777, true);}
+
+
  if (!file_exists($savelast)) {
 mkdir($savelast, 0777, true);}
 
@@ -498,6 +504,7 @@ $sec=$properties[$i]['SEC'];
 $savename=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".mp4"; // куда сохранять
 $savenamethumb=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
+$savenameface=$savefacesdir."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
 //linux
 if (substr(php_uname(),0,5)=='Linux')  {
 //exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
@@ -550,7 +557,6 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 //..if ($iam=='img') {$detect$this->mailvision_detect($savename);}
 //if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
 
-$savenameface=$savelast.'lastface.jpg';
 
 //определяем, есть ли на фото лицо
 
