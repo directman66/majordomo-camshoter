@@ -307,6 +307,7 @@ SQLInsert('camshoter_config', $cmd_rec);
 
 
  if ($this->view_mode=='updatesize') {
+
 $this->getfoldersize($this->id);
    $this->redirect("?");
 }
@@ -377,8 +378,12 @@ $this->redirect("?");
 
  function clearpath($id) {
 
-$savepath=ROOT."cms/cached/nvr/cam".$id;
-$this->rmRec($savepath);
+$savepath=ROOT."cms/cached/nvr/cam".$id.'/';
+//$this->rmRec($savepath);
+echo $savepath;
+$this->delFolder($savepath);
+
+
 
 //$devices=SQLSelect("SELECT * FROM camshoter_devices");
 
@@ -844,6 +849,8 @@ function rmRec($dir) {
   }
 
 
+
+
 function createDateRangeArray($strDateFrom,$strDateTo)
 {
     // takes two dates formatted as YYYY-MM-DD and creates an
@@ -941,6 +948,16 @@ return $files;
 }
 
 
+function delFolder($dir)
+{
+$files = array_diff(scandir($dir), array('.','..'));
+foreach ($files as $file) {
+(is_dir("$dir/$file")) ? $this->delFolder("$dir/$file") : unlink("$dir/$file");
+}
+return rmdir($dir);
+}
+
+
 function getusers($dir) {
 
 
@@ -1017,9 +1034,12 @@ function getfoldersize($id) {
 $cnt = $this->DirFilesR($folder);
 
 
-$dirsize=$this->show_size($folder);
+if (is_dir($folder)) { 
+$dirsize=$this->show_size($folder);} else {$dirsize=0;}
 
 $rec['COUNT']=$cnt;
+
+
 $rec['SIZE']=$dirsize;
 
 SQLUpdate('camshoter_devices', $rec);
@@ -1146,6 +1166,7 @@ else
 //получение названий файлов
 function DirFilesR($dir)  
 {  
+if (is_dir($dir)) {
   $handle = opendir($dir) or die("Can't open directory $dir");  
   $files = Array();  
   $subfiles = Array();  
@@ -1163,7 +1184,7 @@ function DirFilesR($dir)
 
           // ...и добавим их к общему списку  
 
-        $files = array_merge($files,$subfiles);  
+if (is_array($subfiles))        $files = array_merge($files,$subfiles);  
       }  
       else 
       {  
@@ -1173,6 +1194,7 @@ function DirFilesR($dir)
   }  
   closedir($handle);  
 //  print_r($files);
+}
   return count($files);  
   }
 
