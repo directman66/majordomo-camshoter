@@ -128,6 +128,12 @@ if (!$sizethmb) $sizethmb=200;
 $out['SIZETHMB1']=$sizethmb;
 
 
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='SIZEALL'");
+$out['SIZEALL']=$cmd_rec['value'];
+
+
+
+
 
 
 //$out['arcdate']=date('Ymd');
@@ -313,6 +319,17 @@ $this->getfoldersize($this->id);
 }
 
 
+
+ if ($this->view_mode=='updatesizeall') {
+
+$this->getsizeall();
+
+
+}
+
+
+
+
  if ($this->view_mode=='detect') {
 
 
@@ -371,9 +388,32 @@ $this->redirect("?");
 
 
 
+ function getsizeall() {
 
- 
+$cmd=sqlselect('select * from camshoter_devices');
+$total = count($cmd);
+for ($i = 0; $i < $total; $i++)
+{
+//$folder=ROOT."cms/cached/nvr/cam".$cmd[$i]['ID'].'/';
+//echo $folder;
+$this->getfoldersize($cmd[$i]['ID']);
+}
 
+$allsize=$this->show_size(ROOT."cms/cached/nvr/");
+
+$cmd=SQLSelectOne("select * from  camshoter_config where parametr='SIZEALL'");
+$cmd['value']= $allsize;
+$cmd['parametr']= 'SIZEALL';
+if ($cmd['ID'])
+{
+sqlupdate('camshoter_config',$cmd);}
+else 
+{
+sqlinsert('camshoter_config',$cmd);}
+
+
+$this->redirect("?"); 
+}
 
 
  function clearpath($id) {
@@ -694,8 +734,19 @@ $this->mailvision_detect($savenamethumb, $id);
 *
 * @access private
 */
- function install($data='') {
 
+	function processSubscription($event_name, $details='') {
+		if ($event_name=='HOURLY') {
+
+$this->getsizeall();
+}
+
+}
+
+
+
+ function install($data='') {
+subscribeToEvent($this->name, 'HOURLY');
 $users=ROOT."cms/cached/nvr/users/";
 if (!file_exists($users)) {
 mkdir($users, 0777, true);}
@@ -711,7 +762,7 @@ mkdir($users, 0777, true);}
 * @access public
 */
  function uninstall() {
-
+unsubscribeFromEvent($this->name, 'HOURLY');
 SQLExec('DROP TABLE IF EXISTS camshoter_devices');
 SQLExec('DROP TABLE IF EXISTS camshoter_config');
 SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
@@ -758,6 +809,7 @@ EOD;
   parent::dbInstall($data);
 
   $data = <<<EOD
+ camshoter_config: ID int(10) unsigned NOT NULL auto_increment
  camshoter_config: parametr varchar(300)
  camshoter_config: value varchar(10000)  
 EOD;
@@ -1025,7 +1077,7 @@ return $files;
 
 
 
-function getfoldersize($id) {
+	function getfoldersize($id) {
   $rec=SQLSelectOne("SELECT * FROM camshoter_devices WHERE ID='$id'");
  $folder=ROOT."cms/cached/nvr/cam".$id.'/';
 
