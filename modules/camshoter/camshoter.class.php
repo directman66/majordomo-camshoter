@@ -190,6 +190,17 @@ $out['FILES']=$files;
 }
 
 
+ if ($this->tab=='preview') {
+$gfolder=ROOT."cms/cached/nvr/last/";
+$files=$this->getusers($gfolder);
+//print_r($files);
+//jpeg
+$out['FILES']=$files;
+
+}
+
+
+
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
@@ -611,9 +622,10 @@ if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 if (($savenamethumbdir)&&($savenamethumbdir<>"")&& (is_dir($savenamethumbdir))){
  foreach (scandir($savenamethumbdir) as $v) 
 {
-
+debmes('Проверяем фото '.$savenamethumbdir.$v.' на наличие лиц','camshoter');
 if ($face_detect->face_detect($savenamethumbdir.$v)) 
 {$face=1;
+debmes('В кадре лицо!!  '.$savenamethumbdir.$v,'camshoter');
 $face_detect->cropsave($savenameface);
 //$face_detect->cropFace2('new.jpg');
 } else $face=0; 
