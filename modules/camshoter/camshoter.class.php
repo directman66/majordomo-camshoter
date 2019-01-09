@@ -516,6 +516,8 @@ else
 //для теста вызовем нужный метод датчика движения
 //cm('Motion11.motionDetected');
 
+debmes('Сработал датчик движения на камере '.$properties[$i]['ID'],'camshoter');
+
 $savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/';
  if (!file_exists($savepath)) {
 mkdir($savepath, 0777, true);}
@@ -598,7 +600,7 @@ if  ($properties[$i]['FFMPEGCMD']=="")
 $cmd='timeout -s INT 60s '.str_replace('#savename',$savename, str_replace('#sec',$sec, $properties[$i]['FFMPEGCMD']));
 exec($cmd); 
 }
-
+debmes('Видео сохранено  '.$savename,'camshoter');
 
 
 //-vcodec copy -b 64k -acodec ac3
@@ -612,7 +614,8 @@ exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image
 
 //раскадровка каждый 4 кадр в отдельную папку для определения наличия лиц
 //exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25 -ss 00:00:00 -t 00:00:10 -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
-exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
+exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.jpg'); 
+debmes('Раскадровка сохранена  '.$savenamethumbdir,'camshoter');
 
 }
 else 
@@ -635,6 +638,8 @@ include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
 if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
+
+debmes('Файл '.$savename .' отправлен в телегу','camshoter');
 }
 	 $properties[$i]['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties[$i]);
@@ -647,23 +652,34 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$
 
 //определяем, есть ли на фото лицо
 
+$fddpath=DIR_MODULES.$this->name."/FaceDetector.php";
+debmes('Запускаем процесс facedetect '.$fddpath,'camshoter');
 error_reporting(0);
-include "FaceDetector.php";
-$face_detect = new Face_Detector('detection.dat');
+//include "FaceDetector.php";
 
+//require(DIR_MODULES.$this->name.'/FaceDetector.php');
+include $fddpath;
+
+$face_detect = new Face_Detector('detection.dat');
+debmes('facedetect открыт','camshoter');
 
 
 //проверяем  первый кадр, вдруг мы работает только со снапшотами
-if ($face_detect->face_detect($savenamethumb)) 
-{$face=1;
-$face_detect->cropsave($savenameface);
+//if ($face_detect->face_detect($savenamethumb)) 
+//{$face=1;
+//$face_detect->cropsave($savenameface);
 //$face_detect->cropFace2('new.jpg');
-} else $face=0; 
+//} else $face=0; 
 //echo $face;
-if ($face==1) $this->mailvision_detect_face($savenameface, $id);
+
+//debmes('Идем по кадрам '.$savenamethumbdir,'camshoter');
+//распознаем, если лицо
+//if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 
 
 ///идем по кадрам, сохраненным из видео
+debmes('Идем по кадрам '.$savenamethumbdir,'camshoter');
+
 if (($savenamethumbdir)&&($savenamethumbdir<>"")&& (is_dir($savenamethumbdir))){
  foreach (scandir($savenamethumbdir) as $v) 
 {
@@ -675,7 +691,8 @@ $face_detect->cropsave($savenameface);
 //$face_detect->cropFace2('new.jpg');
 } else $face=0; 
 //echo $face;
-if ($face==1) $this->mailvision_detect_face($savenameface, $id);
+
+//if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 }}
 
 
