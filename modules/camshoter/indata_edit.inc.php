@@ -61,6 +61,11 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    global $enable;
    $rec['ENABLE']=$enable;
 
+   global $sendtelegram;
+   $rec['SENDTELEGRAM']=$sendtelegram;
+
+
+
 
    global $somebodyignore;
    $rec['SOMEBODYIGNORE']=$somebodyignore;
