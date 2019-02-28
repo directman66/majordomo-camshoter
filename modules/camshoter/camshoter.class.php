@@ -357,7 +357,8 @@ $this->redirect("?tab=devcount");
 
 
  if ($this->view_mode=='sendaction') {
-sg($this->id, 1);
+setglobal($this->id, '1');
+//callmethod($this->id.'motionDetected');
 $this->redirect("?");
 }
 
@@ -453,11 +454,25 @@ $ip=$mhdevices[$i]['IPADDR'];
 $lastping=$mhdevices[$i]['LASTPING'];
 //echo time()-$lastping;
 if (time()-$lastping>300) {
+
+$cmd='
+$online=ping(processTitle('.$ip.'));
+if ($online) 
+{SQLexec("update camshoter_devices set ONLINE="1", LASTPING=".time()." where IP='.$ip.'");} 
+else 
+{SQLexec("update camshoter_devices set ONLINE="0", LASTPING=".time()." where IP='.$ip.'");}
+}
+';
+ SetTimeOut('camshoter_devices_devices_ping',$cmd, '1'); 
+
+/*
+
 $online=ping(processTitle($ip));
     if ($online) 
 {SQLexec("update camshoter_devices set ONLINE='1', LASTPING=".time()." where IPADDR='$ip'");} 
 else 
 {SQLexec("update camshoter_devices set ONLINE='0', LASTPING=".time()." where IPADDR='$ip'");}
+*/
 }}
 
 
