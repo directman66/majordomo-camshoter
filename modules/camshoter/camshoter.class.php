@@ -456,14 +456,15 @@ $lastping=$mhdevices[$i]['LASTPING'];
 if (time()-$lastping>300) {
 
 $cmd='
-$online=ping(processTitle('.$ip.'));
+$online=ping(processTitle("'.$ip.'"));
 if ($online) 
-{SQLexec("update camshoter_devices set ONLINE="1", LASTPING=".time()." where IP='.$ip.'");} 
+{SQLexec("update camshoter_devices set ONLINE=1, LASTPING='.time().' where IPADDR=\''.$ip.'\'");} 
 else 
-{SQLexec("update camshoter_devices set ONLINE="0", LASTPING=".time()." where IP='.$ip.'");}
-}
+{SQLexec("update camshoter_devices set ONLINE=0, LASTPING='.time().' where IPADDR=\''.$ip.'\'");}
+
 ';
  SetTimeOut('camshoter_devices_devices_ping',$cmd, '1'); 
+debmes($cmd, 'camshoter');
 
 /*
 
