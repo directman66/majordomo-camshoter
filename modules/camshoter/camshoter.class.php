@@ -359,7 +359,7 @@ $this->redirect("?tab=devcount");
  if ($this->view_mode=='sendaction') {
 setglobal($this->id, '1');
 //callmethod($this->id.'motionDetected');
-$this->redirect("?");
+$this->redirect("?action=camshoter");
 }
 
 
@@ -496,6 +496,9 @@ else
 * @access public
 */
 function usual(&$out) {
+ if ($this->owner->action=='apps') {
+  $this->redirect(ROOTHTML."module/".$this->name.".html");
+ } else 
  $this->admin($out);
 }
 
