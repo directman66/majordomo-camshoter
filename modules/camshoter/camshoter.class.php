@@ -982,20 +982,27 @@ $aryRange=array_reverse($aryRange);
 
 
 ///////список файлов папки
+
 function getfiles($dir) {
+
 
  if (substr(php_uname(),0,5)=='Linux')  {
 $dir=str_replace(chr(92),"/",$dir);
-$upfoler=explode('/',$dir)[7];
-$upfoler1=explode('/',$dir)[6];
+$upfoler=str_replace('//','/',explode('/',$dir)[7]);
+$upfoler1=str_replace('//','/',explode('/',$dir)[6]);
 }
 else 
 {
-$dir=str_replace('/',chr(92),$dir);    
-$upfoler=explode(chr(92),$dir)[7];
-$upfoler1=explode(chr(92),$dir)[6];
+$dir=str_replace('//','/',str_replace('/',chr(92),$dir));    
+$upfoler=str_replace('//','/',explode(chr(92),$dir)[7]);
+$upfoler1=str_replace('//','/',explode(chr(92),$dir)[6]);
 
 }
+
+debmes('camshoter storage dir:'.$dir, 'camshoter');
+debmes('camshoter upfoler:'.$upfoler, 'camshoter');
+debmes('camshoter upfoler1:'.$upfoler1, 'camshoter');
+
  $files = array();
 
 if (($dir)&&($dir<>"")&& (is_dir($dir))){
