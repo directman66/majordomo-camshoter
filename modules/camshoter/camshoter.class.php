@@ -1085,6 +1085,7 @@ $users=$tempusers;
 
 //print_r($users);
 
+/*
  if (substr(php_uname(),0,5)=='Linux')  {
 $dir=str_replace(chr(92),"/",$dir);
 $upfoler=explode('/',$dir)[7];
@@ -1095,8 +1096,17 @@ else
 $dir=str_replace('/',chr(92),$dir);    
 $upfoler=explode(chr(92),$dir)[7];
 $upfoler1=explode(chr(92),$dir)[6];
-
 }
+*/
+
+
+$cnt=substr_count( $dir, '/');
+//$upfoler=explode(chr(92),$dir)[$cnt-1];
+//$upfoler1=explode(chr(92),$dir)[$cnt-2];
+$upfoler=explode('/',$dir)[$cnt-1];
+$upfoler1=explode('/',$dir)[$cnt-2];
+
+
  $files = array();
 
 if (($dir)&&($dir<>"")){
