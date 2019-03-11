@@ -451,19 +451,21 @@ $total = count($mhdevices);
 for ($i = 0; $i < $total; $i++)
 { 
 $ip=$mhdevices[$i]['IPADDR'];
-$lastping=$mhdevices[$i]['LASTPING'];
+$lastping=$mhdevices[$i]['LASTPING2'];
+if ((!$lastping)||(time()-$lastping>300))
 //echo time()-$lastping;
-if (time()-$lastping>300) {
+//if (time()-$lastping>300)
+ {
 
 $cmd='
 $online=ping(processTitle("'.$ip.'"));
 if ($online) 
-{SQLexec("update camshoter_devices set ONLINE=1, LASTPING='.time().' where IPADDR=\''.$ip.'\'");} 
+{SQLexec("update camshoter_devices set ONLINE=1, LASTPING2='.time().' where IPADDR=\''.$ip.'\'");} 
 else 
-{SQLexec("update camshoter_devices set ONLINE=0, LASTPING='.time().' where IPADDR=\''.$ip.'\'");}
+{SQLexec("update camshoter_devices set ONLINE=0, LASTPING2='.time().' where IPADDR=\''.$ip.'\'");}
 
 ';
- SetTimeOut('camshoter_devices_devices_ping',$cmd, '1'); 
+ SetTimeOut('camshoter_devices_ping'.$i,$cmd, '1'); 
 debmes($cmd, 'camshoter');
 
 /*
@@ -835,6 +837,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SOMEBODYIGNORE int(1) 
  camshoter_devices: SENDTELEGRAM int(1) 
+ camshoter_devices: TELEGRAMUSERS varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SENDEMAIL int(1) 
  camshoter_devices: SENDSLAKS int(1) 
  camshoter_devices: SEC int(1) 
@@ -842,6 +845,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: COUNT int(10) 
  camshoter_devices: SIZE varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: LASTPING datetime
+ camshoter_devices: LASTPING2 varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: UPDATED datetime
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
