@@ -186,7 +186,9 @@ $out['FILES']=$files;
 }
 
 
- if ($this->tab=='faces') {
+ if ($this->tab=='faces')
+
+ {
 $gfolder=ROOT."cms/cached/nvr/faces/";
 $files=$this->getusers($gfolder);
 //print_r($files);
@@ -195,13 +197,16 @@ $out['FILES']=$files;
 
 }
 
+//$out['er']=$this->owner->action;
+//$out['er']='12';
 
- if ($this->tab=='preview') {
+ if (($this->tab=='preview')||($this->owner->action=='camshoter')) {
 $gfolder=ROOT."cms/cached/nvr/last/";
 $files=$this->getusers($gfolder);
 //print_r($files);
 //jpeg
 $out['FILES']=$files;
+
 
 }
 
