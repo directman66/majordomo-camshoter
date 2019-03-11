@@ -46,11 +46,49 @@
   if ($res[0]['ID']) {
    colorizeArray($res);
    $total=count($res);
+debmes('total:'.$total, 'camshoter');
    for($i=0;$i<$total;$i++) {
 
     // some action for every record if required
    }
+
+
+
+
+
+
    $out['RESULT']=$res;
+
+//debmes($res, 'camshoter');
+
+
+
+/*
+
+//$res2 = SQLSelect("select ID,NAME,ADMIN, (SELECT count(*) FROM tlg_user_cmd where CMD_ID='$id' and tlg_user_cmd.USER_ID=tlg_user.ID) as ACCESS_USER from tlg_user");
+$sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='".$res[0]['ID']."' and  TELEGRAMUSERS=tlg_user.ID )  as ACCESS_USER  from tlg_user ";
+debmes($sql, 'camshoter');
+
+$res2 = SQLSelect($sql);
+
+debmes($res2, 'camshoter');
+
+if ($res[0]) {
+    $out['LIST_ACCESS'] = $res2;
+}
+
+
+$res = SQLSelect("SELECT * from camshoter_devices where ID='$id'");
+if ($res[0]) {
+    $qs    = array();
+    foreach ($res as $row) {
+        $qs[] = $row['TELEGRAMUSERS'];
+    }
+    $out['USER_ID'] = implode(',', $qs);
+   debmes(implode(',', $qs), 'camshoter');
+}
+
+*/
 
 //////////////////////////
 //////////////////////////
