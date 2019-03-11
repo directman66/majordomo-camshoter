@@ -1107,6 +1107,8 @@ return rmdir($dir);
 
 function getusers($dir) {
 
+debmes('вызван getusers '.$dir, 'camshoter');
+
 
   $tempusers=SQLSelect("SELECT ID, NAME FROM users ORDER BY NAME");
   $users_total=count($tempusers);
@@ -1116,6 +1118,7 @@ function getusers($dir) {
   }
 
 $users=$tempusers;
+//debmes($users, 'camshoter');
 
 //print_r($users);
 
@@ -1141,13 +1144,20 @@ $upfoler=explode('/',$dir)[$cnt-1];
 $upfoler1=explode('/',$dir)[$cnt-2];
 
 
+debmes('$upfoler '.$upfoler, 'camshoter');
+debmes('$upfoler1 '.$upfoler1, 'camshoter');
+
+
  $files = array();
+
+
 
 if (($dir)&&($dir<>"")){
  foreach (scandir($dir) as $v) 
 
 
 {
+debmes($v, 'camshoter');
 $sizethmb=300;
 
 if (($v<>"")&&($v<>".")&&($v<>"..")
@@ -1161,8 +1171,10 @@ $userid=$sqlzapr['USERID'];
 $meta=$sqlzapr['ANSWER'];
 
 ///$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3));
-$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
-
+//$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
+$files[] =array("FILE"=>$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
+//$files[] =array("FILE"=>$dir."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
+debmes($files, 'camshoter');
 
 if (!$sqlzapr['ID'])
 
