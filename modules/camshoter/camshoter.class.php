@@ -9,7 +9,7 @@
 //
 //
 //ini_set('max_execution_time', '600');
-//ini_set ('display_errors', 'off');
+ini_set ('display_errors', 'off');
 class camshoter extends module {
 /**
 *
@@ -602,9 +602,6 @@ $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохр
 $savenameface=$savefacesdir."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
 
 
-$savenamethumbdir=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/'."cam".$properties[$i]['ID']."_".date('Y-m-d_His')."/";
- if (!file_exists($savenamethumbdir)) {
-mkdir($savenamethumbdir, 0777, true);}
 
 
 
@@ -643,8 +640,19 @@ exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image
 
 //раскадровка каждый 4 кадр в отдельную папку для определения наличия лиц
 //exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25 -ss 00:00:00 -t 00:00:10 -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
+
+
+//нужна ли раскадровка, делаем ее в том случае, если есть токен майл ру
+
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+if ($cmd_rec['value']);
+{
+$savenamethumbdir=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/'."cam".$properties[$i]['ID']."_".date('Y-m-d_His')."/";
+ if (!file_exists($savenamethumbdir)) {
+mkdir($savenamethumbdir, 0777, true);}
 exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.jpg'); 
 debmes('Раскадровка сохранена  '.$savenamethumbdir,'camshoter');
+}
 
 }
 else 
