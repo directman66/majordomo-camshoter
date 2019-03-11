@@ -662,10 +662,37 @@ $fsize=filesize($savename);
 $text='Зафиксировано движение '.$properties[$i]['TITLE'];
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
-if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
-if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
 
-debmes('Файл '.$savename .' отправлен в телегу','camshoter');
+
+$ts=$properties[$i]['TELEGRAMUSERS'];
+
+debmes('telegram users  '.$ts,'camshoter');
+
+$tsar=explode(',', $ts);
+
+debmes($tsar,'camshoter');
+
+
+$total=count($tsar);
+debmes('total  '.$total,'camshoter');
+for ($i = 0; $i < $total; $i++)
+{
+
+
+
+$user=SQLSElectOne("select * from tlg_user where ID='".$tsar[$i]."'")['USER_ID'];
+
+//if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
+//if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
+
+
+if ($iam=='img') {$telegram_module->sendImageToUser($user,$savename,$text);}
+if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToUser($user,$savename,$text);}
+
+
+
+debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
+}
 }
 	 $properties[$i]['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties[$i]);
