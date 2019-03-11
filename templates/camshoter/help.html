@@ -1,0 +1,159 @@
+<br/>
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t1">Информация</a>
+		</div>
+		<div class="panel-body collapse" id="t1">
+Модуль Camshoter позволяет сохранять скриншоты при срабатывании датчика движения. 			</br>     </br>
+
+	
+		</div> </div> </div>
+
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t2">Возможности</a>
+		</div>
+		<div class="panel-body collapse" id="t2">
+Реализовано: </br>
+1) Привязка камеры к параметрам устройств (например свойство status объекта Motion);</br>
+2) При изменении привязанного свойства, сохраняется картинка камеры, которая указана в поле URL;</br>
+3) Доступен режим просмотра сохраненных фотографий  и фильтрация по дате (вкладка Снапшоты);</br>
+4) Отправка полученных снапшотов в телеграм (временно реализована отправка всем подписантам) .</br>
+5) Сохранение последних снапшотов в одной папке с постоянным именем для добавления на сцену или другие модули:</br>
+код для вставки на сцену (данный вариант использования в отличии от thumb не загружает процессор при обновлении страницы)</br>
+6) Проверка объема занимаемого пространства в разрезе камер.</br>
+7) Добавлена возможность сохранения rtsp потока и отправки видео в формате mp4. </br>
+8) Добавлена настройка игнорировать запись, когда дома кто-то есть. Просьба протестировать. </br>
+9) Добавлена возможность отключения камер (вручную) </br>
+10) Добавлен просмотр миниатюр для видео </br>
+11) Добавлена сохранение токена mail.ru vision, который можно получить тут https://mcs.mail.ru/ (на будущее) </br>
+12) Добавлено изменение размера миниатюр в режиме просмотра </br>
+13) Добавлено распознавание объектов с помощью сервиса vision от mail.ru. Необходимо зарегистрироваться на сайте https://mcs.mail.ru/ и после активации аккаунта на странице https://mcs.mail.ru/app/services/machinelearning/vision/ получить токен с разрешениями (Объекты, Лица). Далее полученный токен необходимо сохранить на вкладке настройки. Информация о распознанных фотографиях хранится в таблице camshoter_recognize и выводится на экран при наведении курсора мыши на фотографию в режиме просмотра. Начальный аккаунт дает возможность производить 5000 запросов в месяц бесплатно. Функционал тестировался пока только под линукс. </br>
+
+
+14) Добавлена эмуляция сработки привязанного датчика. Для тестирования функционала. Вызывается с основного окна модуля. </br>
+15) Для тех, у кого кодеки камеры отличаются от h264, возможно требуется перекодировка на ходу. Для этого предусмотрел в настройках камеры кастомный путь FFMEGCMD. Заполнять  только если сохраняются пустые файлы. Пример заполнения: </br>
+[code] ffmpeg -y -i rtsp://192.168.1.32:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream -t #sec -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 #savename [/code] </br>
+Далее в процессе выполнения #sec  и #savename  будут заменены на нужные пути модуля.  Вы можете поиграть с настройками кодеков: </br>
+</br>
+для видео: </br>
+-vcodec copy  </br>
+-vcodec libx264  </br>
+для аудио </br>
+-acodec copy  </br>
+-acodec ac3 </br>
+
+Возможны другие варианты. Настройки зависят от того, какие кодеки поддерживает камера и какие драйвера установлены в системе. </br>
+</br>
+</br>
+</br>
+
+
+
+В планах: </br>
+1) Очистка хранилища в зависимости от настроек модуля; </br>
+2) Отправка полученного изображения на анализ в сервис vision от mail.ru  для распознавания объектов в кадре и распознавания лиц (платный функционал).</br>
+
+		<p>
+		</div> </div> </div>
+
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t3">Реакция по движению в камере</a>
+		</div>
+
+		<div class="panel-body collapse" id="t3">
+		<p>
+Многие камеры ONVIF позволяют подписываться на "движение в кадре". Для того, чтобы это настроить, необходимо: </br>
+1) Создать простое устройство "Датчик движения". </br>
+2) Установить модуль ONVIF, найти или добавить вручную нужные камеры.  На вкладке "общие" выбрать Enable ONVIF events polling. На вкладке "данные" привязать метрику tns1:RuleEngine/CellMotionDetector/Motion/IsMotion к созданному ранее датчику движения и свойству status или методу MotionDetected. </br>
+</br>
+Проверить, поддерживает ли камера подписку и корректно ли работает подписка можно с помощью программы  </br>
+ONVIF Device Manager Ссылка на программу https://yadi.sk/d/kXCND7Nmt3tAYQ </br>
+Обзор программы https://habr.com/company/synesis/blog/120747/ </br>
+
+[b]Наблюдение: [/b] </br>
+Две камеры h264 в одно и тоже время примерно через месяц перестали присылать статусы о сработках. Перезагрузка не помогает, но запуск </br>
+приложения CMS, просмотр параметров настроек и закрытие приложения.</br>
+
+<br></br>
+
+
+		</div> </div> </div>
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t4">Реакция по внешнему датчику движения, например из модуля MiHome</a>
+		</div>
+		<div class="panel-body collapse" id="t4">
+		<p>
+1) Создать простое устройство "Датчик движения" или "Датчик открытия";  </br>
+2) Внешний датчик движения добавляется в систему мажордомо через модуль XiaomiHome, проверяется факт сработки, т.е. данные во вкладке "данные" должны быть актуальны; </br>
+2) Привязывается метрика "motion" к ранее добавленному Простому устройству "Датчик движения"</br>
+
+<br></br>
+
+
+		</div> </div> </div>
+
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t5">Для всех вариантов</a>
+		</div>
+		<div class="panel-body collapse" id="t5">
+		<p>
+в модуле Camshoter: </br>
+1) Добавляется камера (необходимо указать  Имя устройства, путь к снапшотам устройств, ip адрес (нужен для определения доступности). </br>
+2) Добавленную камеру необходимо привязать к Простому устройству "Датчик движения" на вкладке "Настройки". </br>
+3) Посмотреть снапшоты можно на вкладке "Снапшоты". Для сохранения контента используется путь /var/www/cms/cached/nvr/camX </br>
+
+<br></br>
+
+
+		</div> </div> </div>
+
+
+
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#t6">Контактная информация</a>
+		</div>
+		<div class="panel-body collapse" id="t6">
+		<p>
+<a href="https://github.com/directman66/majordomo-camshoter" target="_blank">Ссылка на репозиторий</a><br>
+<a href="https://mjdm.ru/forum/viewtopic.php?f=5&t=5923" target="_blank">Тема на форуме</a>.<br>
+
+<br></br>
+
+
+		</div> </div> </div>
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#bax">Поддержать разработку</a>
+		</div>
+		<div class="panel-body collapse" id="bax">
+
+[#inc rekv.html#]
+
+		</div> </div> </div>
+
+                                                                                                         
+	
+</div>
+
+
+	
+</div>
+
