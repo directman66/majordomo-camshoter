@@ -74,6 +74,22 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    $rec['FFMPEGCMD']=$ffmpegcmd;
 
 
+   global $users_id;
+
+
+
+//   $rec['FFMPEGCMD']=access_user;
+debmes('users_id: '.$users_id, 'camshoter');
+
+   $rec['TELEGRAMUSERS']=$users_id;
+
+
+
+
+
+
+//ACCESS_USER
+
 
 
 
@@ -105,6 +121,12 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    }
   
 
+$sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='".$rec['ID']."' and TELEGRAMUSERS  like CONCAT('%',tlg_user.ID,'%' )  )  as ACCESS_USER  from tlg_user ";
+debmes($sql, 'camshoter');
+//$sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='' and  TELEGRAMUSERS=tlg_user.ID )  as ACCESS_USER  from tlg_user ";
+$res2 = SQLSelect($sql);
+debmes($res2, 'camshoter');
+   $out['LIST_ACCESS'] = $res2;
 
 
   if (is_array($rec)) {
@@ -112,6 +134,13 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
     if (!is_array($v)) {
      $rec[$k]=htmlspecialchars($v);
     }
-   }
+   
+
+
+
+}
   }
+
   outHash($rec, $out);
+
+
