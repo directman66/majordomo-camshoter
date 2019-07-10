@@ -5,57 +5,47 @@
 
 
 
-
-
-
 <table border=0>
-<tr><td>
-
-
 [#begin FILES#]
-
-
-
-
-  		
-
-
-
-
-
-
-
-
+<table border=0 width="<#SIZETHMB#>" style=" table-layout:fixed; float:left; margin:0 9px 0 0;" >
+<tr><td>
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#META#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="<#SIZETHMB#>" ></a> 
 </td></tr><tr>
-<td>
-
-<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#JSON#]' >
-<img src="../cms/cached/nvr/[#FILE#]" width="[#SIZETHMB#]" ></a> 
-</td></tr>
 <td>
 <a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
 [#if META=""#]..[#else#]<small><small>[#META#]</small></small>[#endif#]
-<!-- USER_ID (select) -->
 </a>
-</td>
-
-</tr>
-
-
+</td></tr>
 </table>
 [#end FILES#]
 
-[#endif#]
+</table>
+<!--
 
 
 
+[#begin FILES#]
+<table border=0>
 <tr><td>
 
+<a rel="simplebox" href="../cms/cached/nvr/[#FILE#]" target="_blank" title='[#JSON#]' >
+<img src="../cms/cached/nvr/[#FILE#]" width="<#SIZETHMB#>" ></a> 
+</td></tr><tr><td>
+<a  href="?view_mode=detect&id=/cms/cached/nvr/[#FILE#]&id2=[#ID#]&tab=devcount" target="_blank" title="[#JSON#]" >
+[#if META=""#]..[#else#][#META#][#endif#]
+
+</a>
+</td></tr>
+</table>
+[#end FILES#]
+-->
+
+</p>
 <br><br>
 <!--<a href="?view_mode=clearfolder&id=[#ID#]&tab=" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Clear Folder">Clear Folder</i></a> -->
  <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
-</td>
 
 
-</tr>
-</table>
+
+
