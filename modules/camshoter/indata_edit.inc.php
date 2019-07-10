@@ -65,6 +65,9 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
    $rec['SENDTELEGRAM']=$sendtelegram;
 
 
+   global $enable1;
+   $rec['ENABLE1']=$sendtelegram;
+
 
 
    global $somebodyignore;
@@ -79,7 +82,7 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
 
 
 //   $rec['FFMPEGCMD']=access_user;
-debmes('users_id: '.$users_id, 'camshoter');
+//debmes('users_id: '.$users_id, 'camshoter');
 
    $rec['TELEGRAMUSERS']=$users_id;
 
@@ -122,10 +125,10 @@ debmes('users_id: '.$users_id, 'camshoter');
   
 
 $sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='".$rec['ID']."' and TELEGRAMUSERS  like CONCAT('%',tlg_user.ID,'%' )  )  as ACCESS_USER  from tlg_user ";
-debmes($sql, 'camshoter');
+//debmes($sql, 'camshoter');
 //$sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='' and  TELEGRAMUSERS=tlg_user.ID )  as ACCESS_USER  from tlg_user ";
 $res2 = SQLSelect($sql);
-debmes($res2, 'camshoter');
+//debmes($res2, 'camshoter');
    $out['LIST_ACCESS'] = $res2;
 
 
