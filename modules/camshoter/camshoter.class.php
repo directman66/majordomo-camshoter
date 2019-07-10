@@ -173,29 +173,8 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 }
 
 
- if ($this->tab=='users') {
 
 
-
-$gfolder=ROOT."cms/cached/nvr/users/";
-$files=$this->getusers($gfolder);
-//print_r($files);
-//jpeg
-$out['FILES']=$files;
-
-}
-
-
- if ($this->tab=='faces')
-
- {
-$gfolder=ROOT."cms/cached/nvr/faces/";
-$files=$this->getusers($gfolder);
-//print_r($files);
-//jpeg
-$out['FILES']=$files;
-
-}
 
 //$out['er']=$this->owner->action;
 //$out['er']='12';
@@ -214,9 +193,12 @@ $gfolder=ROOT."cms/cached/nvr/last/";
 $files=$this->getusers($gfolder);
 //print_r($files);
 //jpeg
+debmes($files, 'camshoter');
 $out['FILES']=$files;
+//$out['CAM']=$files[];
 $out['SIZETHMB']='500';
-} else
+} 
+//else
 
 // if ($this->owner->action=='apps')
  
@@ -235,6 +217,31 @@ $out['SIZETHMB']='500';
    $this->adduser($out, $this->id);
    $this->redirect("?tab=users");
  }
+
+ if ($this->tab=='faces')
+
+ {
+$gfolder=ROOT."cms/cached/nvr/faces/";
+$files=$this->getusers($gfolder);
+//print_r($files);
+//jpeg
+$out['FILES']=$files;
+
+}
+
+ if ($this->tab=='users') {
+
+
+
+$gfolder=ROOT."cms/cached/nvr/users/";
+$files=$this->getusers($gfolder);
+//print_r($files);
+//jpeg
+$out['FILES']=$files;
+
+}
+
+
 
 
  if ($this->view_mode=='copyfav') {
@@ -1222,7 +1229,7 @@ $meta=$sqlzapr['ANSWER'];
 
 ///$files[] =array("FILE"=>$upfoler1."/".$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>substr($upfoler1,3));
 //$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
-$files[] =array("FILE"=>$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
+$files[] =array("CAMID"=>preg_replace("/[^0-9]/", '',$v),"FILE"=>$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
 //$files[] =array("FILE"=>$dir."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
 //debmes($files, 'camshoter');
 
