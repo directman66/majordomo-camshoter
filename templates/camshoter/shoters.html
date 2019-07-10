@@ -10,19 +10,21 @@
 [#begin ARCDATES#]
 <!--<option value="[#DATE#]"[#if SELECTED#] selected[#endif#]>[#DATE#]-->
 
-<option value="[#DATE#]"[#if SELECTED=DATE#] selected[#endif#]>[#DATE#]
+<option value="[#DATE#]"[#if DATE="<#ARCDATE#>"#] selected[#endif#]>[#DATE#]
 [#end ARCDATES#]
  </select>
 </td><td>
  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; размер миниатюры:</td><td>
+[#FILES.SIZETHMB#]
+
 <select name="sizethmb" class="form-control" style="width: 150px;" align="left">
-<option[#if SIZETHMB1=500#] selected[#endif#]>500
-<option[#if SIZETHMB1=400#] selected[#endif#]>400
-<option[#if SIZETHMB1=300#] selected[#endif#]>300
-<option[#if SIZETHMB1=200#] selected[#endif#]>200
-<option[#if SIZETHMB1=150#] selected[#endif#]>150
-<option[#if SIZETHMB1=100#] selected[#endif#]>100
-<option[#if SIZETHMB1=50#] selected[#endif#]>50
+<option[#if SIZETHMB="500"#] selected[#endif#]>500
+<option[#if SIZETHMB="400"#] selected[#endif#]>400
+<option[#if SIZETHMB="300"#] selected[#endif#]>300
+<option[#if SIZETHMB="200"#] selected[#endif#]>200
+<option[#if SIZETHMB="150"#] selected[#endif#]>150
+<option[#if SIZETHMB="100"#] selected[#endif#]>100
+<option[#if SIZETHMB="50"#]  selected[#endif#]>50
 </select>
 
 </td><td>       &nbsp;  &nbsp;  &nbsp; 
