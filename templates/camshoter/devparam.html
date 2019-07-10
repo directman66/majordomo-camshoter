@@ -132,19 +132,44 @@
 </div> 
 </div>
 
-
+ <hr>
 <div class="form-group ">
         <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_OBJECT#> (датчик движения):</label>
         <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_object" id="linked_object"  value="[#LINKED_OBJECT#]" ></div>
 </div>
-
-
 <div class="form-group ">
         <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_PROPERTY#> (status):</label>
         <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_property" id="linked_property" value="[#LINKED_PROPERTY#]" ></div>
 </div>
-
 [#module name="linkedobject" object_field="linked_object" property_field="linked_property"#]
+<br>
+
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_OBJECT#> (датчик двери):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_object2" id="linked_object2"  value="[#LINKED_OBJECT2#]" ></div>
+</div>
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_PROPERTY#> (status):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_property2" id="linked_property2" value="[#LINKED_PROPERTY2#]" ></div>
+</div>
+
+[#module name="linkedobject" object_field="linked_object2" property_field="linked_property2"#]
+<br>
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_OBJECT#> (датчик дополнительный):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_object3" id="linked_object3"  value="[#LINKED_OBJECT3#]" ></div>
+</div>
+<div class="form-group ">
+        <label class="col-lg-4 control-label" for="inputTitle"><#LANG_LINKED_PROPERTY#> (status):</label>
+        <div class="col-lg-5"><input type="text"  class="form-control "  name="linked_property3" id="linked_property3" value="[#LINKED_PROPERTY3#]" ></div>
+</div>
+[#module name="linkedobject" object_field="linked_object3" property_field="linked_property3"#]
+
+<hr>
+
+
+
+
 
 
 
@@ -163,6 +188,15 @@
 </select>
 
 </div></div>
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">
+
+
+	<label class="col-lg-3 control-label">Реагировать только на сработку  сенсора&nbsp;&nbsp;
+ <input type="checkbox" name="enable1" value="1"[#if ENABLE1="1"#] checked[#endif#]> 
+</label>
+</div>
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label">
