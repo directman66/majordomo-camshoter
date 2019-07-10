@@ -98,9 +98,26 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
 
   global $linked_object;
   global $linked_property;
+
+  global $linked_object2;
+  global $linked_property2;
+
+  global $linked_object3;
+  global $linked_property3;
+
+
   $rec['LINKED_OBJECT']=trim($linked_object);
   $rec['LINKED_PROPERTY']=trim($linked_property);
   addLinkedProperty($rec['LINKED_OBJECT'], $rec['LINKED_PROPERTY'], $this->name);   
+
+  $rec['LINKED_OBJECT2']=trim($linked_object2);
+  $rec['LINKED_PROPERTY2']=trim($linked_property2);
+  addLinkedProperty($rec['LINKED_OBJECT2'], $rec['LINKED_PROPERTY2'], $this->name);   
+
+  $rec['LINKED_OBJECT3']=trim($linked_object3);
+  $rec['LINKED_PROPERTY3']=trim($linked_property3);
+  addLinkedProperty($rec['LINKED_OBJECT3'], $rec['LINKED_PROPERTY3'], $this->name);   
+
    //UPDATING RECORD
 //sg('test.merk',$ok);
    if ($ok) {
