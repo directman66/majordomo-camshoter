@@ -199,17 +199,26 @@ $out['FILES']=$files;
 
 //$out['er']=$this->owner->action;
 //$out['er']='12';
-
- if (($this->tab=='preview')&&($this->owner->action=='camshoter')) {
+/*
+ if (
+(($this->tab=='preview')&&($this->owner->action=='camshoter')
+||
+($this->owner->action=='apps')
+&&$this->tab<>'devcount' )
+)
+*/
+echo  $this->owner->action;
+if ($this->tab<>'devcount')
+ {
 $gfolder=ROOT."cms/cached/nvr/last/";
 $files=$this->getusers($gfolder);
 //print_r($files);
 //jpeg
 $out['FILES']=$files;
+} else
 
-
-}
-
+// if ($this->owner->action=='apps')
+ 
 
 
 
