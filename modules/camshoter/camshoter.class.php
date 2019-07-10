@@ -207,7 +207,7 @@ $out['FILES']=$files;
 &&$this->tab<>'devcount' )
 )
 */
-echo  $this->owner->action;
+//echo  $this->owner->action;
 if ($this->tab<>'devcount')
  {
 $gfolder=ROOT."cms/cached/nvr/last/";
