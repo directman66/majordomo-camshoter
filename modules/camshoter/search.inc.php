@@ -46,7 +46,7 @@
   if ($res[0]['ID']) {
    colorizeArray($res);
    $total=count($res);
-debmes('total:'.$total, 'camshoter');
+//debmes('total:'.$total, 'camshoter');
    for($i=0;$i<$total;$i++) {
 
     // some action for every record if required
