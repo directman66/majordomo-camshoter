@@ -9,7 +9,7 @@
 //
 //
 //ini_set('max_execution_time', '600');
-ini_set ('display_errors', 'off');
+//ini_set ('display_errors', 'off');
 class camshoter extends module {
 /**
 *
@@ -200,7 +200,7 @@ $out['FILES']=$files;
 //$out['er']=$this->owner->action;
 //$out['er']='12';
 
- if (($this->tab=='preview')||($this->owner->action=='camshoter')) {
+ if (($this->tab=='preview')&&($this->owner->action=='camshoter')) {
 $gfolder=ROOT."cms/cached/nvr/last/";
 $files=$this->getusers($gfolder);
 //print_r($files);
@@ -471,7 +471,7 @@ else
 
 ';
  SetTimeOut('camshoter_devices_ping'.$i,$cmd, '1'); 
-debmes($cmd, 'camshoter');
+//debmes($cmd, 'camshoter');
 
 /*
 
@@ -511,17 +511,13 @@ function usual(&$out) {
 
 
  function propertySetHandle($object, $property, $value) {
-//   sg('test.camshoter','123');
-
+debmes( 'propertySetHandle '.$object. '.'.$property.' '.$value, 'camshoter');
    $table='camshoter_devices';
 $sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'";
    $properties=SQLSelect($sql);
-//   sg('test.camshoter',  $sql);
-//   sg('test.camshoter',  $properties['TYPE']);
-
-
 //никого дома нет статус
 $nobodyactive=gg('NobodyHomeMode.active');
+debmes( '$nobodyactive '.$nobodyactive, 'camshoter');
 
    $total=count($properties);
    if ($total) {
@@ -533,14 +529,59 @@ if (($properties[$i]['SOMEBODYIGNORE']=='1')&& ($nobodyactive==0))
 {$body=0;} 
 else 
 {$body=1;} 
+//debmes( '----- '.$body, 'camshoter');
+//debmes( '$body '.$body, 'camshoter');
+//debmes( 'enable1 '.$properties[$i]['ENABLE1'], 'camshoter');
+
+if ($properties[$i]['ENABLE1']=="1") {
+
+	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)&&($value==1)) {
+//$this->mainproccesss_test($properties,  $i);
+//debmes( 'mainprocess enable1='.$properties[$i]['ENABLE1'], 'camshoter');
+//debmes( 'mainprocess start', 'camshoter');
+$this->mainprocesss($properties,  $i);
+//debmes( 'mainprocess end', 'camshoter');
+
+
+
+}
+} else 
+{
 	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)) {
-//		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], (int)!$value);
-//	 } else { 
-//		sg($properties[$i]['TARGET_OBJECT'].'.'.$properties[$i]['TARGET_PROPERTY'], $value);
+//$this->mainproccesss_test($properties,  $i);
+//debmes( 'mainprocess enable1='.$properties[$i]['ENABLE1'], 'camshoter');
+//debmes( 'mainprocess start', 'camshoter');
+$this->mainprocesss($properties,  $i);
+//debmes( 'mainprocess end', 'camshoter');
 
 
-//для теста вызовем нужный метод датчика движения
-//cm('Motion11.motionDetected');
+
+//$this->mainprocesss();
+}
+}
+}
+}
+
+}
+/////////////////////////////
+/////////////////////////////
+/////////////////////////////
+/////////////////////////////
+
+
+/**
+
+*
+* @access public
+*/
+
+
+function mainprocesss($properties, $i){
+//function mainproccesss (){
+
+debmes( 'run mainprocess '.$i, 'camshoter');
+//debmes( $properties, 'camshoter');
+
 
 debmes('Сработал датчик движения на камере '.$properties[$i]['ID'],'camshoter');
 
@@ -556,14 +597,10 @@ mkdir($users, 0777, true);}
 
 
 
+
 $savefacesdir=ROOT."cms/cached/nvr/faces/";
 if (!file_exists($savefacesdir)) {
 mkdir($savefacesdir, 0777, true);}
-
-
-
-
-
 
 
  if (!file_exists($savelast)) {
@@ -591,10 +628,8 @@ file_put_contents($savename, $result);
 file_put_contents($savenamelast, $result);
 }
 
-
-
-
 }
+
 if (($properties[$i]['TYPE']=='rtsp')&&($properties[$i]['METHOD']=='mp4'))
 {
 $iam='video';
@@ -605,10 +640,6 @@ $savenamethumb=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg
 $savenamethumbdir=$savepath."cam".$properties[$i]['ID']."_".date('Y-m-d_His'); // куда сохранять
 $savenamelast=$savelast."cam".$properties[$i]['ID'].".jpg"; // куда сохранять
 $savenameface=$savefacesdir."cam".$properties[$i]['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
-
-
-
-
 
 //linux
 if (substr(php_uname(),0,5)=='Linux')  {
@@ -621,10 +652,6 @@ if  ($properties[$i]['FFMPEGCMD']=="")
 //  exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.' 2>&1'.$savename); 
 $cmd='ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename;
 $res = exec($cmd . ' 2>&1', $output);
-
-
-
-
 
  } else
 {
@@ -682,15 +709,15 @@ $telegram_module = new telegram();
 
 $ts=$properties[$i]['TELEGRAMUSERS'];
 
-debmes('telegram users  '.$ts,'camshoter');
+//debmes('telegram users  '.$ts,'camshoter');
 
 $tsar=explode(',', $ts);
 
-debmes($tsar,'camshoter');
+//debmes($tsar,'camshoter');
 
 
 $total=count($tsar);
-debmes('total  '.$total,'camshoter');
+//debmes('total  '.$total,'camshoter');
 for ($i = 0; $i < $total; $i++)
 {
 
@@ -707,9 +734,9 @@ if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToUser($user,$sav
 
 
 
-debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
-}
-}
+//debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
+
+
 	 $properties[$i]['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties[$i]);
 
@@ -719,71 +746,61 @@ debmes('Файл '.$savename .' отправлен в телегу пользо�
 //if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
 
 
+
+
 //определяем, есть ли на фото лицо
 
+$this->detectface($properties, $i, $savenamethumbdir);
+}
+}
+}
+
+   
+
+
+
+
+function detectface ($properties, $i, $savenamethumbdir){
+//debmes( 'run mainprocesstest '.$i, 'camshoter');
+//debmes( $properties, 'camshoter');
 $fddpath=DIR_MODULES.$this->name."/FaceDetector.php";
-debmes('Запускаем процесс facedetect '.$fddpath,'camshoter');
-error_reporting(0);
+//debmes('Запускаем процесс facedetect '.$fddpath,'camshoter');
+//error_reporting(0);
 //include "FaceDetector.php";
 
 //require(DIR_MODULES.$this->name.'/FaceDetector.php');
 include $fddpath;
 
 $face_detect = new Face_Detector('detection.dat');
-debmes('facedetect открыт','camshoter');
+//debmes('facedetect открыт','camshoter');
 
 
-//проверяем  первый кадр, вдруг мы работает только со снапшотами
-//if ($face_detect->face_detect($savenamethumb)) 
-//{$face=1;
-//$face_detect->cropsave($savenameface);
-//$face_detect->cropFace2('new.jpg');
-//} else $face=0; 
-//echo $face;
-
-//debmes('Идем по кадрам '.$savenamethumbdir,'camshoter');
-//распознаем, если лицо
-//if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 
 
 ///идем по кадрам, сохраненным из видео
-debmes('Идем по кадрам '.$savenamethumbdir,'camshoter');
+//debmes('Идем по кадрам '.$savenamethumbdir,'camshoter');
 
 if (($savenamethumbdir)&&($savenamethumbdir<>"")&& (is_dir($savenamethumbdir))){
  foreach (scandir($savenamethumbdir) as $v) 
 {
-debmes('Проверяем фото '.$savenamethumbdir.$v.' на наличие лиц','camshoter');
+//debmes('Проверяем фото '.$savenamethumbdir.$v.' на наличие лиц','camshoter');
 if ($face_detect->face_detect($savenamethumbdir.$v)) 
 {$face=1;
-debmes('В кадре лицо!!  '.$savenamethumbdir.$v,'camshoter');
+//debmes('В кадре лицо  '.$savenamethumbdir.$v,'camshoter');
 $face_detect->cropsave($savenameface);
 //$face_detect->cropFace2('new.jpg');
 } else $face=0; 
-//echo $face;
 
 //if ($face==1) $this->mailvision_detect_face($savenameface, $id);
 }}
-
-
 
 $this->mailvision_detect($savenamethumb, $id);
 
 
 
-
-//$this->mailvision_detect($savenamelast);
-	}
-  }
-   }
- }
+}
 
 
-
-/**
-
-*
-* @access public
-*/
 
  function delete($id) {
   $rec=SQLSelectOne("SELECT * FROM camshoter_devices WHERE ID='$id'");
@@ -880,6 +897,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: METHOD varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SOMEBODYIGNORE int(1) 
  camshoter_devices: SENDTELEGRAM int(1) 
+ camshoter_devices: ENABLE1 int(1) 
  camshoter_devices: TELEGRAMUSERS varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: SENDEMAIL int(1) 
  camshoter_devices: SENDSLAKS int(1) 
@@ -1063,10 +1081,10 @@ $upfoler1=explode('/',$dir)[$cnt-2];
 
 
 
-debmes('camshoter storage dir:'.$dir, 'camshoter');
-debmes('camshoter storage cnt:'.$cnt, 'camshoter');
-debmes('camshoter upfoler:'.$upfoler, 'camshoter');
-debmes('camshoter upfoler1:'.$upfoler1, 'camshoter');
+//debmes('camshoter storage dir:'.$dir, 'camshoter');
+//debmes('camshoter storage cnt:'.$cnt, 'camshoter');
+//debmes('camshoter upfoler:'.$upfoler, 'camshoter');
+//debmes('camshoter upfoler1:'.$upfoler1, 'camshoter');
 
  $files = array();
 
@@ -1120,7 +1138,7 @@ return rmdir($dir);
 
 function getusers($dir) {
 
-debmes('вызван getusers '.$dir, 'camshoter');
+//debmes('вызван getusers '.$dir, 'camshoter');
 
 
   $tempusers=SQLSelect("SELECT ID, NAME FROM users ORDER BY NAME");
@@ -1157,8 +1175,8 @@ $upfoler=explode('/',$dir)[$cnt-1];
 $upfoler1=explode('/',$dir)[$cnt-2];
 
 
-debmes('$upfoler '.$upfoler, 'camshoter');
-debmes('$upfoler1 '.$upfoler1, 'camshoter');
+//debmes('$upfoler '.$upfoler, 'camshoter');
+//debmes('$upfoler1 '.$upfoler1, 'camshoter');
 
 
  $files = array();
@@ -1170,7 +1188,7 @@ if (($dir)&&($dir<>"")){
 
 
 {
-debmes($v, 'camshoter');
+//debmes($v, 'camshoter');
 $sizethmb=300;
 
 if (($v<>"")&&($v<>".")&&($v<>"..")
@@ -1187,7 +1205,7 @@ $meta=$sqlzapr['ANSWER'];
 //$files[] =array("FILE"=>$upfoler1."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
 $files[] =array("FILE"=>$upfoler."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
 //$files[] =array("FILE"=>$dir."/".$v,'SIZETHMB'=>$sizethmb, 'ID'=>$userid, 'USERS'=>$users, 'USERNAME'=>$username, 'META'=>$meta);
-debmes($files, 'camshoter');
+//debmes($files, 'camshoter');
 
 if (!$sqlzapr['ID'])
 
