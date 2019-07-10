@@ -215,6 +215,7 @@ $files=$this->getusers($gfolder);
 //print_r($files);
 //jpeg
 $out['FILES']=$files;
+$out['SIZETHMB']='500';
 } else
 
 // if ($this->owner->action=='apps')
