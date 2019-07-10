@@ -513,7 +513,9 @@ function usual(&$out) {
  function propertySetHandle($object, $property, $value) {
 debmes( 'propertySetHandle '.$object. '.'.$property.' '.$value, 'camshoter');
    $table='camshoter_devices';
-$sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'";
+//$sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'";
+$sql="SELECT * FROM $table WHERE (LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."') OR (LINKED_OBJECT2 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY2 LIKE '".DBSafe($property)."') OR (LINKED_OBJECT3 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY3 LIKE '".DBSafe($property)."')";
+debmes($sql, 'camshoter');
    $properties=SQLSelect($sql);
 //никого дома нет статус
 $nobodyactive=gg('NobodyHomeMode.active');
@@ -910,6 +912,13 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: UPDATED datetime
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
+
+ camshoter_devices: LINKED_OBJECT2 varchar(255) NOT NULL DEFAULT ''
+ camshoter_devices: LINKED_PROPERTY2 varchar(255) NOT NULL DEFAULT ''
+
+ camshoter_devices: LINKED_OBJECT3 varchar(255) NOT NULL DEFAULT ''
+ camshoter_devices: LINKED_PROPERTY3 varchar(255) NOT NULL DEFAULT ''
+
 
 EOD;
   parent::dbInstall($data);
