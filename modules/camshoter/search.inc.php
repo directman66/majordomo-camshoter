@@ -124,6 +124,7 @@ if ($arcdate="" )
 ///////////////////
 //массив дат для комбобокса
 $arcar=$this->createDateRangeArray(date('Y-m-d',$date2), $date1);
+debmes ($arcar, 'camshoter');
 //print_r($arcar);
 //$out['FILES']=$arcar;
 
@@ -162,6 +163,8 @@ $files=$this->getfiles($gfolder);
 $out['FILES']=$files;
 
 
+global $sizethmb;
+$out['SIZETHMB']=$sizethmb;
 
 
 // $this->redirect("?view_mode=indata_edit&tab=devcount&id=".$this->id);
