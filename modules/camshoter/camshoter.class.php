@@ -193,7 +193,7 @@ $gfolder=ROOT."cms/cached/nvr/last/";
 $files=$this->getusers($gfolder);
 //print_r($files);
 //jpeg
-debmes($files, 'camshoter');
+//debmes($files, 'camshoter');
 $out['FILES']=$files;
 //$out['CAM']=$files[];
 $out['SIZETHMB']='500';
@@ -337,6 +337,9 @@ SQLInsert('camshoter_config', $cmd_rec);
  if ($this->view_mode=='updatesize') {
 
 $this->getfoldersize($this->id);
+$this->clearsubfolder($this->id);
+
+
    $this->redirect("?");
 }
 
@@ -345,7 +348,7 @@ $this->getfoldersize($this->id);
  if ($this->view_mode=='updatesizeall') {
 
 $this->getsizeall();
-
+$this->manageallfolders();
 
 }
 
@@ -452,6 +455,75 @@ $this->delFolder($savepath);
 
  }
 
+ function manageallfolders() {
+
+$rec=SQLSELECT('select * from camshoter_devices');
+debmes($rec, 'camshoter');
+$total = count($rec);
+for ($i = 0; $i < $total; $i++){
+$this->clearsubfolder($rec[$i]['ID']);
+}
+}
+
+
+
+ function clearsubfolder($id) {
+
+$path=ROOT."cms/cached/nvr/cam".$id.'/';
+//$this->rmRec($savepath);
+//echo $savepath;
+//$this->delFolder($savepath);
+if (($path)&&($path<>"")){
+ foreach (scandir($path) as $v) 
+
+
+{
+
+if (($v<>"")&&($v<>".")&&($v<>"..")) 
+{
+//debmes($path.$v, 'campath');
+$sec=(time()-strtotime($v));
+$day=round((time()-strtotime($v))/86400);
+$srok=SQLSElectOne('select * from camshoter_devices where ID='.$id)['SROK'];
+//debmes('это папка за дату '.$v.' '.strtotime($v).' урхив устарел на '.$sec.' секунд или '.$day.' дней, а срок хранения '.$srok.' дней', 'campath'); 
+if ($day>$srok)  $this->delFolder($path.$v);
+}
+ foreach (scandir($path.$v) as $vv) {
+if (($vv<>"")&&($vv<>".")&&($vv<>"..")&&($v<>"")&&($v<>".")&&($v<>"..")) {
+
+//debmes($path.$v.'/'.$vv, 'campath'); 
+
+
+
+}
+
+//if (is_dir($path.$v.'/'.$vv)) {
+//$this->delFolder($path.$v.'/'.$vv);
+//debmes('deleting '.$path.$v.'/'.$vv, 'campath');
+//}
+if (is_dir($path.$v.'/'.$vv)&&($vv<>"")&&($vv<>".")&&($vv<>"..")&&($v<>"")&&($v<>".")&&($v<>"..")) 
+{
+///debmes('deleting '.$path.$v.'/'.$vv, 'campath');
+$this->delFolder($path.$v.'/'.$vv);
+
+} 
+
+/*else  {
+ foreach (scandir($path.$v.'/'.$vv) as $vvv) {
+if (($vv<>"")&&($vv<>".")&&($vv<>"..")&&($v<>"")&&($v<>".")&&($v<>"..")&&($vvv<>"")&&($vvv<>".")&&($vvv<>"..")) 
+
+{
+debmes($path.$v.'/'.$vv.'/'.$vvv, 'campath');
+}
+
+}
+
+
+
+}
+*/
+ }}}}
+
 
 
  function adduser(&$out, $id) {
@@ -528,15 +600,15 @@ function usual(&$out) {
 
 
  function propertySetHandle($object, $property, $value) {
-debmes( 'propertySetHandle '.$object. '.'.$property.' '.$value, 'camshoter');
+//debmes( 'propertySetHandle '.$object. '.'.$property.' '.$value, 'camshoter');
    $table='camshoter_devices';
 //$sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'";
 $sql="SELECT * FROM $table WHERE (LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."') OR (LINKED_OBJECT2 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY2 LIKE '".DBSafe($property)."') OR (LINKED_OBJECT3 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY3 LIKE '".DBSafe($property)."')";
-debmes($sql, 'camshoter');
+//debmes($sql, 'camshoter');
    $properties=SQLSelect($sql);
 //никого дома нет статус
 $nobodyactive=gg('NobodyHomeMode.active');
-debmes( '$nobodyactive '.$nobodyactive, 'camshoter');
+//debmes( '$nobodyactive '.$nobodyactive, 'camshoter');
 
    $total=count($properties);
    if ($total) {
@@ -598,11 +670,11 @@ $this->mainprocesss($properties,  $i);
 function mainprocesss($properties, $i){
 //function mainproccesss (){
 
-debmes( 'run mainprocess '.$i, 'camshoter');
+//debmes( 'run mainprocess '.$i, 'camshoter');
 //debmes( $properties, 'camshoter');
 
 
-debmes('Сработал датчик движения на камере '.$properties[$i]['ID'],'camshoter');
+//debmes('Сработал датчик движения на камере '.$properties[$i]['ID'],'camshoter');
 
 $savepath=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-d').'/';
  if (!file_exists($savepath)) {
@@ -677,7 +749,7 @@ $res = exec($cmd . ' 2>&1', $output);
 $cmd='timeout -s INT 60s '.str_replace('#savename',$savename, str_replace('#sec',$sec, $properties[$i]['FFMPEGCMD']));
 exec($cmd); 
 }
-debmes('Видео сохранено  '.$savename,'camshoter');
+//debmes('Видео сохранено  '.$savename,'camshoter');
 
 
 //-vcodec copy -b 64k -acodec ac3
@@ -702,7 +774,7 @@ $savenamethumbdir=ROOT."cms/cached/nvr/cam".$properties[$i]['ID'].'/'.date('Y-m-
  if (!file_exists($savenamethumbdir)) {
 mkdir($savenamethumbdir, 0777, true);}
 exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.jpg'); 
-debmes('Раскадровка сохранена  '.$savenamethumbdir,'camshoter');
+//debmes('Раскадровка сохранена  '.$savenamethumbdir,'camshoter');
 }
 
 }
@@ -861,6 +933,7 @@ $this->mailvision_detect($savenamethumb, $id);
 		if ($event_name=='HOURLY') {
 
 $this->getsizeall();
+$this->manageallfolders();
 }
 
 }
