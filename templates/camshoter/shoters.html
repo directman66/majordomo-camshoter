@@ -1,12 +1,12 @@
 [#if ACTION=""#]<br>[#endif#]
 
-<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<form action="?" method="post" enctype="multipart/form-data" name="frmList_mqtt"  class="form-horizontal">
 <table border=0><tr><td>
 Снапшоты с "[#TITLE#]" за [#ARCDATE#] ([#METHOD#] )
 </td><td>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align="left">
-<select name="arcdate" class="form-control" style="width: 200px;[#if "<#SETTINGS_THEME#>"=="dark"&& ACTION=""#]background-color : grey;color:white[#endif#]" align="left">
+<select name="arcdate" onChange="document.frmList_mqtt.submit();"  class="form-control" style="width: 200px;[#if "<#SETTINGS_THEME#>"=="dark"&& ACTION=""#]background-color : grey;color:white[#endif#]" align="left">
 <!--  <option value=""><#LANG_SELECT#> -->
 
 [#begin ARCDATES#]
@@ -19,7 +19,7 @@
  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; размер миниатюры:&nbsp;&nbsp;&nbsp;</td><td>
 [#FILES.SIZETHMB#]
 
-<select name="sizethmb" class="form-control" style="width: 150px;
+<select name="sizethmb" onChange="document.frmList_mqtt.submit();" class="form-control" style="width: 150px;
 [#if "<#SETTINGS_THEME#>"=="dark"&& ACTION=""#]background-color : grey;color:white[#endif#]" align="left">
 <option[#if SIZETHMB="500"#] selected[#endif#]>500
 <option[#if SIZETHMB="400"#] selected[#endif#]>400
