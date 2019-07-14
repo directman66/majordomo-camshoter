@@ -389,6 +389,21 @@ $this->redirect("?action=camshoter");
 
 
 
+ if ($this->view_mode=='runall') {
+
+$cmd=sqlselect('select * from camshoter_devices  where  enable=1');
+$total = count($cmd);
+for ($i = 0; $i < $total; $i++)
+{
+$this->mainprocesss($cmd,  $i);
+
+}
+
+}
+
+
+
+
 
  if ($this->view_mode=='indata_del') {
    $this->delete($this->id);
@@ -411,6 +426,21 @@ $this->redirect("?action=camshoter");
 }
 
   
+
+
+
+ function hourly() {
+
+$cmd=sqlselect('select * from camshoter_devices  where hourly=1 and enable=1');
+$total = count($cmd);
+for ($i = 0; $i < $total; $i++)
+{
+$this->mainprocesss($cmd,  $i);
+
+}
+
+}
+
 
 
 
@@ -592,11 +622,60 @@ else
 * @access public
 */
 function usual(&$out) {
+
+    if ($this->ajax) {
+        global $op;
+        $result=array();
+
+
+            if ($op == 'htop'  ) {
+//echo "123";      
+//echo $fn;      
+
+//print_r(time().": <hr>");
+//echo "123";
+//$cmd="top  -b -n 1";
+//$cmd="top  -b -n 1|grep ffmpeg| grep Cpu";
+$cmd='top  -b -n 1 | grep -E "ffmpeg|Cpu|Tasks|Mem"';
+
+
+
+
+//$cmd="top  -b -n 1";
+
+
+//$cmd="top  -p `pidof -s ffmpeg` -b -n 1";
+//$cmd="top -p 'pgrep -f ffmpeg'";
+
+//$cmd='ps -aux';
+//$res = exec($cmd , $output);
+$res = (nl2br(shell_exec($cmd)));
+
+
+//print_r( $res);
+echo 'Показывает список процессов через top c фильтром ffpeg за '.time(). ' (функционал работает пока только c linux):<hr>';
+echo $res;
+
+
+        }
+
+
+
+//        echo json_encode($result);
+        exit;
+    }
+
+
  if ($this->owner->action=='apps') {
   $this->redirect(ROOTHTML."module/".$this->name.".html");
  } else 
  $this->admin($out);
 }
+
+
+
+
+
 
 
  function propertySetHandle($object, $property, $value) {
@@ -793,7 +872,7 @@ if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
 
  {	 
 $fsize=filesize($savename);
-$text='Зафиксировано движение '.$properties[$i]['TITLE'];
+$text='Зафиксировано изменение датчика '.$properties[$i]['LINKED_DEVICES'].$properties[$i]['LINKED_DEVICES1'].$properties[$i]['LINKED_DEVICES2'].' на камере '.$properties[$i]['TITLE'] ;
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 
@@ -934,6 +1013,7 @@ $this->mailvision_detect($savenamethumb, $id);
 
 $this->getsizeall();
 $this->manageallfolders();
+$this->hourly();
 }
 
 }
@@ -1008,6 +1088,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
 
  camshoter_devices: LINKED_OBJECT3 varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY3 varchar(255) NOT NULL DEFAULT ''
+ camshoter_devices: HOURLY varchar(255) NOT NULL DEFAULT ''
 
 
 EOD;
