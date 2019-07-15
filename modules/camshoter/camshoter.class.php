@@ -381,6 +381,13 @@ $this->redirect("?tab=devcount");
 }
 
 
+ if ($this->view_mode=='clearcpu') {
+SQLExec ('delete from camshoter_config where parametr="cpu" ');
+   $this->redirect("?tab=htop");
+}
+
+
+
  if ($this->view_mode=='sendaction') {
 setglobal($this->id, '1');
 //callmethod($this->id.'motionDetected');
@@ -626,7 +633,7 @@ function usual(&$out) {
     if ($this->ajax) {
         global $op;
         $result=array();
-
+SQLExec ('delete from camshoter_config where parametr="cpu" and updated<"'.date('Y-m-d').'"');
 
             if ($op == 'htop'  ) {
 //echo "123";      
@@ -636,7 +643,8 @@ function usual(&$out) {
 //echo "123";
 //$cmd="top  -b -n 1";
 //$cmd="top  -b -n 1|grep ffmpeg| grep Cpu";
-$cmd2='top  -b -n 1 | grep -E "Cpu|Tasks|Mem"';
+$cmd2='top  -b -n 1 | grep -E "Cpu|Tasks|Mem|average"';
+//$cmd2='top  -b -n 1 ';
 $res2 = (shell_exec($cmd2));
 
 
@@ -677,6 +685,72 @@ display:inline-block;
 </style>';
 */
 
+$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d').'" limit 100  ' ;
+
+$rec=SQLSelect($sql);
+$total=count($rec);
+for ($i = 0; $i < $total; $i++)
+{
+//echo $rec[$i]['value'].",";
+$x=$x.$rec[$i]['value'].",";
+$y=$y."'".$rec[$i]['updated']."',";
+}
+
+$x = substr($x, 0, -1);
+$y = substr($y, 0, -1);
+
+echo '
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<div id="container"></div>
+';
+
+echo "
+<script>
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'line'
+  },
+  title: {
+    text: 'CPU'
+  },
+  xAxis: {
+    categories: [ ";
+//echo $y;
+echo "]
+  },
+  yAxis: {
+    title: {
+      text: 'CPU load %'
+    }
+  },
+  plotOptions: {
+    line: {
+      dataLabels: {
+        enabled: false
+      },
+      enableMouseTracking: false
+    }
+  },
+  series: [{
+    name: 'CPU load',
+    data: [";
+//7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6
+echo $x;
+
+echo "]
+  }
+
+]
+});
+</script>
+";
+
+
+
 echo '
 <style>
 table {
@@ -691,6 +765,14 @@ tr :first-child {
 tr :last-child {
   width: 100%;
 }
+
+#container {
+  min-width: 310px;
+  max-width: 1400px;
+  height: 300px;
+  margin: 0 auto
+}
+
 </style>
 ';
 
@@ -714,10 +796,27 @@ echo '<div>';
 echo trim(str_replace(' ','&nbsp;',$lines[$i]));
 
 
-if (strpos($lines[$i],'Cpu(s)')>0) {
+if (strpos($lines[$i],'average')>0) {
 
 $cpus=explode(' ',$lines[$i]);
-$pcpu=$pcpu.$cpus[1].';';
+
+//echo "--------------:". str_replace(",", '',$cpus[13]);
+//$pcpu=$pcpu.$cpus[1].';';
+//echo 
+
+$max=SQLSelectOne('select max(updated) max from camshoter_config where parametr="cpu" ')['max'];
+//if
+
+$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d H:i:s').'"';
+
+$rec=SQLSelectOne($sql);
+$rec['parametr']='cpu';
+$rec['value']=str_replace(",", '',$cpus[13]);
+$rec['updated']=date('Y-m-d H:i:s');
+if (!$rec['ID']) 
+SQLInsert('camshoter_config', $rec);
+else SQLUpdate('camshoter_config', $rec);
+
 }
 
 //echo "<td  {text-align: justify;}>";
@@ -781,7 +880,11 @@ echo "</td></tr>";
 //echo "</tr>";
 echo '</table>';
 echo "<hr>";
-echo '%cpu: '.$pcpu;
+
+
+
+
+
 
         }
 
