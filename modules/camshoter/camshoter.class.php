@@ -431,7 +431,7 @@ $this->mainprocesss($cmd,  $i);
 
  function hourly() {
 
-$cmd=sqlselect('select * from camshoter_devices  where hourly=1 and enable=1');
+$cmd=sqlselect('select * from camshoter_devices  where hourly=1 and enable=1 order by ID');
 $total = count($cmd);
 for ($i = 0; $i < $total; $i++)
 {
@@ -636,8 +636,8 @@ function usual(&$out) {
 //echo "123";
 //$cmd="top  -b -n 1";
 //$cmd="top  -b -n 1|grep ffmpeg| grep Cpu";
-$cmd='top  -b -n 1 | grep -E "ffmpeg|Cpu|Tasks|Mem"';
-
+$cmd2='top  -b -n 1 | grep -E "Cpu|Tasks|Mem"';
+$res2 = (shell_exec($cmd2));
 
 
 
@@ -647,15 +647,141 @@ $cmd='top  -b -n 1 | grep -E "ffmpeg|Cpu|Tasks|Mem"';
 //$cmd="top  -p `pidof -s ffmpeg` -b -n 1";
 //$cmd="top -p 'pgrep -f ffmpeg'";
 
-//$cmd='ps -aux';
+//$cmd='ps -aux | grep -E "ffmpeg|COMMAND"';
+
+//$cmd='ps  --format="%cpu cmd args time" |grep -E "ffmpeg|COMMAND"';
+//$cmd='ps  --format="%cpu cmd args" |grep -E "ffmpeg|COMMAND"';
+
+//Доступны следующие форматы: %cpu, %mem, args, c, cmd, comm, cp, cputime, egid, egroup, etime, euid, euser, gid, group, pgid, pgrp, ppid, start, sz, thcount, time, uid, uname и многие другие, ознакомиться с ними в разделе помощи man.
+
+$cmd='ps  --format="%cpu time args" |grep -E "ffmpeg|COMMAND"';
+
+//$cmd='ps -fG ffmpeg';
+
+
+
 //$res = exec($cmd , $output);
-$res = (nl2br(shell_exec($cmd)));
+//$res = (nl2br(shell_exec($cmd)));
+$res = (shell_exec($cmd));
+/*
+echo '
+<style>
+div{
+  text-align:justify;
+}
+
+span{  
+width:100%;
+display:inline-block;
+}
+</style>';
+*/
+
+echo '
+<style>
+table {
+  width: 100%;
+}
+
+tr :first-child {
+  width: 0;
+  white-space: nowrap;
+}
+
+tr :last-child {
+  width: 100%;
+}
+</style>
+';
 
 
-//print_r( $res);
-echo 'Показывает список процессов через top c фильтром ffpeg за '.time(). ' (функционал работает пока только c linux):<hr>';
-echo $res;
+echo '<hr>';
+echo 'Показывает общую нагрузку на сервер:';
 
+echo '<table width="100%" border=1>';
+//echo "<tr>";
+
+$lines = preg_split('/\\r\\n?|\\n/', $res2);
+
+$total=count($lines);
+for ($i = 0; $i < $total-1; $i++)
+{
+
+echo '<tr><td>';
+echo '<div>';
+//echo $lines[$i];
+//echo trim(str_replace(' ','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$lines[$i]));
+echo trim(str_replace(' ','&nbsp;',$lines[$i]));
+
+
+if (strpos($lines[$i],'Cpu(s)')>0) {
+
+$cpus=explode(' ',$lines[$i]);
+$pcpu=$pcpu.$cpus[1].';';
+}
+
+//echo "<td  {text-align: justify;}>";
+//echo '<p align="justify">';
+echo '<span> </span></div> ';
+
+echo "</td></tr>";
+}
+echo '</table><hr>';
+
+
+//print_r( $output);
+//echo "<br>";
+echo 'Показывает список процессов ffmpeg:';
+
+echo '<table width="100%" border=1>';
+//echo "<tr>";
+
+$lines = preg_split('/\\r\\n?|\\n/', $res);
+
+$total=count($lines);
+for ($i = 0; $i < $total-1; $i++)
+{
+//echo '<div>';
+
+
+if ((strpos($lines[$i],'grep')>0)||(strpos($lines[$i],'sh')>0)
+){
+//echo "1233";
+} else 
+
+if ((strpos($lines[$i],'COMMAND')>0) ) 
+{
+echo '<tr align ="justify"><td align ="justify">';
+//echo str_replace(' ','&nbsp;',$lines[$i]);
+echo "%CPU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TIME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CMD";
+
+}
+
+else if  ((strpos($lines[$i],'ffmpeg')>0) ) 
+{
+echo '<tr><td bgcolor="red">';
+//echo $lines[$i];
+echo trim(str_replace(' ','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$lines[$i]));
+} 
+else  {
+echo '<tr align ="justify"><td align ="justify">';
+//echo $lines[$i];
+//echo str_replace(' ','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$lines[$i]);
+echo trim(str_replace(' ','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$lines[$i]));
+}
+
+//echo "<td  {text-align: justify;}>";
+//echo '<p align="justify">';
+echo '<span> </span></div> ';
+echo '</div>';
+echo "</td></tr>";
+}
+
+//echo ($res);
+//echo "</tr>";
+echo '</table>';
+echo "<hr>";
+echo '%cpu: '.$pcpu;
 
         }
 
@@ -872,7 +998,7 @@ if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
 
  {	 
 $fsize=filesize($savename);
-$text='Зафиксировано изменение датчика '.$properties[$i]['LINKED_DEVICES'].$properties[$i]['LINKED_DEVICES1'].$properties[$i]['LINKED_DEVICES2'].' на камере '.$properties[$i]['TITLE'] ;
+$text='Зафиксировано изменение датчика '.$properties[$i]['LINKED_OBJECT'].' '.$properties[$i]['LINKED_OBJECT1'].' ' .$properties[$i]['LINKED_OBJECT2'].' на камере '.$properties[$i]['TITLE'] ;
 include_once(DIR_MODULES . 'telegram/telegram.class.php');
 $telegram_module = new telegram();
 
@@ -1098,6 +1224,7 @@ EOD;
  camshoter_config: ID int(10) unsigned NOT NULL auto_increment
  camshoter_config: parametr varchar(300)
  camshoter_config: value varchar(10000)  
+ camshoter_config: updated datetime
 EOD;
    parent::dbInstall($data);
 
