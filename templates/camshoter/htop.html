@@ -1,4 +1,5 @@
 <br>
+
 <!--<a href="?view_mode=clearcpu" class="btn btn-default" title="Clear Folder">Clear CPU</i></a> -->
 <style>
 #container {
@@ -8,9 +9,27 @@
 }
 </style>
 
+<!--
+<script src="highcharts\highcharts.js"></script>
+<script src="highcharts\exporting.js"></script>
+<script src="highcharts\export-data.js"></script>
+-->
+
+
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/highcharts.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/exporting.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/export-data.js"></script>
+
+<!--
+<script src="<#ROOTHTML#>3rdparty/highcharts/modules/solid-gauge.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/highcharts-more.js"></script>
+
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
+-->
+
 
 <div id="container"></div>
 
@@ -84,7 +103,7 @@ Highcharts.chart('container', {
 //    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
 //  },
   legend: {
-    enabled: true
+    enabled: false
   },
   exporting: {
     enabled: false
@@ -93,7 +112,7 @@ Highcharts.chart('container', {
  plotOptions: {
         line: {
             dataLabels: {
-                enabled: true
+                enabled: false
             },
             enableMouseTracking: true
         }
@@ -151,6 +170,19 @@ Highcharts.chart('container', {
     });
     return Number(retVal);
 }
+
+  function getavg() {
+ var retVal;
+    $.ajax({
+        url:"/ajax/camshoter.html?op=average",
+        async: false,
+        success:function(response) {
+            retVal = response;
+        }
+    });
+    return Number(retVal);
+}
+
 
     
 </script>
