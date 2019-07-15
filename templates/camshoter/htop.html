@@ -24,9 +24,12 @@
 
 Highcharts.chart('container', {
   chart: {
-    type: 'spline',
+//    type: 'spline',
+    type: 'area',
+
     animation: Highcharts.svg, // don't animate in old IE
-    marginRight: 30,
+    marginRight: 10,
+    zoomType: 'xy',
     events: {
       load: function () {
         // set up the updating of the chart each second
@@ -52,28 +55,50 @@ Highcharts.chart('container', {
   },
   xAxis: {
     type: 'datetime',
-    tickPixelInterval: 150
+    tickPixelInterval: 1
+//,   minRange: 30000
+,minTickInterval: 1
+//,minPadding:300
   },
   yAxis: {
     title: {
       text: 'Value'
     },
+    min: 0,
+//minTickInterval: 1,
+//    max: 50-100,
+
+
     plotLines: [{
       value: 0,
       width: 2,
       color: '#808080'
-    }]
+    }
+
+
+]
   },
-  tooltip: {
-    headerFormat: '<b>{series.name}</b><br/>',
-    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
-  },
+  
+//  tooltip: {
+//    headerFormat: '<b>{series.name}</b><br/>',
+//    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
+//  },
   legend: {
     enabled: true
   },
   exporting: {
     enabled: false
   },
+
+ plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: true
+        }
+    },
+
   series: [{
     name: 'CPU load',
     data: (function () {
@@ -84,7 +109,8 @@ Highcharts.chart('container', {
 
       for (i = -19; i <= 0; i += 1) {
         data.push({
-          x: time + i * 1000,
+//          x: time + i * 1000,
+            x: time + i *1000,
 //          y: Math.random()
 //            y: getcpu();
         });
