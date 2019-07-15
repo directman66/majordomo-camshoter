@@ -635,6 +635,15 @@ function usual(&$out) {
         $result=array();
 SQLExec ('delete from camshoter_config where parametr="cpu" and updated<"'.date('Y-m-d').'"');
 
+
+            if ($op == 'cpu'  ) {
+$cpu=SQLSelectOne('select  value from camshoter_config where parametr="cpu"')['value'];
+echo ($cpu); 
+//echo str_replace('.', ',',$cpu); 
+//echo round($cpu); 
+}
+
+
             if ($op == 'htop'  ) {
 //echo "123";      
 //echo $fn;      
@@ -684,7 +693,7 @@ display:inline-block;
 }
 </style>';
 */
-
+/*
 $sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d').'" limit 100  ' ;
 
 $rec=SQLSelect($sql);
@@ -748,6 +757,7 @@ echo "]
 });
 </script>
 ";
+*/
 
 
 
@@ -807,7 +817,8 @@ $cpus=explode(' ',$lines[$i]);
 $max=SQLSelectOne('select max(updated) max from camshoter_config where parametr="cpu" ')['max'];
 //if
 
-$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d H:i:s').'"';
+//$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d H:i:s').'"';
+$sql='select * from camshoter_config where parametr="cpu"';
 
 $rec=SQLSelectOne($sql);
 $rec['parametr']='cpu';
