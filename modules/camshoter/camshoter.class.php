@@ -1106,9 +1106,10 @@ exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$savename.'"  -r 1 -t 00:00:
 copy($savenamethumb, $savenamelast);
 }
 
+//debmes(SQLSELECTONE("CHECK TABLE tlg_cmd"), 'camshoter');
+
 ///отправка в телеграм
-if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&
-($properties[$i]['SENDTELEGRAM']=1))
+if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&($properties[$i]['SENDTELEGRAM']==1)&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
 
  {	 
 $fsize=filesize($savename);
@@ -1604,7 +1605,7 @@ $upfoler1=explode('/',$dir)[$cnt-2];
 
 
 
-if (($dir)&&($dir<>"")){
+if (($dir)&&($dir<>"")&&is_dir($dir)){
  foreach (scandir($dir) as $v) 
 
 
