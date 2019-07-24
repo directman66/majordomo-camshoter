@@ -555,7 +555,7 @@ if ($cmd['ID'])
 else 
 {sqlinsert('camshoter_config',$cmd);}
 
-return $allsize;
+//return $allsize;
 $this->redirect("?"); 
 }
 
@@ -2084,6 +2084,10 @@ $rec['SIZE']=$dirsize;
 SQLUpdate('camshoter_devices', $rec);
 
 
+
+
+
+
 }
 
 
@@ -2102,14 +2106,14 @@ function show_size($f,$format=true)
         { 
                 if(is_file($f)) return filesize($f); 
                 $size=0; 
-                $dh=opendir($f); 
+if (is_dir($f)) {  $dh=opendir($f); 
                 while(($file=readdir($dh))!==false) 
                 { 
                         if($file=='.' || $file=='..') continue; 
                         if(is_file($f.'/'.$file)) $size+=filesize($f.'/'.$file); 
                         else $size+=$this->show_size($f.'/'.$file,false); 
                 } 
-                closedir($dh); 
+                closedir($dh); }
                 return $size+filesize($f); // +filesize($f) for *nix directories 
         } 
 } 
@@ -2234,7 +2238,7 @@ if (is_array($subfiles))        $files = array_merge($files,$subfiles);
   closedir($handle);  
 //  print_r($files);
 }
-  return count($files);  
+if (!is_array($files))   return 0; else return count($files);  
   }
 
 
