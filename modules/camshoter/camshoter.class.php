@@ -529,19 +529,21 @@ for ($i = 0; $i < $total; $i++)
 //echo $folder;
 $res=$this->getfoldersize($cmd[$i]['ID']);
 
+}
+
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
 if (!$logrec['ID'])
 {
 $localpath=rtrim($localpath,'/');
 $logrec['type']='';
-$logrec['camid']=$rec[$i]['ID'];
+$logrec['camid']='';
 $logrec['path']='';
 $logrec['pathroot']='';
 $logrec['message']='';
-$logrec['trigger']='getfoldersize';
+$logrec['trigger']='getsizeall';
 $logrec['updated']=date('Y-m-d H:i:s');
 SQLInsert('camshoter_log', $logrec);
-}
+
 
 }
 
@@ -1640,7 +1642,7 @@ $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
 $camshoter= new camshoter();
 $camshoter->getsizeall();';
-SetTimeOut('getsizeall '.$i,$cmdd, '0'); 
+SetTimeOut('getsizeall '.$i,$cmdd, '60'); 
 
 
 
@@ -1648,14 +1650,14 @@ $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
 $camshoter= new camshoter();
 $camshoter->hourly();';
-SetTimeOut('hourly '.$i,$cmdd, '0'); 
+SetTimeOut('hourly '.$i,$cmdd, ''); 
 
 
 $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
 $camshoter= new camshoter();
 $camshoter->manageallfolders();';
-SetTimeOut('manageallfolders '.$i,$cmdd, '0'); 
+SetTimeOut('manageallfolders '.$i,$cmdd, '120'); 
 
 
 }
