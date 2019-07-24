@@ -1,0 +1,47 @@
+
+
+<!--<table width=100% > -->
+<table  align=center class="table table-striped" >
+<thead>
+
+ <th>TYPE</th>
+ <th>CAM</th>
+ <th>MESSAGE</th>
+ <th>PATH</th>
+ <th>TRIGGER</th>
+ <th>UPDATED</th>
+
+
+</thead>
+<tbody> 
+[#begin LOG#]
+<tr>
+ <td ><a href="[#pathroot#]">[#type#]</a></td>
+ <td ><span  title="Type: [#TYPE#] Topic:[#TITLE#]">[#camid#] </span></td>
+ <td >[#message#] </td>
+ <td >[#path#] </td>
+ <td >[#trigger#] </td>
+ <td >[#updated#] </td>
+</tr>
+[#end LOG#]
+</tbody> 
+</table>
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="view_mode" value="multiple_mqtt">
+
+<!-- / search results (list) -->
+<!-- paging -->
+
+<!-- / paging -->
+
+
+
+ <a href="?view_mode=clearlog&tab=[#TAB#]&id=[#ID#]" class="btn btn-default">Очистить</a>
+<!-- / results -->
+</td></tr></table>
+
+
+
+
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+<hr>
