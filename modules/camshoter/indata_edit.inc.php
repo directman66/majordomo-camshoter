@@ -143,7 +143,7 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
     $out['ERR']=1;
    }
   
-if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&($properties[$i]['SENDTELEGRAM']==1)&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
+if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
 {
 $sql="select ID,NAME,ADMIN ,(SELECT  count(*)   FROM camshoter_devices   where ID='".$rec['ID']."' and TELEGRAMUSERS  like CONCAT('%',tlg_user.ID,'%' )  )  as ACCESS_USER  from tlg_user ";
 //else 
