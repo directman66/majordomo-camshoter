@@ -6,8 +6,9 @@
 <!-- DID (varchar) -->
 
 	 <ul class="nav nav-tabs">
-<li [#ifTAB=="devcount" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devcount"><span class="glyphicon glyphicon-list-alt"></span> Снапшоты</a></li>
+<li [#if TAB=="devcount" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devcount"><span class="glyphicon glyphicon-list-alt"></span> Снапшоты</a></li>
 <li [#if  TAB=="" || TAB=="devparam" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=devparam"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
+<li [#if  TAB=="logdevice" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=indata_edit&id=[#ID#]&tab=logdevice"><span class="glyphicon glyphicon-cog"></span> Log</a></li>
 
 
 </ul>
@@ -26,6 +27,10 @@
 
 [#if TAB="devparam"#] 
 [#inc devparam.html#] 
+[#endif#]
+
+[#if TAB="logdevice"#] 
+[#inc log.html#] 
 [#endif#]
 	
 
