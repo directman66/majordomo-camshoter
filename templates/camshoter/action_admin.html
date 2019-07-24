@@ -31,17 +31,19 @@ padding: .3em 1em
 <li [#if TAB=="faces" #] class="active" [#endif#]><a href="?view_mode=&tab=faces"><span class="glyphicon glyphicon-cog"></span> Лица</a> </li>	
 <li [#if TAB=="htop" #] class="active" [#endif#]><a href="?view_mode=&tab=htop"><span class="glyphicon glyphicon-cog"></span> htop</a> </li>	
 <li [#if TAB=="settings" #] class="active" [#endif#]><a href="?view_mode=&tab=settings"><span class="glyphicon glyphicon-cog"></span> Настройки</a> </li>	
+<li [#if TAB=="log" #] class="active" [#endif#]><a href="?view_mode=&tab=log"><span class="glyphicon glyphicon-cog"></span> Log</a> </li>	
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
 [#endif#]
 
 
-[#if TAB="config"|| TAB=""|| TAB="devparam" || TAB="devcount"#] [#inc indata.html#] [#endif#]
+[#if TAB="config"|| TAB=""|| TAB="devparam" || TAB="logdevice"|| TAB="devcount"#] [#inc indata.html#] [#endif#]
 
 
 [#if TAB="help"#] [#inc help.html#] [#endif#]
 [#if TAB="settings"#] [#inc settings.html#] [#endif#]
 [#if TAB="users"#] [#inc users.html#] [#endif#]
 [#if TAB="faces"#] [#inc faces.html#] [#endif#]
+[#if TAB="log"#] [#inc log.html#] [#endif#]
 [#if TAB="htop"#] [#inc htop.html#] [#endif#]
 [#if TAB="preview"#] [#inc faces.html#] [#endif#]
