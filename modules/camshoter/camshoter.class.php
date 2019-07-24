@@ -176,6 +176,22 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 
 
 
+ if ($this->tab=='log') {
+$cmd_rec = SQLSelect("SELECT * FROM camshoter_log order by updated desc");
+$out['LOG']=$cmd_rec;
+}
+
+ if ($this->tab=='logdevice') {
+$id=$this->id;
+$cmd_rec = SQLSelect("SELECT * FROM camshoter_log  where camid=$id order by updated desc");
+$out['LOG']=$cmd_rec;
+}
+
+
+
+
+
+
 //$out['er']=$this->owner->action;
 //$out['er']='12';
 /*
@@ -241,7 +257,24 @@ $out['FILES']=$files;
 
 }
 
+ if ($this->view_mode=='clearlog') {
+//$id=$this->id;
 
+//$tab=$this->tab;
+$tab=$_GET['tab'];
+$id=$_GET['id'];
+
+
+if ($tab=='log') $sql='delete from camshoter_log';
+if ($tab=='logdevice') $sql='delete from camshoter_log where camid='.$id;
+
+debmes('TAB:'.$tab, 'camshoter');
+
+debmes($sql, 'camshoter');
+SQLExec ($sql);
+
+   $this->redirect("?");
+}
 
 
  if ($this->view_mode=='copyfav') {
@@ -402,9 +435,29 @@ $cmd=sqlselect('select * from camshoter_devices  where  enable=1');
 $total = count($cmd);
 for ($i = 0; $i < $total; $i++)
 {
-$this->mainprocesss($cmd,  $i);
+
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$cmd=array();
+
+';
+
+foreach ($cmd[$i] as $val=>$name){
+//$cmdd.='$cmd[]=array("'.$val.'"=>"'.$name.'");';
+$cmdd.='$cmd["'.$val.'"]="'.$name.'";';
+}
+$cmdd.='
+$camshoter->mainprocesss1($cmd,'.  $i.', "runall");
+';
+SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+debmes(  $cmdd, 'camshoter');
+//$this->mainprocesss1($cmd[$i],  $i);
 
 }
+   $this->redirect("?");
+
+
 
 }
 
@@ -442,7 +495,22 @@ $cmd=sqlselect('select * from camshoter_devices  where hourly=1 and enable=1 ord
 $total = count($cmd);
 for ($i = 0; $i < $total; $i++)
 {
-$this->mainprocesss($cmd,  $i);
+//$this->mainprocesss1($cmd[$i],  $i);
+
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$cmd=array();
+
+';
+foreach ($cmd[$i] as $val=>$name){
+//$cmdd.='$cmd[]=array("'.$val.'"=>"'.$name.'");';
+$cmdd.='$cmd["'.$val.'"]="'.$name.'";';
+}
+$cmdd.='
+$camshoter->mainprocesss1($cmd,'.  $i.', "hourly");
+';
+SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
 
 }
 
@@ -596,7 +664,7 @@ else
 {SQLexec("update camshoter_devices set ONLINE=0, LASTPING2='.time().' where IPADDR=\''.$ip.'\'");}
 
 ';
- SetTimeOut('camshoter_devices_ping'.$i,$cmd, '1'); 
+ SetTimeOut('camshoter_devices_ping'.$i,$cmd, '10'); 
 //debmes($cmd, 'camshoter');
 
 /*
@@ -921,6 +989,9 @@ echo "<hr>";
  function propertySetHandle($object, $property, $value) {
 //debmes( 'propertySetHandle '.$object. '.'.$property.' '.$value, 'camshoter');
    $table='camshoter_devices';
+
+
+$trigger=$object.'.'.$property;
 //$sql="SELECT * FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'";
 $sql="SELECT * FROM $table WHERE (LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."') OR (LINKED_OBJECT2 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY2 LIKE '".DBSafe($property)."') OR (LINKED_OBJECT3 LIKE '".DBSafe($object)."' AND LINKED_PROPERTY3 LIKE '".DBSafe($property)."')";
 //debmes($sql, 'camshoter');
@@ -949,7 +1020,21 @@ if ($properties[$i]['ENABLE1']=="1") {
 //$this->mainproccesss_test($properties,  $i);
 //debmes( 'mainprocess enable1='.$properties[$i]['ENABLE1'], 'camshoter');
 //debmes( 'mainprocess start', 'camshoter');
-$this->mainprocesss($properties,  $i);
+//$this->mainprocesss1($properties[$i],  $i);
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$cmd=array();
+
+';
+foreach ($properties[$i] as $val=>$name){
+//$cmdd.='$cmd[]=array("'.$val.'"=>"'.$name.'");';
+$cmdd.='$cmd["'.$val.'"]="'.$name.'";';
+}
+$cmdd.='
+$camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
+';
+SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
 //debmes( 'mainprocess end', 'camshoter');
 
 
@@ -961,7 +1046,24 @@ $this->mainprocesss($properties,  $i);
 //$this->mainproccesss_test($properties,  $i);
 //debmes( 'mainprocess enable1='.$properties[$i]['ENABLE1'], 'camshoter');
 //debmes( 'mainprocess start', 'camshoter');
-$this->mainprocesss($properties,  $i);
+//$this->mainprocesss1($properties[$i],  $i);
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$cmd=array();
+
+';
+foreach ($properties[$i] as $val=>$name){
+//$cmdd.='$cmd[]=array("'.$val.'"=>"'.$name.'");';
+$cmdd.='$cmd["'.$val.'"]="'.$name.'";';
+}
+$cmdd.='
+$camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
+';
+SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+
+
+
 //debmes( 'mainprocess end', 'camshoter');
 
 
@@ -985,7 +1087,7 @@ $this->mainprocesss($properties,  $i);
 * @access public
 */
 
-
+/*
 function mainprocesss($properties, $i){
 //function mainproccesss (){
 
@@ -1166,6 +1268,222 @@ $this->detectface($properties, $i, $savenamethumbdir);
 }
 }
 
+*/
+
+function mainprocesss1($properties, $i, $trigger){
+//function mainproccesss (){
+
+//debmes( 'run mainprocess '.$i, 'camshoter');
+//debmes( $properties, 'camshoter');
+
+
+//debmes('Сработал датчик движения на камере '.$properties[$i]['ID'],'camshoter');
+
+$savepath=ROOT."cms/cached/nvr/cam".$properties['ID'].'/'.date('Y-m-d').'/';
+ if (!file_exists($savepath)) {
+mkdir($savepath, 0777, true);}
+$savelast=ROOT."cms/cached/nvr/last/";
+
+
+$users=ROOT."cms/cached/nvr/users/";
+if (!file_exists($users)) {
+mkdir($users, 0777, true);}
+
+
+
+
+$savefacesdir=ROOT."cms/cached/nvr/faces/";
+if (!file_exists($savefacesdir)) {
+mkdir($savefacesdir, 0777, true);}
+
+
+ if (!file_exists($savelast)) {
+mkdir($savelast, 0777, true);}
+
+
+
+if ($properties['TYPE']=='snapshot')
+{
+$iam='img';
+$image_url=$properties['URL'];
+$savename=$savepath."cam".$properties['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+$savenamelast=$savelast."cam".$properties['ID'].".jpg"; // куда сохранять
+$savenamethumb=$savename;
+
+$result=getURL($image_url,0);
+
+if ($result) {
+SaveFile($savename, $result);
+SaveFile($savenamelast, $result);
+
+}else {
+$result=file_get_contents($url); //скачиваем картинку с камеры 
+file_put_contents($savename, $result);
+file_put_contents($savenamelast, $result);
+}
+
+}
+
+if (($properties['TYPE']=='rtsp')&&($properties['METHOD']=='mp4'))
+{
+$iam='video';
+$url=$properties['URL'];
+$sec=$properties['SEC'];
+$savename=$savepath."cam".$properties['ID']."_".date('Y-m-d_His').".mp4"; // куда сохранять
+$savenamethumb=$savepath."cam".$properties['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+$savenamethumbdir=$savepath."cam".$properties['ID']."_".date('Y-m-d_His'); // куда сохранять
+$savenamelast=$savelast."cam".$properties['ID'].".jpg"; // куда сохранять
+$savenameface=$savefacesdir."cam".$properties['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+
+//linux
+if (substr(php_uname(),0,5)=='Linux')  {
+//exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+//  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec ac3 -an -r 15 '.$savename); 
+//  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec pcm_s16le -an -r 15 '.$savename); 
+if  ($properties['FFMPEGCMD']=="")
+{
+//  exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename); 
+//  exec('ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.' 2>&1'.$savename); 
+$cmd='ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename;
+$res = exec($cmd . ' 2>&1', $output);
+
+ } else
+{
+$cmd='timeout -s INT 60s '.str_replace('#savename',$savename, str_replace('#sec',$sec, $properties['FFMPEGCMD']));
+exec($cmd); 
+}
+//debmes('Видео сохранено  '.$savename,'camshoter');
+
+
+//-vcodec copy -b 64k -acodec ac3
+
+//exec('timeout -s INT 60s ffmpeg -y -i "'.$url.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
+//exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -f image2  -updatefirst 1 '.$savenamethumb); 
+//http://digilinux.ru/2010/10/21/how-to-split-frames-with-ffmpeg/
+
+// первый кадр на обложку
+exec('timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
+
+//раскадровка каждый 4 кадр в отдельную папку для определения наличия лиц
+//exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25 -ss 00:00:00 -t 00:00:10 -f image2   '.$savenamethumbdir.'frames_%04d.png'); 
+
+
+//нужна ли раскадровка, делаем ее в том случае, если есть токен майл ру
+
+$cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='VISION_TOKEN'");
+if ($cmd_rec['value']);
+{
+$savenamethumbdir=ROOT."cms/cached/nvr/cam".$properties['ID'].'/'.date('Y-m-d').'/'."cam".$properties['ID']."_".date('Y-m-d_His')."/";
+ if (!file_exists($savenamethumbdir)) {
+mkdir($savenamethumbdir, 0777, true);}
+exec('timeout -s INT 120s ffmpeg -y -i "'.$savename.'"  -r 0.25  -f image2   '.$savenamethumbdir.'frames_%04d.jpg'); 
+//debmes('Раскадровка сохранена  '.$savenamethumbdir,'camshoter');
+}
+
+}
+else 
+{
+//windows
+exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec libx264 -pix_fmt yuv420p -an -r 15 '.$savename); 
+exec('C:\_majordomo\apps\ffmpeg\ffmpeg.exe -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
+}
+if (file_exists($savenamethumb)) copy($savenamethumb, $savenamelast);
+}
+
+//debmes(SQLSELECTONE("CHECK TABLE tlg_cmd"), 'camshoter');
+
+///отправка в телеграм
+if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&($properties['SENDTELEGRAM']==1)&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
+
+ {	 
+$fsize=filesize($savename);
+
+//$text='Зафиксировано изменение датчика '.$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'].' на камере '.$properties['TITLE'] ;
+$text='Зафиксировано изменение датчика '.$trigger.' на камере '.$properties['TITLE'] ;
+include_once(DIR_MODULES . 'telegram/telegram.class.php');
+$telegram_module = new telegram();
+
+
+$ts=$properties['TELEGRAMUSERS'];
+
+//debmes('telegram users  '.$ts,'camshoter');
+
+$tsar=explode(',', $ts);
+
+//debmes($tsar,'camshoter');
+
+
+$total=count($tsar);
+//debmes('total  '.$total,'camshoter');
+for ($ii = 0; $ii < $total; $ii++)
+{
+
+
+
+$user=SQLSElectOne("select * from tlg_user where ID='".$tsar[$ii]."'")['USER_ID'];
+
+//if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
+//if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
+
+
+if ($iam=='img') {$telegram_module->sendImageToUser($user,$savename,$text);}
+if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToUser($user,$savename,$text);}
+
+
+
+//debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
+
+
+	 $properties['UPDATED']=date('Y-m-d H:i:s');
+	 SQLUpdate('camshoter_devices', $properties);
+
+
+
+//..if ($iam=='img') {$detect$this->mailvision_detect($savename);}
+//if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
+
+
+
+
+//определяем, есть ли на фото лицо
+
+//$this->detectface($properties, $i, $savenamethumbdir);
+}
+}
+
+$logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
+if (!$logrec['ID'])
+{
+$cnt=substr_count( $savename, '/');
+$upfolder=explode('/',$savename);
+
+$nado='';
+
+for($i=0; $iii<=$cnt; $iii++){
+
+if ($upfolder[$iii]=='cms') $nado='1';
+if ($nado=='1') $localpath.=$upfolder[$iii].'/';
+}
+$localpath=rtrim($localpath,'/');
+
+
+//$trigger=$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'];
+
+//$localpath='';
+$logrec['type']=$properties['TYPE'];
+$logrec['camid']=$properties['ID'];
+$logrec['path']=$savename;
+$logrec['pathroot']=$localpath;
+$logrec['message']=$text;
+$logrec['trigger']=$trigger;
+$logrec['updated']=date('Y-m-d H:i:s');
+SQLInsert('camshoter_log', $logrec);
+}
+
+
+
+}
+
    
 
 
@@ -1330,6 +1648,20 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: LINKED_OBJECT3 varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY3 varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: HOURLY varchar(255) NOT NULL DEFAULT ''
+
+
+
+ camshoter_log: ID int(10) unsigned NOT NULL auto_increment
+ camshoter_log: type varchar(100)
+ camshoter_log: camid varchar(10)
+ camshoter_log: path varchar(100)
+ camshoter_log: pathroot varchar(100)
+ camshoter_log: trigger varchar(100)
+ camshoter_log: responce varchar(1000)
+ camshoter_log: peoples varchar(100)
+ camshoter_log: faces varchar(100)
+ camshoter_log: message varchar(10000)  
+ camshoter_log: updated datetime
 
 
 EOD;
