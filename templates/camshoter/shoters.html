@@ -29,6 +29,8 @@
 
 <select name="sizethmb" onChange="document.frmList_mqtt.submit();" class="form-control" style="width: 150px;
 [#if "<#SETTINGS_THEME#>"=="dark"&& ACTION=""#]background-color : grey;color:white[#endif#]" align="left">
+<option[#if SIZETHMB="1200"#] selected[#endif#]>1200
+<option[#if SIZETHMB="700"#] selected[#endif#]>700
 <option[#if SIZETHMB="500"#] selected[#endif#]>500
 <option[#if SIZETHMB="400"#] selected[#endif#]>400
 <option[#if SIZETHMB="300"#] selected[#endif#]>300
