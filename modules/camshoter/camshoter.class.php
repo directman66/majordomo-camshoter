@@ -527,7 +527,22 @@ for ($i = 0; $i < $total; $i++)
 {
 //$folder=ROOT."cms/cached/nvr/cam".$cmd[$i]['ID'].'/';
 //echo $folder;
-$this->getfoldersize($cmd[$i]['ID']);
+$res=$this->getfoldersize($cmd[$i]['ID']);
+
+$logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
+if (!$logrec['ID'])
+{
+$localpath=rtrim($localpath,'/');
+$logrec['type']='';
+$logrec['camid']=$rec[$i]['ID'];
+$logrec['path']='';
+$logrec['pathroot']='';
+$logrec['message']='';
+$logrec['trigger']='getfoldersize';
+$logrec['updated']=date('Y-m-d H:i:s');
+SQLInsert('camshoter_log', $logrec);
+}
+
 }
 
 $allsize=$this->show_size(ROOT."cms/cached/nvr/");
@@ -536,13 +551,11 @@ $cmd=SQLSelectOne("select * from  camshoter_config where parametr='SIZEALL'");
 $cmd['value']= $allsize;
 $cmd['parametr']= 'SIZEALL';
 if ($cmd['ID'])
-{
-sqlupdate('camshoter_config',$cmd);}
+{sqlupdate('camshoter_config',$cmd);}
 else 
-{
-sqlinsert('camshoter_config',$cmd);}
+{sqlinsert('camshoter_config',$cmd);}
 
-
+return $allsize;
 $this->redirect("?"); 
 }
 
@@ -566,8 +579,28 @@ $rec=SQLSELECT('select * from camshoter_devices');
 debmes($rec, 'camshoter');
 $total = count($rec);
 for ($i = 0; $i < $total; $i++){
-$this->clearsubfolder($rec[$i]['ID']);
+$res=$this->clearsubfolder($rec[$i]['ID']);
+
+
+$logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
+if (!$logrec['ID'])
+{
+$localpath=rtrim($localpath,'/');
+$logrec['type']='';
+$logrec['camid']=$rec[$i]['ID'];
+$logrec['path']='';
+$logrec['pathroot']='';
+$logrec['message']=$res;
+$logrec['trigger']='clearsubfolder';
+$logrec['updated']=date('Y-m-d H:i:s');
+SQLInsert('camshoter_log', $logrec);
 }
+
+
+}
+
+
+
 }
 
 
@@ -610,8 +643,9 @@ if (is_dir($path.$v.'/'.$vv)&&($vv<>"")&&($vv<>".")&&($vv<>"..")&&($v<>"")&&($v<
 {
 ///debmes('deleting '.$path.$v.'/'.$vv, 'campath');
 $this->delFolder($path.$v.'/'.$vv);
-
+return 1;
 } 
+else return 0;
 
 /*else  {
  foreach (scandir($path.$v.'/'.$vv) as $vvv) {
@@ -1597,9 +1631,33 @@ $this->mailvision_detect($savenamethumb, $id);
 	function processSubscription($event_name, $details='') {
 		if ($event_name=='HOURLY') {
 
-$this->getsizeall();
-$this->manageallfolders();
-$this->hourly();
+//$this->getsizeall();
+//$this->manageallfolders();
+//$this->hourly();
+
+
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$camshoter->getsizeall();';
+SetTimeOut('getsizeall '.$i,$cmdd, '0'); 
+
+
+
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$camshoter->hourly();';
+SetTimeOut('hourly '.$i,$cmdd, '0'); 
+
+
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$camshoter->manageallfolders();';
+SetTimeOut('manageallfolders '.$i,$cmdd, '0'); 
+
+
 }
 
 }
