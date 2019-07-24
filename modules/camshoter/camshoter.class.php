@@ -874,6 +874,32 @@ echo '<div>';
 echo trim(str_replace(' ','&nbsp;',$lines[$i]));
 
 
+if (strpos($lines[$i],'Cpu(s)')>0) {
+
+$cpus=explode(':',explode(',',$lines[$i])[0])[1];
+
+$cpus=preg_replace("/[^,.0-9]/", '', $cpus);
+
+//echo "--------------:". str_replace(",", '',$cpus[0]);
+//$pcpu=$pcpu.$cpus[1].';';
+//echo 
+
+//$max=SQLSelectOne('select max(updated) max from camshoter_config where parametr="cpu" ')['max'];
+//if
+
+//$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d H:i:s').'"';
+$sql='select * from camshoter_config where parametr="cpu"';
+
+$rec=SQLSelectOne($sql);
+$rec['parametr']='cpu';
+$rec['value']=str_replace(",", '',$cpus);
+$rec['updated']=date('Y-m-d H:i:s');
+if (!$rec['ID']) 
+SQLInsert('camshoter_config', $rec);
+else SQLUpdate('camshoter_config', $rec);
+
+}
+
 if (strpos($lines[$i],'average')>0) {
 
 $cpus=explode(' ',$lines[$i]);
@@ -882,14 +908,14 @@ $cpus=explode(' ',$lines[$i]);
 //$pcpu=$pcpu.$cpus[1].';';
 //echo 
 
-$max=SQLSelectOne('select max(updated) max from camshoter_config where parametr="cpu" ')['max'];
+//$max=SQLSelectOne('select max(updated) max from camshoter_config where parametr="average" ')['max'];
 //if
 
 //$sql='select * from camshoter_config where parametr="cpu" and updated>="'.date('Y-m-d H:i:s').'"';
-$sql='select * from camshoter_config where parametr="cpu"';
+$sql='select * from camshoter_config where parametr="average"';
 
 $rec=SQLSelectOne($sql);
-$rec['parametr']='cpu';
+$rec['parametr']='average';
 $rec['value']=str_replace(",", '',$cpus[13]);
 $rec['updated']=date('Y-m-d H:i:s');
 if (!$rec['ID']) 
@@ -897,6 +923,7 @@ SQLInsert('camshoter_config', $rec);
 else SQLUpdate('camshoter_config', $rec);
 
 }
+
 
 //echo "<td  {text-align: justify;}>";
 //echo '<p align="justify">';
