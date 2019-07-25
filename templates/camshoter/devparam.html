@@ -37,11 +37,12 @@
 <select name="type" class="form-control" style="width: 260px;" align="right">
 <option[#if TYPE=""#] selected[#endif#]>snapshot
 <option[#if TYPE="rtsp"#] selected[#endif#]>rtsp
+<option[#if TYPE="snapshot_diff"#] selected[#endif#]>snapshot_diff
 </select>
 
 </div></div>
 
-      [#if TYPE=""||TYPE="snapshot" #]
+      [#if TYPE=""||TYPE="snapshot"||TYPE="snapshot_diff" #]
 
 
 
