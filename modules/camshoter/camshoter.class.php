@@ -773,6 +773,15 @@ echo ($cpu);
 }
 
 
+            if ($op == 'average'  ) {
+$cpu=SQLSelectOne('select  value from camshoter_config where parametr="average"')['value'];
+echo ($cpu); 
+//echo str_replace('.', ',',$cpu); 
+//echo round($cpu); 
+}
+
+
+
             if ($op == 'htop'  ) {
 //echo "123";      
 //echo $fn;      
@@ -977,7 +986,7 @@ $sql='select * from camshoter_config where parametr="average"';
 
 $rec=SQLSelectOne($sql);
 $rec['parametr']='average';
-$rec['value']=str_replace(",", '',$cpus[13]);
+$rec['value']=str_replace(",", '',$cpus[14]);
 $rec['updated']=date('Y-m-d H:i:s');
 if (!$rec['ID']) 
 SQLInsert('camshoter_config', $rec);
