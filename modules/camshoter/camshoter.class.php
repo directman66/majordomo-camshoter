@@ -809,7 +809,7 @@ $res2 = (shell_exec($cmd2));
 
 //Доступны следующие форматы: %cpu, %mem, args, c, cmd, comm, cp, cputime, egid, egroup, etime, euid, euser, gid, group, pgid, pgrp, ppid, start, sz, thcount, time, uid, uname и многие другие, ознакомиться с ними в разделе помощи man.
 
-$cmd='ps  --format="%cpu time args" |grep -E "ffmpeg|COMMAND"';
+$cmd='ps  --format="%cpu time args" |grep -E "ffmpeg|COMMAND|camshoter"';
 
 //$cmd='ps -fG ffmpeg';
 
@@ -947,8 +947,13 @@ echo trim(str_replace(' ','&nbsp;',$lines[$i]));
 if (strpos($lines[$i],'Cpu(s)')>0) {
 
 $cpus=explode(':',explode(',',$lines[$i])[0])[1];
+$sy=explode(':',explode(',',$lines[$i])[1])[0];
+
+debmes('sy: '.$sy, 'camshoter');
 
 $cpus=preg_replace("/[^,.0-9]/", '', $cpus);
+$sy=preg_replace("/[^,.0-9]/", '', $sy);
+
 
 //echo "--------------:". str_replace(",", '',$cpus[0]);
 //$pcpu=$pcpu.$cpus[1].';';
@@ -962,7 +967,7 @@ $sql='select * from camshoter_config where parametr="cpu"';
 
 $rec=SQLSelectOne($sql);
 $rec['parametr']='cpu';
-$rec['value']=str_replace(",", '',$cpus);
+$rec['value']=str_replace(",", '',$cpu+$sy);
 $rec['updated']=date('Y-m-d H:i:s');
 if (!$rec['ID']) 
 SQLInsert('camshoter_config', $rec);
@@ -1421,7 +1426,7 @@ file_put_contents($savenamelast, $result);
 
 }
 
-if ($properties['TYPE']=='snapshot_diff')
+if (($properties['TYPE']=='snapshot_diff'))
 {
 $iam='img';
 $image_url=$properties['URL'];
@@ -1431,6 +1436,9 @@ $savenameid=$savepath."cam".$properties['ID']."_".date('Y-m-d').".id"; // куд
 $savenamelast=$savelast."cam".$properties['ID'].".jpg"; // куда сохранять
 $savenamelast1=$savelast."cam".$properties['ID'].".jpg1"; // куда сохранять
 $savenamethumb=$savename;
+
+
+if ($properties['METHOD']=='jpeg'){
 
 $result=getURL($image_url,0);
 
@@ -1443,6 +1451,51 @@ $result=file_get_contents($url); //скачиваем картинку с кам
 //file_put_contents($savename, $result);
 file_put_contents($savenamelast, $result);
 }
+}
+
+if ($properties['METHOD']=='rtsp'){
+
+$result=getURL($image_url,0);
+/*
+if ($result) {
+//SaveFile($savename, $result);
+SaveFile($savenamelast, $result);
+
+}else {
+$result=file_get_contents($url); //скачиваем картинку с камеры 
+//file_put_contents($savename, $result);
+file_put_contents($savenamelast, $result);
+}
+*/
+$url=$properties['URL'];
+$sec=$properties['SEC'];
+
+
+
+
+if (substr(php_uname(),0,5)=='Linux')  {
+if  ($properties['FFMPEGCMD']=="")
+{
+//$cmd='ffmpeg -y -i "'.$url.'" -t '.$sec.' -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 '.$savename;
+//$cmd='timeout -s INT 60s ffmpeg -y -i "'.$savename.'"  -r 1 -t 00:00:01 -f image2  -updatefirst 1 '.$savenamethumb); 
+$cmd='ffmpeg -y -i "'.$url.'"  -pix_fmt yuv420p -vframes 1 -an -f image2   '.$savenamelast; 
+debmes($cmd, 'camshoter');
+$res = exec($cmd . ' 2>&1', $output);
+
+ } 
+/*
+else
+{
+$cmd='timeout -s INT 60s '.str_replace('#savename',$savename, str_replace('#sec',$sec, $properties['FFMPEGCMD']));
+exec($cmd); 
+*/
+}
+
+
+
+}
+
+
 
 //$imageid=$this->getimageid2($savenamelast);
 //debmes( '$imageid:   '.$imageid, 'camshoter');
@@ -1476,7 +1529,7 @@ debmes('ver:'.$ver, 'camshoter');
 */
 
 $ver=$this->imagecompare2($savenamelast1,$savenamelast);
-debmes('ver:'.$ver, 'camshoter');
+//debmes('cam'.$properties['ID'].' ver:'.$ver, 'camshoter');
 
 
 $sensity=$properties['SENSITY'];
@@ -1486,18 +1539,14 @@ $last=$properties['UPDATEDTS'];
 $delay=$properties['DELAY'];  
 $proshlo=$now-$last;
 
-
-if (($ver<$sensity)  && ($proshlo>$delay))
+debmes('cam'.$properties['ID'].' '.$ver.'<'.$sensity.'  &&  '.$proshlo.'>'.$delay.' && '.$ver.'<>0', 'camshoter');
+if (($ver<$sensity)  && ($proshlo>$delay)&&($ver<>0))
 {
-if ($result) {
-SaveFile($savename, $result);
-}else {
-$result=file_get_contents($url); //скачиваем картинку с камеры 
-file_put_contents($savename, $result);
 
+debmes('сохраняем', 'camshoter');
+copy($savenamelast, $savename);
 
-
-}
+debmes('copy '.$savenamelast.' '. $savename, 'camshoter');
 
 if (($properties['LINKED_OBJECT4'])&&($properties['LINKED_PROPERTY4'])) setglobal($properties['LINKED_OBJECT4'].'.'.$properties['LINKED_PROPERTY4'],1);
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
@@ -1517,13 +1566,14 @@ $localpath=rtrim($localpath,'/');
 
 
 //$trigger=$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'];
-
+//if ($trigger<>'snapshot_diff')  
+$text=$this->sendto($properties, $i, $savename, $trigger,$iam);
 //$localpath='';
 $logrec['type']=$properties['TYPE'];
 $logrec['camid']=$properties['ID'];
 $logrec['path']=$savename;
 $logrec['pathroot']=$localpath;
-$logrec['message']=$ver;
+$logrec['message']=$text.'. Чувствительность:'.$ver;
 $logrec['trigger']=$trigger;
 $logrec['updated']=date('Y-m-d H:i:s');
 SQLInsert('camshoter_log', $logrec);
@@ -1541,8 +1591,8 @@ SQLUpdate('camshoter_devices', $logrec);
 
 
 
-
-SaveFile($savenamelast1, $result);
+copy($savenamelast, $savenamelast1);
+//SaveFile($savenamelast1, $result);
 //SaveFile($savenameid, $imageid);
 
 
@@ -1617,64 +1667,11 @@ if (file_exists($savenamethumb)) copy($savenamethumb, $savenamelast);
 
 //debmes(SQLSELECTONE("CHECK TABLE tlg_cmd"), 'camshoter');
 
-///отправка в телеграм
-if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&($properties['SENDTELEGRAM']==1)&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
-
- {	 
-$fsize=filesize($savename);
-
-//$text='Зафиксировано изменение датчика '.$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'].' на камере '.$properties['TITLE'] ;
-$text='Зафиксировано изменение датчика '.$trigger.' на камере '.$properties['TITLE'] ;
-include_once(DIR_MODULES . 'telegram/telegram.class.php');
-$telegram_module = new telegram();
-
-
-$ts=$properties['TELEGRAMUSERS'];
-
-//debmes('telegram users  '.$ts,'camshoter');
-
-$tsar=explode(',', $ts);
-
-//debmes($tsar,'camshoter');
-
-
-$total=count($tsar);
-//debmes('total  '.$total,'camshoter');
-for ($ii = 0; $ii < $total; $ii++)
-{
-
-
-
-$user=SQLSElectOne("select * from tlg_user where ID='".$tsar[$ii]."'")['USER_ID'];
-
-//if ($iam=='img') {$telegram_module->sendImageToAll($savename,$text);}
-//if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToAll($savename,$text);}
-
-
-if ($iam=='img') {$telegram_module->sendImageToUser($user,$savename,$text);}
-if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToUser($user,$savename,$text);}
-
-
-
-//debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
-
+if ($trigger<>'snapshot_diff')  $text=$this->sendto($properties, $i, $savename,  $trigger,$iam);
 
 	 $properties['UPDATED']=date('Y-m-d H:i:s');
 	 SQLUpdate('camshoter_devices', $properties);
 
-
-
-//..if ($iam=='img') {$detect$this->mailvision_detect($savename);}
-//if (($iam=='video')&&($fsize>500)) {$detect$this->mailvision_detect($savename);}
-
-
-
-
-//определяем, есть ли на фото лицо
-
-//$this->detectface($properties, $i, $savenamethumbdir);
-}
-}
 
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
 if (!$logrec['ID'])
@@ -1703,7 +1700,16 @@ $logrec['message']=$text;
 $logrec['trigger']=$trigger;
 $logrec['updated']=date('Y-m-d H:i:s');
 if ($trigger<>'snapshot_diff') SQLInsert('camshoter_log', $logrec);
+
+//определяем, есть ли на фото лицо
+//$this->detectface($properties, $i, $savenamethumbdir);
+
+
 }
+
+
+
+
 
 
 
@@ -1711,7 +1717,41 @@ if ($trigger<>'snapshot_diff') SQLInsert('camshoter_log', $logrec);
 
    
 
+function sendto($properties, $i, $savename, $trigger,$iam){
+///отправка в телеграм
+//debmes('sendto','camshoter');
+$text='Зафиксировано изменение датчика '.$trigger.' на камере '.$properties['TITLE'] ;
 
+if ((SQLSELECTONE("CHECK TABLE tlg_cmd")['Msg_text']=='OK')&&($properties['SENDTELEGRAM']==1)&&(SQLSELECTONE("CHECK TABLE tlg_user")['Msg_text']=='OK'))
+ {	 
+//debmes('telegram','camshoter');
+$fsize=filesize($savename);
+
+//$text='Зафиксировано изменение датчика '.$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'].' на камере '.$properties['TITLE'] ;
+
+include_once(DIR_MODULES . 'telegram/telegram.class.php');
+$telegram_module = new telegram();
+$ts=$properties['TELEGRAMUSERS'];
+//debmes('telegram users  '.$ts,'camshoter');
+$tsar=explode(',', $ts);
+//debmes($tsar,'camshoter');
+$total=count($tsar);
+//debmes('total  '.$total,'camshoter');
+for ($ii = 0; $ii < $total; $ii++)
+{
+$user=SQLSElectOne("select * from tlg_user where ID='".$tsar[$ii]."'")['USER_ID'];
+
+
+if ($iam=='img') {$telegram_module->sendImageToUser($user,$savename,$text);}
+if (($iam=='video')&&($fsize>500)) {$telegram_module->sendVideoToUser($user,$savename,$text);}
+
+//debmes('Файл '.$savename .' отправлен в телегу пользователю '.$user,'camshoter');
+
+
+}
+}
+return $text;
+}
 
 
 function detectface ($properties, $i, $savenamethumbdir){
