@@ -2091,7 +2091,10 @@ $upfoler1=explode('/',$dir)[$cnt-2];
  $files = array();
 
 if (($dir)&&($dir<>"")&& (is_dir($dir))){
- foreach (scandir($dir) as $v) 
+$arr=scandir($dir);
+rsort($arr);
+
+ foreach ($arr as $v) 
 
 {
 global $sizethmb;
