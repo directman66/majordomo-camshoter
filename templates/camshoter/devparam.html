@@ -67,8 +67,7 @@
 			</label>
 			<div class="col-lg-4">
 			<select name="sensity" class="form-control" style="width: 260px;" align="right">
-			<option[#if SENSITY="5"#] selected[#endif#]>60
-			<option[#if SENSITY="5"#] selected[#endif#]>5
+			<option[#if SENSITY="5"|SENSITY=""#] selected[#endif#]>5
 			<option[#if SENSITY="10"#] selected[#endif#]>10
 			<option[#if SENSITY="15"#] selected[#endif#]>15
 			<option[#if SENSITY="20"#] selected[#endif#]>20
@@ -96,10 +95,10 @@
 			</label>
 			<div class="col-lg-4">
 			<select name="delay" class="form-control" style="width: 260px;" align="right">
-			<option[#if DELAY=""#] selected[#endif#]>10
+
 			<option[#if DELAY="1"#] selected[#endif#]>1
 			<option[#if DELAY="5"#] selected[#endif#]>5
-			<option[#if DELAY="10"#] selected[#endif#]>10
+			<option[#if DELAY="10"|DELAY=""#] selected[#endif#]>10
 			<option[#if DELAY="15"#] selected[#endif#]>15
 			<option[#if DELAY="20"#] selected[#endif#]>20
 			<option[#if DELAY="25"#] selected[#endif#]>25
