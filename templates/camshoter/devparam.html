@@ -53,6 +53,7 @@
 			<div class="col-lg-4">
                         <select name="method" class="form-control" style="width: 260px;" align="right">
                         <option[#if METHOD=""#] selected[#endif#]>jpeg
+[#if TYPE="snapshot_diff"#]<option[#if METHOD="rtsp"#] selected[#endif#]>rtsp[#endif#]
                         </select>
                         </div></div>
 
