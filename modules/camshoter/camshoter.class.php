@@ -1518,7 +1518,7 @@ $logrec['type']=$properties['TYPE'];
 $logrec['camid']=$properties['ID'];
 $logrec['path']=$savename;
 $logrec['pathroot']=$localpath;
-$logrec['message']=$text;
+$logrec['message']=$ver;
 $logrec['trigger']=$trigger;
 $logrec['updated']=date('Y-m-d H:i:s');
 SQLInsert('camshoter_log', $logrec);
