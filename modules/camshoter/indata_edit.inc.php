@@ -53,6 +53,12 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
   global $ipaddr;
    $rec['IPADDR']=$ipaddr;
 
+  global $sensity;
+   $rec['SENSITY']=$sensity;
+
+  global $delay;
+   $rec['DELAY']=$delay;
+
 
 
    global $method;
@@ -108,6 +114,11 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
   global $linked_object3;
   global $linked_property3;
 
+ global $linked_object4;
+  global $linked_property4;
+
+
+
 
   $rec['LINKED_OBJECT']=trim($linked_object);
   $rec['LINKED_PROPERTY']=trim($linked_property);
@@ -120,6 +131,11 @@ if ($arcdate="" ) { $rec['ARCDATE']=date('Ymd');} else
   $rec['LINKED_OBJECT3']=trim($linked_object3);
   $rec['LINKED_PROPERTY3']=trim($linked_property3);
   addLinkedProperty($rec['LINKED_OBJECT3'], $rec['LINKED_PROPERTY3'], $this->name);   
+
+
+  $rec['LINKED_OBJECT4']=trim($linked_object4);
+  $rec['LINKED_PROPERTY4']=trim($linked_property4);
+
 
    //UPDATING RECORD
 //sg('test.merk',$ok);
