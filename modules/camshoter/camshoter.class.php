@@ -1470,9 +1470,10 @@ $ver=$this->imagecompare2($savenamelast1,$savenamelast);
 debmes('ver:'.$ver, 'camshoter');
 
 
+$sensity=$properties['SENSITY'];
+if (!$sensity) $sensity=60;
 
-
-if ($ver<60)  
+if ($ver<$sensity)  
 {
 if ($result) {
 SaveFile($savename, $result);
@@ -1480,8 +1481,11 @@ SaveFile($savename, $result);
 $result=file_get_contents($url); //скачиваем картинку с камеры 
 file_put_contents($savename, $result);
 
+
+
 }
 
+if (($properties['LINKED_OBJECT4'])&&($properties['LINKED_PROPERTY4'])) setglobal($properties['LINKED_OBJECT4'].'.'.$properties['LINKED_PROPERTY4'],1);
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
 if (!$logrec['ID'])
 {
@@ -1871,6 +1875,11 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
 
  camshoter_devices: LINKED_OBJECT3 varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY3 varchar(255) NOT NULL DEFAULT ''
+
+ camshoter_devices: LINKED_OBJECT4 varchar(255) NOT NULL DEFAULT ''
+ camshoter_devices: LINKED_PROPERTY4 varchar(255) NOT NULL DEFAULT ''
+
+ camshoter_devices: SENSITY varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: HOURLY varchar(255) NOT NULL DEFAULT ''
 
 
