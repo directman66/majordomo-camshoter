@@ -1,6 +1,7 @@
 <br>
 
 <!--<a href="?view_mode=clearcpu" class="btn btn-default" title="Clear Folder">Clear CPU</i></a> -->
+<!--
 <style>
 #container {
     min-width: 310px;
@@ -8,7 +9,7 @@
     margin: 0 auto;
 }
 </style>
-
+-->
 <!--
 <script src="highcharts\highcharts.js"></script>
 <script src="highcharts\exporting.js"></script>
@@ -38,13 +39,13 @@
 
 <script type="text/javascript">
 
-
+/*
 
 
 Highcharts.chart('container', {
   chart: {
-//    type: 'spline',
-    type: 'area',
+    type: 'spline',
+//    type: 'area',
 
     animation: Highcharts.svg, // don't animate in old IE
     marginRight: 10,
@@ -56,22 +57,67 @@ Highcharts.chart('container', {
         setInterval(function () {
           var x = (new Date()).getTime(), // current time
 //            y = Math.random();
-//	      y = 2;
+//       y = 2;
               y = getcpu();
+              y2=2;
+///              alert(y);
+          series.addPoint([x, y], true, true);
+        }, 1000);
+   
+     
+/*
+var series1 = this.series[1];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+//            y = Math.random();
+///       y = 2;
+//              y = getcpu();
+              y2=2;
+///              alert(y);
+          series.addPoint([x, y2], true, true);
+        }, 1000);
+
+*/
+/*
+      
+}     }   
+
+
+
+
+  },
+
+chart2: {
+    type: 'spline',
+//    type: 'area',
+
+    animation: Highcharts.svg, // don't animate in old IE
+    marginRight: 10,
+    zoomType: 'xy',
+    events: {
+      load: function () {
+        // set up the updating of the chart each second
+        var series = this.series[1];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+//            y = Math.random();
+       y = 20;
+//              y = getcpu();
 ///              alert(y);
           series.addPoint([x, y], true, true);
         }, 1000);
       }
-    }
-  },
+     }
+
+
+  }
+,
 
   time: {
     useUTC: false
   },
 
-  title: {
-    text: 'Cpu load'
-  },
+  title: {    text: 'Cpu load and average'  },
   xAxis: {
     type: 'datetime',
     tickPixelInterval: 1
@@ -81,7 +127,7 @@ Highcharts.chart('container', {
   },
   yAxis: {
     title: {
-      text: 'Value'
+      text: '%'
     },
     min: 0,
 //minTickInterval: 1,
@@ -136,7 +182,108 @@ Highcharts.chart('container', {
       }
       return data;
     }())
-  }]
+  }
+
+,
+//{   name: 'CPU average',   data: [20, 21, 22]  }
+
+{
+name: 'CPU average',
+    data: (function () {
+      // generate an array of random data
+      var data = [],
+        time = (new Date()).getTime(),
+        i;
+
+      for (i = -19; i <= 0; i += 1) {
+        data.push({
+//          x: time + i * 1000,
+            x: time + i *1000,
+            y: Math.random()
+//          y: 20;
+
+//            y: getcpu();
+        });
+      }
+      return data;
+    }())
+
+  }
+
+
+
+
+]
+}
+
+
+
+);
+*/
+
+$(function () {
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        $('#container').highcharts({
+            chart: {
+                renderTo: 'container',
+                defaultSeriesType: 'spline',
+//                width: 1400,
+//                height: 800,
+                events: {
+                    load: function () {
+                        var series = this.series[0],
+                            ser2 = this.series[1],
+                        shift = 0;
+
+                        setInterval(function () {
+                            var x = (new Date()).getTime(), // current time
+//                                y = Math.random();
+			    y= getcpu();
+			    y2= getavg()*10;
+//			    y2= getavg();
+                            series.addPoint([x, y], false, shift>20);
+//                            ser2.addPoint([x, y+0.5], true, shift>20);
+                            ser2.addPoint([x, y2], true, shift>20);
+                            shift++;
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: 'Cpu usage and average'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+//,
+//                maxZoom: 20 * 1000
+//                maxZoom: 20 * 100
+            },
+            yAxis: {
+//                minPadding: 0.2,
+//                maxPadding: 0.2,
+    min: -10,
+//    max: 100,
+                title: {
+                    text: 'Cpu usage and average'
+//,                    margin: 80
+                }
+            },
+            series: [{
+                name: 'Cpu usage',
+                data: []
+            }, {
+                name: 'Average*10',
+                data: []
+            }]
+        });
+    });
 });
 
 
