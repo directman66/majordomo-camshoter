@@ -1516,6 +1516,12 @@ SQLInsert('camshoter_log', $logrec);
 }
 
 
+$logrec=SQLSelectOne('select * from camshoter_devices where ID='.$properties['ID']);
+$logrec['UPDATED']=date('Y-m-d H:i:s');
+SQLUpdate('camshoter_devices', $logrec);
+
+
+
 }
 
 
