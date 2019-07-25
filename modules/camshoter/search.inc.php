@@ -124,7 +124,7 @@ if ($arcdate="" )
 ///////////////////
 //массив дат для комбобокса
 $arcar=$this->createDateRangeArray(date('Y-m-d',$date2), $date1);
-debmes ($arcar, 'camshoter');
+//debmes ($arcar, 'camshoter');
 //print_r($arcar);
 //$out['FILES']=$arcar;
 
@@ -158,7 +158,12 @@ $gfolder=$savepath.'/'.$folderdata."/";
 //echo $gfolder."<br>";
 
 $files=$this->getfiles($gfolder);
+
+//debmes($files, 'camshoter');
+
 //print_r($files);
+
+
 //jpeg
 $out['FILES']=$files;
 
