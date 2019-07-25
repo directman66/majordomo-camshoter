@@ -1481,8 +1481,13 @@ debmes('ver:'.$ver, 'camshoter');
 
 $sensity=$properties['SENSITY'];
 if (!$sensity) $sensity=60;
+$now=time();
+$last=$properties['UPDATEDTS'];  
+$delay=$properties['DELAY'];  
+$proshlo=$now-$last;
 
-if ($ver<$sensity)  
+
+if (($ver<$sensity)  && ($proshlo>$delay))
 {
 if ($result) {
 SaveFile($savename, $result);
@@ -1527,6 +1532,7 @@ SQLInsert('camshoter_log', $logrec);
 
 $logrec=SQLSelectOne('select * from camshoter_devices where ID='.$properties['ID']);
 $logrec['UPDATED']=date('Y-m-d H:i:s');
+$logrec['UPDATEDTS']=time();
 SQLUpdate('camshoter_devices', $logrec);
 
 
@@ -1882,6 +1888,7 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: LASTPING datetime
  camshoter_devices: LASTPING2 varchar(100) NOT NULL DEFAULT ''
  camshoter_devices: UPDATED datetime
+ camshoter_devices: UPDATEDTS varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  camshoter_devices: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
 
@@ -1895,6 +1902,8 @@ SQLExec('DROP TABLE IF EXISTS camshoter_people');
  camshoter_devices: LINKED_PROPERTY4 varchar(255) NOT NULL DEFAULT ''
 
  camshoter_devices: SENSITY varchar(255) NOT NULL DEFAULT ''
+ camshoter_devices: DELAY varchar(255) NOT NULL DEFAULT ''
+
  camshoter_devices: HOURLY varchar(255) NOT NULL DEFAULT ''
 
 
