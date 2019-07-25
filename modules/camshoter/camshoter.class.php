@@ -123,9 +123,17 @@ function run() {
 function admin(&$out) {
 
 
+        if ((time() - gg('cycle_camshoterRun')) < 360*30 ) {
+			$out['CYCLERUN'] = 1;
+		} else {
+			$out['CYCLERUN'] = 0;
+		}
+
 global $sizethmb;
 if (!$sizethmb) $sizethmb=200;
 $out['SIZETHMB1']=$sizethmb;
+
+
 
 
 $cmd_rec = SQLSelectOne("SELECT * FROM camshoter_config where parametr='SIZEALL'");
@@ -268,9 +276,9 @@ $id=$_GET['id'];
 if ($tab=='log') $sql='delete from camshoter_log';
 if ($tab=='logdevice') $sql='delete from camshoter_log where camid='.$id;
 
-debmes('TAB:'.$tab, 'camshoter');
+//debmes('TAB:'.$tab, 'camshoter');
 
-debmes($sql, 'camshoter');
+//debmes($sql, 'camshoter');
 SQLExec ($sql);
 
    $this->redirect("?");
@@ -451,7 +459,7 @@ $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "runall");
 ';
 SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
-debmes(  $cmdd, 'camshoter');
+//debmes(  $cmdd, 'camshoter');
 //$this->mainprocesss1($cmd[$i],  $i);
 
 }
@@ -485,7 +493,23 @@ debmes(  $cmdd, 'camshoter');
 
 }
 
-  
+
+ function processCycle() {
+
+$cmd=sqlselect('select * from camshoter_devices  where enable=1 and type="snapshot_diff" order by ID');
+
+$total = count($cmd);
+for ($i = 0; $i < $total; $i++)
+{
+
+
+$this->mainprocesss1($cmd[$i], $i, "snapshot_diff");
+
+
+}
+
+
+}  
 
 
 
@@ -542,7 +566,7 @@ $logrec['pathroot']='';
 $logrec['message']='';
 $logrec['trigger']='getsizeall';
 $logrec['updated']=date('Y-m-d H:i:s');
-SQLInsert('camshoter_log', $logrec);
+if ($logrec['message']<>'snapshot_diff') SQLInsert('camshoter_log', $logrec);
 
 
 }
@@ -578,12 +602,12 @@ $this->delFolder($savepath);
  function manageallfolders() {
 
 $rec=SQLSELECT('select * from camshoter_devices');
-debmes($rec, 'camshoter');
+//debmes($rec, 'camshoter');
 $total = count($rec);
 for ($i = 0; $i < $total; $i++){
 $res=$this->clearsubfolder($rec[$i]['ID']);
 
-
+/*
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
 if (!$logrec['ID'])
 {
@@ -597,6 +621,7 @@ $logrec['trigger']='clearsubfolder';
 $logrec['updated']=date('Y-m-d H:i:s');
 SQLInsert('camshoter_log', $logrec);
 }
+*/
 
 
 }
@@ -1387,6 +1412,118 @@ file_put_contents($savenamelast, $result);
 
 }
 
+if ($properties['TYPE']=='snapshot_diff')
+{
+$iam='img';
+$image_url=$properties['URL'];
+$savename=$savepath."cam".$properties['ID']."_".date('Y-m-d_His').".jpg"; // куда сохранять
+//$savename=$savepath."cam".$properties['ID']."_".date('Y-m-d').".jpg"; // куда сохранять
+$savenameid=$savepath."cam".$properties['ID']."_".date('Y-m-d').".id"; // куда сохранять
+$savenamelast=$savelast."cam".$properties['ID'].".jpg"; // куда сохранять
+$savenamelast1=$savelast."cam".$properties['ID'].".jpg1"; // куда сохранять
+$savenamethumb=$savename;
+
+$result=getURL($image_url,0);
+
+if ($result) {
+//SaveFile($savename, $result);
+SaveFile($savenamelast, $result);
+
+}else {
+$result=file_get_contents($url); //скачиваем картинку с камеры 
+//file_put_contents($savename, $result);
+file_put_contents($savenamelast, $result);
+}
+
+//$imageid=$this->getimageid2($savenamelast);
+//debmes( '$imageid:   '.$imageid, 'camshoter');
+
+/*
+$oldimageid=SQLSelectOne("select * from  camshoter_config where parametr='imageid".$properties['ID']."'")['value'];
+
+debmes( '$oldimageid:'.$oldimageid, 'camshoter');
+
+$cmd=SQLSelectOne("select * from  camshoter_config where parametr='imageid".$properties['ID']."'");
+
+if (!$cmd['ID'])
+{
+$cmd['value']= $imageid;
+$cmd['updated']=date('Y-m-d H:i:s');
+$cmd['parametr']= 'imageid'.$properties['ID'];
+sqlinsert('camshoter_config',$cmd);}
+else 
+{
+$cmd['value']= $imageid;
+$cmd['updated']=date('Y-m-d H:i:s');
+$cmd['parametr']= 'imageid'.$properties['ID'];
+sqlupdate('camshoter_config',$cmd);
+}
+
+
+//if  ($oldimageid<> $imageid)
+$ver=$this->imagediff2($imageid,$oldimageid);
+debmes('ver:'.$ver, 'camshoter');
+
+*/
+
+$ver=$this->imagecompare2($savenamelast1,$savenamelast);
+debmes('ver:'.$ver, 'camshoter');
+
+
+
+
+if ($ver<60)  
+{
+if ($result) {
+SaveFile($savename, $result);
+}else {
+$result=file_get_contents($url); //скачиваем картинку с камеры 
+file_put_contents($savename, $result);
+
+}
+
+$logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
+if (!$logrec['ID'])
+{
+$cnt=substr_count( $savename, '/');
+$upfolder=explode('/',$savename);
+
+$nado='';
+
+for($i=0; $iii<=$cnt; $iii++){
+
+if ($upfolder[$iii]=='cms') $nado='1';
+if ($nado=='1') $localpath.=$upfolder[$iii].'/';
+}
+$localpath=rtrim($localpath,'/');
+
+
+//$trigger=$properties['LINKED_OBJECT'].' '.$properties['LINKED_OBJECT1'].' ' .$properties['LINKED_OBJECT2'];
+
+//$localpath='';
+$logrec['type']=$properties['TYPE'];
+$logrec['camid']=$properties['ID'];
+$logrec['path']=$savename;
+$logrec['pathroot']=$localpath;
+$logrec['message']=$text;
+$logrec['trigger']=$trigger;
+$logrec['updated']=date('Y-m-d H:i:s');
+SQLInsert('camshoter_log', $logrec);
+}
+
+
+}
+
+
+
+
+SaveFile($savenamelast1, $result);
+//SaveFile($savenameid, $imageid);
+
+
+}
+
+
 if (($properties['TYPE']=='rtsp')&&($properties['METHOD']=='mp4'))
 {
 $iam='video';
@@ -1540,7 +1677,7 @@ $logrec['pathroot']=$localpath;
 $logrec['message']=$text;
 $logrec['trigger']=$trigger;
 $logrec['updated']=date('Y-m-d H:i:s');
-SQLInsert('camshoter_log', $logrec);
+if ($trigger<>'snapshot_diff') SQLInsert('camshoter_log', $logrec);
 }
 
 
@@ -2281,6 +2418,120 @@ return $a;
 }
 
 
+
+//Генерация ключа-изображения
+
+//https://habr.com/ru/post/55926/
+
+function getimageid2($image)
+{
+  //Размеры исходного изображения
+  $size=getimagesize($image);
+
+  //Исходное изображение
+  $image=imagecreatefrompng($image);
+
+  //Маска
+  $zone=imagecreate(20,20);
+
+  //Копируем изображение в маску
+  imagecopyresized($zone,$image,0,0,0,0,20,20,$size[0],$size[1]);
+
+  //Будущая маска
+  $colormap=array();
+
+  //Базовый цвет изображения
+  $average=0;
+
+  //Результат
+  $result=array();
+
+   //Заполняем маску и вычисляем базовый цвет
+  for($x=0;$x<20;$x++)
+    for($y=0;$y<20;$y++)
+    {
+      $color=imagecolorat($zone,$x,$y);
+      $color=imagecolorsforindex($zone,$color);
+
+      //Вычисление яркости было подсказано хабраюзером Ryotsuke
+      $colormap[$x][$y]= 0.212671 * $color['red'] + 0.715160 * $color['green'] + 0.072169 * $color['blue'];
+
+      $average += $colormap[$x][$y];
+    }
+
+  //Базовый цвет
+  $average /= 400;
+
+  //Генерируем ключ строку
+  for($x=0;$x<20;$x++)
+    for($y=0;$y<20;$y++)
+          $result[]=($x<10?$x:chr($x+97)).($y<10?$y:chr($y+97)).round(2*$colormap[$x][$y]/$average);
+
+  //Возвращаем ключ
+  return join(' ',$result);
+}
+
+// This source code was highlighted with Source Code Highlighter.
+
+
+///Вычисление "похожести" двух изображений
+//http://www.manhunter.ru/webmaster/1284_sravnenie_izobrazheniy_na_php.html
+function imagediff2($image,$desc)
+{
+  $image=explode(' ',$image);
+  $desc=explode(' ',$desc);
+
+  $result=0;
+
+  foreach($image as $bit)
+    if(in_array($bit,$desc))
+      $result++;
+
+   return $result/((count($image)+count($desc))/2);
+}
+
+function imagecompare2($file1,$file2)
+{ 
+$im1=ImageCreateFromJPEG($file1);
+$im2=ImageCreateFromJPEG($file2);
+// Размеры изображения
+$width=ImageSX($im1);
+$height=ImageSY($im1);
+$count=0;
+for ($x=0; $x<$width; $x++) {
+    for ($y=0; $y<$height; $y++) {
+        // Цвет точки первого изображения
+        $rgb1=ImageColorAt($im1,$x,$y);
+        $R1=($rgb1 >> 16) & 0xFF;
+        $G1=($rgb1 >> 8) & 0xFF;
+        $B1=$rgb1 & 0xFF;
+ 
+        // Цвет точки второго изображения
+        $rgb2=ImageColorAt($im2,$x,$y);
+        $R2=($rgb2 >> 16) & 0xFF;
+        $G2=($rgb2 >> 8) & 0xFF;
+        $B2=$rgb2 & 0xFF;
+ 
+        // Перевести в оттенки серого
+        $gray1=(0.2126*$R1+0.7152*$G1+0.0722*$B1);
+        $gray2=(0.2126*$R2+0.7152*$G2+0.0722*$B2);
+ 
+        // Если получился цвет, близкий к черному,
+        // то считаем, что цвета точек условно равны
+        if (($gray1^$gray2) < 5) {
+            $count++;
+        }
+    }
+}
+ 
+// Прибраться за собой
+ImageDestroy($im1);
+ImageDestroy($im2);
+ 
+// Коэффициент похожести изображений в процентах
+$similarity=intval($count/$x/$y*100);
+return $similarity;
+}
 
 }
 // --------------------------------------------------------------------
