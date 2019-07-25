@@ -14,6 +14,13 @@ padding: .3em 1em
 
 <a href="?view_mode=home">
 <img src="../img/modules/camshoter.png"  width="100"  ></a> &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;	
+	[#if CYCLERUN==1#]
+		<span class="label label-success" title="Статус цикла">Цикл запущен</span>
+	[#else#]
+		<span class="label label-danger" title="Статус цикла">Цикл остановлен</span>
+	[#endif#]
+
 
 
  &nbsp; 
