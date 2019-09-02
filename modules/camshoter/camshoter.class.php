@@ -464,7 +464,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "runall");
 ';
-SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_runnall_'.$i,$cmdd, '0'); 
 //debmes(  $cmdd, 'camshoter');
 //$this->mainprocesss1($cmd[$i],  $i);
 
@@ -540,7 +540,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "hourly");
 ';
-SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_hourly'.$i,$cmdd, '0'); 
 
 }
 
@@ -718,7 +718,7 @@ for ($i = 0; $i < $total; $i++)
 { 
 $ip=$mhdevices[$i]['IPADDR'];
 $lastping=$mhdevices[$i]['LASTPING2'];
-if ((!$lastping)||(time()-$lastping>300))
+if (((!$lastping)||(time()-$lastping>300))&&($ip))
 //echo time()-$lastping;
 //if (time()-$lastping>300)
  {
@@ -1142,7 +1142,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_type1_'.$i,$cmdd, '0'); 
 //debmes( 'mainprocess end', 'camshoter');
 
 
@@ -1171,7 +1171,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_type0_'.$i,$cmdd, '0'); 
 //debmes( 'mainprocess end', 'camshoter');
 
 
@@ -1200,7 +1200,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_type_'.$i,$cmdd, '0'); 
 
 
 
