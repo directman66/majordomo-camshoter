@@ -141,6 +141,78 @@ ONVIF Device Manager Ссылка на программу https://yadi.sk/d/kXCN
 <div class="panel-group" id="accordion">
 	<div class="panel panel-info">
 		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#dlist">Список поддерживаемых устройств</a>
+		</div>
+		<div class="panel-body collapse" id="dlist">
+
+<b>Более подробная информация ищется в сети на сайтах <a href="https://rtsp-stream.ru/" target="_blank"> https://rtsp-stream.ru/  </a> и <a href="https://www.ispyconnect.com/" target="_blank">https://www.ispyconnect.com/</a>
+
+<br></b>
+<br>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
+<table   class="table table_wrapper">
+<thead>
+<tr><b>
+<td>Тип</td>
+<td>ПРоизводитель</td>
+<td>Модель</td>
+<td>rtsp1</td>
+<td>rtsp2</td>
+<td>snap1</td>
+<td>snap2</td>
+<td>mjpeg</td>
+<td>login</td>
+<td>pass</td>
+<td>ptz</td>
+<td>onvif</td>
+<td>onvifevents</td>
+
+</tr>
+</b>
+</thead>
+<tbody>
+[#begin DEVICE_LIST#]
+<tr>
+
+
+<td>[#TYPE#]</td>
+<td>[#VENDOR#]</td>
+<td>[#MODEL#]</td>
+<td>[#RTSP1#]</td>
+<td>[#RTSP2#]</td>
+<td>[#SNAP1#]</td>
+<td>[#SNAP2#]</td>
+<td>[#MJPEG#]</td>
+<td>[#DEFAULTLOGIN#]</td>
+<td>[#DEFAULTPASS#]</td>
+<td>[#PTZ#]</td>
+<td>[#ONVIF#]</td>
+<td>[#ONVIFEVENTS#]</td>
+<td>[#LINK#]</td>
+<td>[#COMMENT#]</td>
+
+
+
+
+</tr>
+[#end DEVICE_LIST#]
+</tbody>
+</table>
+
+		</div> </div> </div>
+
+
+
+<div class="panel-group" id="accordion">
+	<div class="panel panel-info">
+		<div class="panel-heading">
 		<a data-toggle="collapse" data-parent="#accordion" href="#bax">Поддержать разработку</a>
 		</div>
 		<div class="panel-body collapse" id="bax">
@@ -151,7 +223,7 @@ ONVIF Device Manager Ссылка на программу https://yadi.sk/d/kXCN
 
                                                                                                          
 	
-</div>
+
 
 
 	
