@@ -1145,7 +1145,7 @@ SetTimeOut('camshoter_timer '.$i,$cmdd, '0');
 } 
 
 elseif
- ($properties[$i]['ENABLE1']=="2") {
+ ($properties[$i]['ENABLE1']=="0") {
 
 	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)&&($value==0)) {
 //$this->mainproccesss_test($properties,  $i);
