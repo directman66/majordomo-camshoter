@@ -1142,7 +1142,39 @@ SetTimeOut('camshoter_timer '.$i,$cmdd, '0');
 
 
 }
-} else 
+} 
+
+elseif
+ ($properties[$i]['ENABLE1']=="2") {
+
+	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)&&($value==0)) {
+//$this->mainproccesss_test($properties,  $i);
+//debmes( 'mainprocess enable1='.$properties[$i]['ENABLE1'], 'camshoter');
+//debmes( 'mainprocess start', 'camshoter');
+//$this->mainprocesss1($properties[$i],  $i);
+$cmdd='
+include_once(DIR_MODULES . "camshoter/camshoter.class.php");
+$camshoter= new camshoter();
+$cmd=array();
+
+';
+foreach ($properties[$i] as $val=>$name){
+//$cmdd.='$cmd[]=array("'.$val.'"=>"'.$name.'");';
+$cmdd.='$cmd["'.$val.'"]="'.$name.'";';
+}
+$cmdd.='
+$camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
+';
+SetTimeOut('camshoter_timer '.$i,$cmdd, '0'); 
+//debmes( 'mainprocess end', 'camshoter');
+
+
+
+}
+} 
+
+
+else 
 {
 	 if( ($properties[$i]['ID'])&&($properties[$i]['ENABLE']==1)&&($body==1)) {
 //$this->mainproccesss_test($properties,  $i);
@@ -1969,6 +2001,26 @@ EOD;
  camshoter_config: parametr varchar(300)
  camshoter_config: value varchar(10000)  
  camshoter_config: updated datetime
+
+
+ camshoter_devcatalog: ID int(10) unsigned NOT NULL auto_increment
+ camshoter_devcatalog: TITLE varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: TYPE varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: VENDOR varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: MODEL varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: RTSP1 varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: RTSP2 varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: SNAP1 varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: SNAP2 varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: MJPEG varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: DEFAULTLOGIN varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: DEFAULTPASS varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: PTZ varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: ONVIF varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: ONVIFEVENTS varchar(100) NOT NULL DEFAULT ''
+
+
+
 EOD;
    parent::dbInstall($data);
 
