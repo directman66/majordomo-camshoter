@@ -185,13 +185,13 @@ $out['VISION_TOKEN']=$cmd_rec['value'];
 
 
  if ($this->tab=='log') {
-$cmd_rec = SQLSelect("SELECT * FROM camshoter_log order by updated desc");
+$cmd_rec = SQLSelect("SELECT * FROM camshoter_log order by updated desc limit 300");
 $out['LOG']=$cmd_rec;
 }
 
  if ($this->tab=='logdevice') {
 $id=$this->id;
-$cmd_rec = SQLSelect("SELECT * FROM camshoter_log  where camid=$id order by updated desc");
+$cmd_rec = SQLSelect("SELECT * FROM camshoter_log  where camid=$id order by updated desc limit 300" );
 $out['LOG']=$cmd_rec;
 }
 
@@ -435,6 +435,12 @@ setglobal($this->id, '1');
 $this->redirect("?action=camshoter");
 }
 
+
+if ($this->tab=='help') {
+$res=SQLSelect("SELECT * FROM camshoter_devcatalog ");
+$out['DEVICE_LIST']=$res;
+
+}
 
 
  if ($this->view_mode=='runall') {
@@ -1922,6 +1928,8 @@ SQLExec('DROP TABLE IF EXISTS camshoter_devices');
 SQLExec('DROP TABLE IF EXISTS camshoter_config');
 SQLExec('DROP TABLE IF EXISTS camshoter_recognize');
 SQLExec('DROP TABLE IF EXISTS camshoter_people');
+SQLExec('DROP TABLE IF EXISTS camshoter_devcatalog');
+
 
 
   parent::uninstall();
@@ -2018,6 +2026,10 @@ EOD;
  camshoter_devcatalog: PTZ varchar(100) NOT NULL DEFAULT ''
  camshoter_devcatalog: ONVIF varchar(100) NOT NULL DEFAULT ''
  camshoter_devcatalog: ONVIFEVENTS varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: RESOLUTION varchar(100) NOT NULL DEFAULT ''
+ camshoter_devcatalog: LINK varchar(200) NOT NULL DEFAULT ''
+ camshoter_devcatalog: COMMENT varchar(300) NOT NULL DEFAULT ''
+ camshoter_devcatalog: SENDEMAIL varchar(300) NOT NULL DEFAULT ''
 
 
 
@@ -2051,6 +2063,187 @@ EOD;
    parent::dbInstall($data);
 
 
+
+$par1=SQLSelectOne ("select * from camshoter_devcatalog where ID=1");
+
+if (!$par1['ID']) {
+
+$par1['type'] = 'camera';
+$par1['vendor'] = "Besder";		 
+$par1['model'] = "H264 HI3516C + 1/2. 8 ''Sony imx22";		 
+$par1['rtsp1'] = "rtsp://192.168.1.2:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream";		 
+$par1['rtsp2'] = "rtsp://192.168.1.2:554/user=admin_password=tlJwpbo6_channel=1_stream=2.sdp?real_stream";		 
+$par1['snap1'] = "http://192.168.1.2/webcapture.jpg?command=snap&channel=0";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "admin";		 
+$par1['defaultpass'] = "tlJwpbo6";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "1";		 
+$par1['onvifevents'] = "1";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://ru.aliexpress.com/item/32597794581.html?spm=a2g0s.9042311.0.0.274233edjWeK16";		 
+$par1['comment'] = "инструкция по увеличению разрешения статической фотографии https://connect.smartliving.ru/profile/1502/blog60.html";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);						
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "XM";		 
+$par1['model'] = "XM 1080 P PTZ";		 
+$par1['rtsp1'] = "rtsp://192.168.1.2:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream";		 
+$par1['rtsp2'] = "rtsp://192.168.1.2:554/user=admin_password=tlJwpbo6_channel=1_stream=2.sdp?real_stream";		 
+$par1['snap1'] = "http://192.168.1.2/webcapture.jpg?command=snap&channel=0";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "admin";		 
+$par1['defaultpass'] = "tlJwpbo6";		 
+$par1['ptz'] = "1";		 
+$par1['onvif'] = "0";		 
+$par1['onvifevents'] = "0";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://ru.aliexpress.com/item/32739140677.html?spm=a2g0o.detail.1000013.3.736253c8B4P4WJ&gps-id=pcDetailBottomMoreThisSeller&scm=1007.13339.139618.0&scm_id=1007.13339.139618.0&scm-url=1007.13339.139618.0&pvid=fb548291-7575-46e8-a857-5f7dd407636c";		 
+$par1['comment'] = "инструкция по увеличению разрешения статической фотографии https://connect.smartliving.ru/profile/1502/blog60.html";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);						
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "Reolink";		 
+$par1['model'] = "RLC-420";		 
+$par1['rtsp1'] = "rtsp://192.168.1.13/h264Preview_01_main";		 
+$par1['rtsp2'] = "";		 
+$par1['snap1'] = "http://192.168.1.13/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=XXXXXXX";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "1";		 
+$par1['onvif'] = "0";		 
+$par1['onvifevents'] = "0";		 
+$par1['resolution'] = "5";		 
+$par1['link'] = "https://mysku.ru/blog/aliexpress/71677.html";		 
+$par1['comment'] = "";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);						
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "Herospeed";		 
+$par1['model'] = "3516d imx123";		 
+$par1['rtsp1'] = "rtsp://192.168.1.13/0";		 
+$par1['rtsp2'] = "";		 
+$par1['snap1'] = "http://user:password@IP_адрес:80/snap.jpg";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "1";		 
+$par1['onvif'] = "0";		 
+$par1['onvifevents'] = "0";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "";		 
+$par1['comment'] = "";		 
+$par1['sendemail'] = "";		 
+SQLInsert('camshoter_devcatalog', $par1);						
+
+$par1['type'] = 'Вызывная панель';
+$par1['vendor'] = "Hikvision";		 
+$par1['model'] = "DS-KB8112-IM";		 
+$par1['rtsp1'] = "rtsp://IPADDRESS:554/h264/ch01/main/av_stream";		 
+$par1['rtsp2'] = "rtsp://user:password@IPADDRESS:554/ISAPI/Streaming/Channels/102";		 
+$par1['snap1'] = "http://IPADDRESS/Streaming/channels/1/preview";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "0";		 
+$par1['onvifevents'] = "0";		 
+$par1['resolution'] = "1";		 
+$par1['link'] = "https://www.hikvision.com/en/Products/Video-Intercom/Vandal-Resistant-Door-Bell/DS-KB8112-IM";		 
+$par1['comment'] = "";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "Hikvision";		 
+$par1['model'] = "3516d imx123";		 
+$par1['rtsp1'] = "rtsp://IPADDRESS:554/mpeg4/sub/main/av_stream";		 
+$par1['rtsp2'] = "rtsp://IPADDRESS:554/mpeg4/ch01/sub/av_stream";		 
+$par1['snap1'] = "http://IPADDRESS/Streaming/channels/1/picture";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "1";		 
+$par1['onvifevents'] = "1";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://hikvision.ru/product/ds_2cd2032_i";		 
+$par1['comment'] = "";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);												
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "Hikvision";		 
+$par1['model'] = "современные модели";		 
+$par1['rtsp1'] = "rtsp://admin:12345@192.168.200.11:554/ISAPI/Streaming/Channels/101";		 
+$par1['rtsp2'] = "rtsp://admin:12345@192.168.200.11:554/ISAPI/Streaming/Channels/102";		 
+$par1['snap1'] = "http://admin:пароль@IP-камеры:порт-http/streaming/channels/102/httpPreview";		 
+$par1['snap2'] = "http://admin:passwd@ip-cam/ISAPI/Streaming/channels/101/picture?snapShotImageType=JPEG";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "1";		 
+$par1['onvifevents'] = "1";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://hikvision.ru/faq/23";		 
+$par1['comment'] = "101 - это 1 камера 1 поток, 201 - это 2 камера 1 поток, 102 - это 1 камера 2 поток
+MJPEG и фото: Для получения MJPEG-потока по HTTP (суб-поток камеры должен быть настроен как mjpeg)
+Перевести в MJPEG можно только суб-поток камеры.
+";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);												
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "Dahua";		 
+$par1['model'] = "современные модели";		 
+$par1['rtsp1'] = "rtsp://192.168.2.128:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif";		 
+$par1['rtsp2'] = "rtsp://<Имя польз.>:<Пароль>@:<Порт>/cam/realmonitor?channel=1&subtype=0 ";		 
+$par1['snap1'] = "";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "1";		 
+$par1['onvifevents'] = "1";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://dahuawiki.com/Remote_Access/RTSP_via_VLC";		 
+$par1['comment'] = "rtsp://192.168.2.128:554/live";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);	
+
+$par1['type'] = 'Камера';
+$par1['vendor'] = "RVI";		 
+$par1['model'] = "современные модели";		 
+$par1['rtsp1'] = "rtsp://192.168.2.128:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif";		 
+$par1['rtsp2'] = "rtsp://<Имя польз.>:<Пароль>@:<Порт>/cam/realmonitor?channel=1&subtype=0 ";		 
+$par1['snap1'] = "";		 
+$par1['snap2'] = "";		 
+$par1['mjpeg'] = "";		 
+$par1['defaultlogin'] = "";		 
+$par1['defaultpass'] = "";		 
+$par1['ptz'] = "0";		 
+$par1['onvif'] = "1";		 
+$par1['onvifevents'] = "1";		 
+$par1['resolution'] = "2";		 
+$par1['link'] = "https://dahuawiki.com/Remote_Access/RTSP_via_VLC";		 
+$par1['comment'] = "rtsp://192.168.2.128:554/live";		 
+$par1['sendemail'] = "1";		 
+SQLInsert('camshoter_devcatalog', $par1);																							
+ 
+
+}
 
 /*
 $cmd_rec = SQLSelect("SELECT * FROM camshoter_config");
