@@ -1452,7 +1452,12 @@ $savenamethumb=$savename;
 
 $result=getURL($image_url,0);
 
+
+
+if(strlen($result)>400){
+
 if ($result) {
+
 SaveFile($savename, $result);
 SaveFile($savenamelast, $result);
 
@@ -1460,6 +1465,8 @@ SaveFile($savenamelast, $result);
 $result=file_get_contents($url); //скачиваем картинку с камеры 
 file_put_contents($savename, $result);
 file_put_contents($savenamelast, $result);
+}
+
 }
 
 }
