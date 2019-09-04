@@ -540,7 +540,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "hourly");
 ';
-SetTimeOut('camshoter_timer_hourly'.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_hourly_'.$cmd[$i]['ID'],$cmdd, '0'); 
 
 }
 
@@ -551,15 +551,17 @@ SetTimeOut('camshoter_timer_hourly'.$i,$cmdd, '0');
 
  function getsizeall() {
 
-$cmd=sqlselect('select * from camshoter_devices');
+$cmd=sqlselect('select * from camshoter_devices where enable=1');
 $total = count($cmd);
 for ($i = 0; $i < $total; $i++)
 {
 //$folder=ROOT."cms/cached/nvr/cam".$cmd[$i]['ID'].'/';
 //echo $folder;
-$res=$this->getfoldersize($cmd[$i]['ID']);
+$int=$cmd[$i]['ID'];
+$this->getfoldersize($int);
 
 }
+//echo "1";
 
 $logrec=SQLSelectOne('select * from camshoter_log where ID="dummy"');
 if (!$logrec['ID'])
@@ -576,6 +578,7 @@ if ($logrec['message']<>'snapshot_diff') SQLInsert('camshoter_log', $logrec);
 
 
 }
+//echo "2";
 
 $allsize=$this->show_size(ROOT."cms/cached/nvr/");
 
@@ -588,7 +591,7 @@ else
 {sqlinsert('camshoter_config',$cmd);}
 
 //return $allsize;
-$this->redirect("?"); 
+//$this->redirect("?"); 
 }
 
 
@@ -1172,7 +1175,7 @@ $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
 SetTimeOut('camshoter_timer_type0_'.$i,$cmdd, '0'); 
-//debmes( 'mainprocess end', 'camshoter');
+debmes( 'camshoter_timer_type0_'.$i.":".$cmdd, 'camshoter_timer_type0_'.$i.":".$cmdd);
 
 
 
@@ -1887,23 +1890,23 @@ $this->mailvision_detect($savenamethumb, $id);
 
 $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
-$camshoter= new camshoter();
-$camshoter->getsizeall();';
+$cs= new camshoter();
+$cs->getsizeall();';
 SetTimeOut('getsizeall '.$i,$cmdd, '60'); 
 
 
 
 $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
-$camshoter= new camshoter();
-$camshoter->hourly();';
-SetTimeOut('hourly '.$i,$cmdd, ''); 
+$cs= new camshoter();
+$cs->hourly();';
+SetTimeOut('hourly '.$i,$cmdd, '1'); 
 
 
 $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
-$camshoter= new camshoter();
-$camshoter->manageallfolders();';
+$cs= new camshoter();
+$cs->manageallfolders();';
 SetTimeOut('manageallfolders '.$i,$cmdd, '120'); 
 
 
