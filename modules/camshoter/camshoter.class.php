@@ -464,7 +464,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "runall");
 ';
-SetTimeOut('camshoter_timer_runnall_'.$i,$cmdd, '0'); 
+SetTimeOut('camshoter_timer_runnall_'.$i,$cmdd, '1'); 
 //debmes(  $cmdd, 'camshoter');
 //$this->mainprocesss1($cmd[$i],  $i);
 
@@ -540,7 +540,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "hourly");
 ';
-SetTimeOut('camshoter_timer_hourly_'.$cmd[$i]['ID'],$cmdd, '0'); 
+SetTimeOut('camshoter_timer_hourly_'.$cmd[$i]['ID'],$cmdd, '2'); 
 
 }
 
@@ -1145,7 +1145,8 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer_type1_'.$i,$cmdd, '0'); 
+SetTimeOut('cs_timer_type1_'.$i.'_'.time(),$cmdd, '0'); 
+//eval($cmdd);
 //debmes( 'mainprocess end', 'camshoter');
 
 
@@ -1163,7 +1164,7 @@ elseif
 //$this->mainprocesss1($properties[$i],  $i);
 $cmdd='
 include_once(DIR_MODULES . "camshoter/camshoter.class.php");
-$camshoter= new camshoter();
+$cs= new camshoter();
 $cmd=array();
 
 ';
@@ -1172,10 +1173,11 @@ foreach ($properties[$i] as $val=>$name){
 $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 }
 $cmdd.='
-$camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
+$cs->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer_type0_'.$i,$cmdd, '0'); 
-debmes( 'camshoter_timer_type0_'.$i.":".$cmdd, 'camshoter_timer_type0_'.$i.":".$cmdd);
+SetTimeOut('cs_timer_type0_'.$i.'_'.time(),$cmdd, '0'); 
+//eval($cmdd);
+//debmes( 'camshoter_timer_type0_'.$i.":".$cmdd, 'camshoter_timer_type0');
 
 
 
@@ -1203,7 +1205,9 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
 ';
-SetTimeOut('camshoter_timer_type_'.$i,$cmdd, '0'); 
+SetTimeOut('csr_timer_type_'.$i.'_'.time(),$cmdd, '0'); 
+//eval($cmdd);
+
 
 
 
@@ -1913,6 +1917,12 @@ SetTimeOut('manageallfolders '.$i,$cmdd, '120');
 }
 
 }
+
+    function api($cmd) {
+
+$this->mainprocesss1($cmd,'.  $i.', "'.$trigger.'");
+   }
+
 
 
 
