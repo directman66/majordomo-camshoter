@@ -228,6 +228,17 @@ $out['SIZETHMB']='500';
  
 
 
+ if ($this->view_mode=='kick') {
+debmes('kick', 'camshoter');
+$cmd2='sudo killall ffmpeg"';
+//$cmd2='top  -b -n 1 ';
+$res2 = (shell_exec($cmd2));
+
+   $this->redirect("?tab=htop");
+
+
+ }
+
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
