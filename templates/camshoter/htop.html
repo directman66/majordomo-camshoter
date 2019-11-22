@@ -1,231 +1,353 @@
-<br/>
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t1">Информация</a>
-		</div>
-		<div class="panel-body collapse" id="t1">
-Модуль Camshoter позволяет сохранять скриншоты при срабатывании датчика движения. 			</br>     </br>
-
-	
-		</div> </div> </div>
-
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t2">Возможности</a>
-		</div>
-		<div class="panel-body collapse" id="t2">
-Реализовано: </br>
-1) Привязка камеры к параметрам устройств (например свойство status объекта Motion);</br>
-2) При изменении привязанного свойства, сохраняется картинка камеры, которая указана в поле URL;</br>
-3) Доступен режим просмотра сохраненных фотографий  и фильтрация по дате (вкладка Снапшоты);</br>
-4) Отправка полученных снапшотов в телеграм (временно реализована отправка всем подписантам) .</br>
-5) Сохранение последних снапшотов в одной папке с постоянным именем для добавления на сцену или другие модули:</br>
-код для вставки на сцену (данный вариант использования в отличии от thumb не загружает процессор при обновлении страницы)</br>
-6) Проверка объема занимаемого пространства в разрезе камер.</br>
-7) Добавлена возможность сохранения rtsp потока и отправки видео в формате mp4. </br>
-8) Добавлена настройка игнорировать запись, когда дома кто-то есть. Просьба протестировать. </br>
-9) Добавлена возможность отключения камер (вручную) </br>
-10) Добавлен просмотр миниатюр для видео </br>
-11) Добавлена сохранение токена mail.ru vision, который можно получить тут https://mcs.mail.ru/ (на будущее) </br>
-12) Добавлено изменение размера миниатюр в режиме просмотра </br>
-13) Добавлено распознавание объектов с помощью сервиса vision от mail.ru. Необходимо зарегистрироваться на сайте https://mcs.mail.ru/ и после активации аккаунта на странице https://mcs.mail.ru/app/services/machinelearning/vision/ получить токен с разрешениями (Объекты, Лица). Далее полученный токен необходимо сохранить на вкладке настройки. Информация о распознанных фотографиях хранится в таблице camshoter_recognize и выводится на экран при наведении курсора мыши на фотографию в режиме просмотра. Начальный аккаунт дает возможность производить 5000 запросов в месяц бесплатно. Функционал тестировался пока только под линукс. </br>
-
-
-14) Добавлена эмуляция сработки привязанного датчика. Для тестирования функционала. Вызывается с основного окна модуля. </br>
-15) Для тех, у кого кодеки камеры отличаются от h264, возможно требуется перекодировка на ходу. Для этого предусмотрел в настройках камеры кастомный путь FFMEGCMD. Заполнять  только если сохраняются пустые файлы. Пример заполнения: </br>
-[code] ffmpeg -y -i rtsp://192.168.1.32:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream -t #sec -f mp4 -vcodec copy -pix_fmt yuv420p -acodec copy -an -r 15 #savename [/code] </br>
-Далее в процессе выполнения #sec  и #savename  будут заменены на нужные пути модуля.  Вы можете поиграть с настройками кодеков: </br>
-</br>
-для видео: </br>
--vcodec copy  </br>
--vcodec libx264  </br>
-для аудио </br>
--acodec copy  </br>
--acodec ac3 </br>
-
-Возможны другие варианты. Настройки зависят от того, какие кодеки поддерживает камера и какие драйвера установлены в системе. </br>
-</br>
-</br>
-</br>
-
-
-
-В планах: </br>
-1) Очистка хранилища в зависимости от настроек модуля; </br>
-2) Отправка полученного изображения на анализ в сервис vision от mail.ru  для распознавания объектов в кадре и распознавания лиц (платный функционал).</br>
-
-		<p>
-		</div> </div> </div>
-
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t3">Реакция по движению в камере</a>
-		</div>
-
-		<div class="panel-body collapse" id="t3">
-		<p>
-Многие камеры ONVIF позволяют подписываться на "движение в кадре". Для того, чтобы это настроить, необходимо: </br>
-1) Создать простое устройство "Датчик движения". </br>
-2) Установить модуль ONVIF, найти или добавить вручную нужные камеры.  На вкладке "общие" выбрать Enable ONVIF events polling. На вкладке "данные" привязать метрику tns1:RuleEngine/CellMotionDetector/Motion/IsMotion к созданному ранее датчику движения и свойству status или методу MotionDetected. </br>
-</br>
-Проверить, поддерживает ли камера подписку и корректно ли работает подписка можно с помощью программы  </br>
-ONVIF Device Manager Ссылка на программу https://yadi.sk/d/kXCND7Nmt3tAYQ </br>
-Обзор программы https://habr.com/company/synesis/blog/120747/ </br>
-
-[b]Наблюдение: [/b] </br>
-Две камеры h264 в одно и тоже время примерно через месяц перестали присылать статусы о сработках. Перезагрузка не помогает, но запуск </br>
-приложения CMS, просмотр параметров настроек и закрытие приложения.</br>
-
-<br></br>
-
-
-		</div> </div> </div>
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t4">Реакция по внешнему датчику движения, например из модуля MiHome</a>
-		</div>
-		<div class="panel-body collapse" id="t4">
-		<p>
-1) Создать простое устройство "Датчик движения" или "Датчик открытия";  </br>
-2) Внешний датчик движения добавляется в систему мажордомо через модуль XiaomiHome, проверяется факт сработки, т.е. данные во вкладке "данные" должны быть актуальны; </br>
-2) Привязывается метрика "motion" к ранее добавленному Простому устройству "Датчик движения"</br>
-
-<br></br>
-
-
-		</div> </div> </div>
-
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t5">Для всех вариантов</a>
-		</div>
-		<div class="panel-body collapse" id="t5">
-		<p>
-в модуле Camshoter: </br>
-1) Добавляется камера (необходимо указать  Имя устройства, путь к снапшотам устройств, ip адрес (нужен для определения доступности). </br>
-2) Добавленную камеру необходимо привязать к Простому устройству "Датчик движения" на вкладке "Настройки". </br>
-3) Посмотреть снапшоты можно на вкладке "Снапшоты". Для сохранения контента используется путь /var/www/cms/cached/nvr/camX </br>
-
-<br></br>
-
-
-		</div> </div> </div>
-
-
-
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#t6">Контактная информация</a>
-		</div>
-		<div class="panel-body collapse" id="t6">
-		<p>
-<a href="https://github.com/directman66/majordomo-camshoter" target="_blank">Ссылка на репозиторий</a><br>
-<a href="https://mjdm.ru/forum/viewtopic.php?f=5&t=5923" target="_blank">Тема на форуме</a>.<br>
-
-<br></br>
-
-
-		</div> </div> </div>
-
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#dlist">Список поддерживаемых устройств</a>
-		</div>
-		<div class="panel-body collapse" id="dlist">
-
-<b>Более подробная информация ищется в сети на сайтах <a href="https://rtsp-stream.ru/" target="_blank"> https://rtsp-stream.ru/  </a> и <a href="https://www.ispyconnect.com/" target="_blank">https://www.ispyconnect.com/</a>
-
-<br></b>
 <br>
-<style> 
- .table_wrapper{
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+
+<!--<a href="?view_mode=clearcpu" class="btn btn-default" title="Clear Folder">Clear CPU</i></a> -->
+<!--
+<style>
+#container {
+    min-width: 310px;
+    height: 400px;
+    margin: 0 auto;
 }
 </style>
-
-<table   class="table table_wrapper">
-<thead>
-<tr><b>
-<td>Тип</td>
-<td>ПРоизводитель</td>
-<td>Модель</td>
-<td>rtsp1</td>
-<td>rtsp2</td>
-<td>snap1</td>
-<td>snap2</td>
-<td>mjpeg</td>
-<td>login</td>
-<td>pass</td>
-<td>ptz</td>
-<td>onvif</td>
-<td>onvifevents</td>
-
-</tr>
-</b>
-</thead>
-<tbody>
-[#begin DEVICE_LIST#]
-<tr>
+-->
+<!--
+<script src="highcharts\highcharts.js"></script>
+<script src="highcharts\exporting.js"></script>
+<script src="highcharts\export-data.js"></script>
+-->
 
 
-<td>[#TYPE#]</td>
-<td>[#VENDOR#]</td>
-<td>[#MODEL#]</td>
-<td>[#RTSP1#]</td>
-<td>[#RTSP2#]</td>
-<td>[#SNAP1#]</td>
-<td>[#SNAP2#]</td>
-<td>[#MJPEG#]</td>
-<td>[#DEFAULTLOGIN#]</td>
-<td>[#DEFAULTPASS#]</td>
-<td>[#PTZ#]</td>
-<td>[#ONVIF#]</td>
-<td>[#ONVIFEVENTS#]</td>
-<td>[#LINK#]</td>
-<td>[#COMMENT#]</td>
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/highcharts.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/exporting.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/camshoter/export-data.js"></script>
+
+<!--
+<script src="<#ROOTHTML#>3rdparty/highcharts/modules/solid-gauge.js"></script>
+<script src="<#ROOTHTML#>3rdparty/highcharts/highcharts-more.js"></script>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+-->
+
+
+<div id="container"></div>
 
 
 
 
-</tr>
-[#end DEVICE_LIST#]
-</tbody>
-</table>
+<script type="text/javascript">
 
-		</div> </div> </div>
+/*
 
 
+Highcharts.chart('container', {
+  chart: {
+    type: 'spline',
+//    type: 'area',
 
-<div class="panel-group" id="accordion">
-	<div class="panel panel-info">
-		<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#bax">Поддержать разработку</a>
-		</div>
-		<div class="panel-body collapse" id="bax">
+    animation: Highcharts.svg, // don't animate in old IE
+    marginRight: 10,
+    zoomType: 'xy',
+    events: {
+      load: function () {
+        // set up the updating of the chart each second
+        var series = this.series[0];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+//            y = Math.random();
+//       y = 2;
+              y = getcpu();
+              y2=2;
+///              alert(y);
+          series.addPoint([x, y], true, true);
+        }, 1000);
+   
+     
+/*
+var series1 = this.series[1];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+//            y = Math.random();
+///       y = 2;
+//              y = getcpu();
+              y2=2;
+///              alert(y);
+          series.addPoint([x, y2], true, true);
+        }, 1000);
 
-[#inc rekv.html#]
-
-		</div> </div> </div>
-
-                                                                                                         
-	
+*/
+/*
+      
+}     }   
 
 
 
-	
-</div>
+
+  },
+
+chart2: {
+    type: 'spline',
+//    type: 'area',
+
+    animation: Highcharts.svg, // don't animate in old IE
+    marginRight: 10,
+    zoomType: 'xy',
+    events: {
+      load: function () {
+        // set up the updating of the chart each second
+        var series = this.series[1];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+//            y = Math.random();
+       y = 20;
+//              y = getcpu();
+///              alert(y);
+          series.addPoint([x, y], true, true);
+        }, 1000);
+      }
+     }
+
+
+  }
+,
+
+  time: {
+    useUTC: false
+  },
+
+  title: {    text: 'Cpu load and average'  },
+  xAxis: {
+    type: 'datetime',
+    tickPixelInterval: 1
+//,   minRange: 30000
+,minTickInterval: 1
+//,minPadding:300
+  },
+  yAxis: {
+    title: {
+      text: '%'
+    },
+    min: 0,
+//minTickInterval: 1,
+//    max: 50-100,
+
+
+    plotLines: [{
+      value: 0,
+      width: 2,
+      color: '#808080'
+    }
+
+
+]
+  },
+  
+//  tooltip: {
+//    headerFormat: '<b>{series.name}</b><br/>',
+//    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
+//  },
+  legend: {
+    enabled: false
+  },
+  exporting: {
+    enabled: false
+  },
+
+ plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: false
+            },
+            enableMouseTracking: true
+        }
+    },
+
+  series: [{
+    name: 'CPU load',
+    data: (function () {
+      // generate an array of random data
+      var data = [],
+        time = (new Date()).getTime(),
+        i;
+
+      for (i = -19; i <= 0; i += 1) {
+        data.push({
+//          x: time + i * 1000,
+            x: time + i *1000,
+//          y: Math.random()
+//            y: getcpu();
+        });
+      }
+      return data;
+    }())
+  }
+
+,
+//{   name: 'CPU average',   data: [20, 21, 22]  }
+
+{
+name: 'CPU average',
+    data: (function () {
+      // generate an array of random data
+      var data = [],
+        time = (new Date()).getTime(),
+        i;
+
+      for (i = -19; i <= 0; i += 1) {
+        data.push({
+//          x: time + i * 1000,
+            x: time + i *1000,
+            y: Math.random()
+//          y: 20;
+
+//            y: getcpu();
+        });
+      }
+      return data;
+    }())
+
+  }
+
+
+
+
+]
+}
+
+
+
+);
+*/
+
+$(function () {
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        $('#container').highcharts({
+            chart: {
+                renderTo: 'container',
+                defaultSeriesType: 'spline',
+//                width: 1400,
+//                height: 800,
+                events: {
+                    load: function () {
+                        var series = this.series[0],
+                            ser2 = this.series[1],
+                        shift = 0;
+
+                        setInterval(function () {
+                            var x = (new Date()).getTime(), // current time
+//                                y = Math.random();
+			    y= getcpu();
+			    y2= getavg()*10;
+//			    y2= getavg();
+                            series.addPoint([x, y], false, shift>20);
+//                            ser2.addPoint([x, y+0.5], true, shift>20);
+                            ser2.addPoint([x, y2], true, shift>20);
+                            shift++;
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: 'Cpu usage and average'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+//,
+//                maxZoom: 20 * 1000
+//                maxZoom: 20 * 100
+            },
+            yAxis: {
+//                minPadding: 0.2,
+//                maxPadding: 0.2,
+    min: -10,
+//    max: 100,
+                title: {
+                    text: 'Cpu usage and average'
+//,                    margin: 80
+                }
+            },
+            series: [{
+                name: 'Cpu usage',
+                data: []
+            }, {
+                name: 'Average*10',
+                data: []
+            }]
+        });
+    });
+});
+
+
+
+
+
+    function viewlog() {
+
+        var url="/ajax/camshoter.html?op=htop";
+
+        $.ajax({
+            url: url,
+            cache: false,
+            success: function(html){
+                $("#auth_log").html(html);
+            }
+        });
+  logTimer = window.setTimeout('viewlog();',4000);
+
+}
+   viewlog();
+
+  function getcpu() {
+ var retVal;
+    $.ajax({
+        url:"/ajax/camshoter.html?op=cpu",
+        async: false,
+        success:function(response) {
+            retVal = response;
+        }
+    });
+    return Number(retVal);
+}
+
+  function getavg() {
+ var retVal;
+    $.ajax({
+        url:"/ajax/camshoter.html?op=average",
+        async: false,
+        success:function(response) {
+            retVal = response;
+        }
+    });
+    return Number(retVal);
+}
+
+
+    
+</script>
+<!--<div class="modal fade" id="viewlog" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true" height="100"> -->
+<div  id="viewlog" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true" height="200"> 
+<div>
+<p  id="auth_log" >    </p>
+</div></div>
+
+
+
+
+
+    <p  id="auth_log" >    </p>
+    </div>
+    </div>
+
+
+
+<!--   <a onclick="viewlog('[#FN#]')" class="btn btn-default"  data-toggle="modal" data-target="#viewlog"  title="View"><i class="glyphicon glyphicon-film"></i></a> -->
 
