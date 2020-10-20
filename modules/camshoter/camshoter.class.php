@@ -550,6 +550,7 @@ $cmdd.='$cmd["'.$val.'"]="'.$name.'";';
 }
 $cmdd.='
 $camshoter->mainprocesss1($cmd,'.  $i.', "hourly");
+SQLExec ("delete from camshoter_log where updated<DATE_SUB(now(), INTERVAL 7 DAY);");
 ';
 SetTimeOut('camshoter_timer_hourly_'.$cmd[$i]['ID'],$cmdd, '2'); 
 
